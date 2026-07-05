@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-05T12:40:07Z",
+  "updated_at": "2026-07-05T12:55:35Z",
   "cards": [
     {
       "lotr_name": "Redhorn Pass",
@@ -7,7 +7,10 @@
       "tcg_price": 1.76,
       "tcg_url": "https://www.tcgplayer.com/product/499322?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.04,
-      "mp_url": "https://manapool.com/card/ltc/370/mouth-of-ronom?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/370/mouth-of-ronom?conditions=NM&finish=nonfoil",
+      "owned": true,
+      "condition": "NM",
+      "foil": false
     },
     {
       "lotr_name": "Shards of Narsil",
@@ -15,7 +18,10 @@
       "tcg_price": 2.45,
       "tcg_url": "https://www.tcgplayer.com/product/499315?Condition=Near+Mint&Printing=Normal",
       "mp_price": 3.96,
-      "mp_url": "https://manapool.com/card/ltc/356/thorn-of-amethyst?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/356/thorn-of-amethyst?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Inn of the Prancing Pony",
@@ -23,7 +29,10 @@
       "tcg_price": 6.22,
       "tcg_url": "https://www.tcgplayer.com/product/499324?Condition=Near+Mint&Printing=Normal",
       "mp_price": 6.09,
-      "mp_url": "https://manapool.com/card/ltc/372/pillar-of-the-paruns?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/372/pillar-of-the-paruns?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Meduseld, Golden Hall of Edoras",
@@ -31,7 +40,10 @@
       "tcg_price": 7.53,
       "tcg_url": "https://www.tcgplayer.com/product/499317?Condition=Near+Mint&Printing=Normal",
       "mp_price": 6.17,
-      "mp_url": "https://manapool.com/card/ltc/361/castle-ardenvale?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/361/castle-ardenvale?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Weathertop",
@@ -39,7 +51,10 @@
       "tcg_price": 8.29,
       "tcg_url": "https://www.tcgplayer.com/product/498458?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.59,
-      "mp_url": "https://manapool.com/card/ltc/363/deserted-temple?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/363/deserted-temple?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Bag End",
@@ -47,7 +62,10 @@
       "tcg_price": 8.54,
       "tcg_url": "https://www.tcgplayer.com/product/499319?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.92,
-      "mp_url": "https://manapool.com/card/ltc/366/horizon-canopy?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/366/horizon-canopy?conditions=NM&finish=nonfoil",
+      "owned": true,
+      "condition": "MP",
+      "foil": false
     },
     {
       "lotr_name": "Elessar, the Elfstone",
@@ -55,7 +73,10 @@
       "tcg_price": 12.49,
       "tcg_url": "https://www.tcgplayer.com/product/498455?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.48,
-      "mp_url": "https://manapool.com/card/ltc/349/cloudstone-curio?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/349/cloudstone-curio?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Bridge of Khazad-d\u00fbm",
@@ -63,7 +84,10 @@
       "tcg_price": 12.92,
       "tcg_url": "https://www.tcgplayer.com/product/488283?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.52,
-      "mp_url": "https://manapool.com/card/ltc/350/ensnaring-bridge?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/350/ensnaring-bridge?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Three Rings for the Elven-Kings",
@@ -71,7 +95,10 @@
       "tcg_price": 13.68,
       "tcg_url": "https://www.tcgplayer.com/product/498466?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.12,
-      "mp_url": "https://manapool.com/card/ltc/352/rings-of-brighthearth?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/352/rings-of-brighthearth?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Green Dragon Inn",
@@ -79,7 +106,10 @@
       "tcg_price": 14.09,
       "tcg_url": "https://www.tcgplayer.com/product/498463?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.31,
-      "mp_url": "https://manapool.com/card/ltc/365/homeward-path?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/365/homeward-path?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Ring of Barahir",
@@ -87,7 +117,10 @@
       "tcg_price": 15.15,
       "tcg_url": "https://www.tcgplayer.com/product/499314?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.49,
-      "mp_url": "https://manapool.com/card/ltc/355/sword-of-the-animist?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/355/sword-of-the-animist?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "White Tower of Ecthelion",
@@ -95,7 +128,10 @@
       "tcg_price": 15.32,
       "tcg_url": "https://www.tcgplayer.com/product/499320?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.25,
-      "mp_url": "https://manapool.com/card/ltc/367/karakas?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/367/karakas?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Bucklebury Ferry",
@@ -103,7 +139,10 @@
       "tcg_price": 16.34,
       "tcg_url": "https://www.tcgplayer.com/product/499323?Condition=Near+Mint&Printing=Normal",
       "mp_price": 16.95,
-      "mp_url": "https://manapool.com/card/ltc/371/oboro-palace-in-the-clouds?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/371/oboro-palace-in-the-clouds?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Isengard, Saruman's Fortress",
@@ -111,7 +150,10 @@
       "tcg_price": 17.4,
       "tcg_url": "https://www.tcgplayer.com/product/498462?Condition=Near+Mint&Printing=Normal",
       "mp_price": 17.59,
-      "mp_url": "https://manapool.com/card/ltc/359/boseiju-who-shelters-all?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/359/boseiju-who-shelters-all?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Osgiliath, Fallen Capital",
@@ -119,7 +161,10 @@
       "tcg_price": 18.23,
       "tcg_url": "https://www.tcgplayer.com/product/499321?Condition=Near+Mint&Printing=Normal",
       "mp_price": 15.46,
-      "mp_url": "https://manapool.com/card/ltc/368/kor-haven?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/368/kor-haven?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Herugrim, Sword of Rohan",
@@ -127,7 +172,10 @@
       "tcg_price": 23.91,
       "tcg_url": "https://www.tcgplayer.com/product/499313?Condition=Near+Mint&Printing=Normal",
       "mp_price": 23.97,
-      "mp_url": "https://manapool.com/card/ltc/354/sword-of-hearth-and-home?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/354/sword-of-hearth-and-home?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Henneth Ann\u00fbn",
@@ -135,7 +183,10 @@
       "tcg_price": 24.51,
       "tcg_url": "https://www.tcgplayer.com/product/499327?Condition=Near+Mint&Printing=Normal",
       "mp_price": 25.23,
-      "mp_url": "https://manapool.com/card/ltc/373/reflecting-pool?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/373/reflecting-pool?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Helm's Deep",
@@ -143,7 +194,10 @@
       "tcg_price": 27.41,
       "tcg_url": "https://www.tcgplayer.com/product/499325?Condition=Near+Mint&Printing=Normal",
       "mp_price": 25.38,
-      "mp_url": "https://manapool.com/card/ltc/374/shinka-the-bloodsoaked-keep?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/374/shinka-the-bloodsoaked-keep?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Valley of Gorgoroth",
@@ -151,7 +205,10 @@
       "tcg_price": 29.12,
       "tcg_url": "https://www.tcgplayer.com/product/488281?Condition=Near+Mint&Printing=Normal",
       "mp_price": 32.94,
-      "mp_url": "https://manapool.com/card/ltc/376/wasteland?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/376/wasteland?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Barrow-Downs",
@@ -159,7 +216,10 @@
       "tcg_price": 32.0,
       "tcg_url": "https://www.tcgplayer.com/product/498461?Condition=Near+Mint&Printing=Normal",
       "mp_price": 32.65,
-      "mp_url": "https://manapool.com/card/ltc/358/bojuka-bog?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/358/bojuka-bog?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Fangorn Forest",
@@ -167,7 +227,10 @@
       "tcg_price": 51.21,
       "tcg_url": "https://www.tcgplayer.com/product/498459?Condition=Near+Mint&Printing=Normal",
       "mp_price": 49.76,
-      "mp_url": "https://manapool.com/card/ltc/377/yavimaya-cradle-of-growth?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/377/yavimaya-cradle-of-growth?conditions=NM&finish=nonfoil",
+      "owned": true,
+      "condition": "NM",
+      "foil": true
     },
     {
       "lotr_name": "Minas Morgul",
@@ -175,15 +238,21 @@
       "tcg_price": 57.39,
       "tcg_url": "https://www.tcgplayer.com/product/499316?Condition=Near+Mint&Printing=Normal",
       "mp_price": 50.0,
-      "mp_url": "https://manapool.com/card/ltc/360/cabal-coffers?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/360/cabal-coffers?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Dol Amroth",
       "mtg_name": "Minamo, School at Water's Edge",
-      "tcg_price": 57.49,
+      "tcg_price": 57.45,
       "tcg_url": "https://www.tcgplayer.com/product/498460?Condition=Near+Mint&Printing=Normal",
       "mp_price": 57.0,
-      "mp_url": "https://manapool.com/card/ltc/369/minamo-school-at-waters-edge?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/369/minamo-school-at-waters-edge?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Glittering Caves of Aglarond",
@@ -191,7 +260,10 @@
       "tcg_price": 67.98,
       "tcg_url": "https://www.tcgplayer.com/product/499318?Condition=Near+Mint&Printing=Normal",
       "mp_price": 68.29,
-      "mp_url": "https://manapool.com/card/ltc/364/gemstone-caverns?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/364/gemstone-caverns?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Morgul-Knife",
@@ -199,15 +271,21 @@
       "tcg_price": 72.84,
       "tcg_url": "https://www.tcgplayer.com/product/498464?Condition=Near+Mint&Printing=Normal",
       "mp_price": 75.79,
-      "mp_url": "https://manapool.com/card/ltc/353/shadowspear?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/353/shadowspear?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Paths of the Dead",
       "mtg_name": "Cavern of Souls",
-      "tcg_price": 74.59,
+      "tcg_price": 74.69,
       "tcg_url": "https://www.tcgplayer.com/product/498465?Condition=Near+Mint&Printing=Normal",
       "mp_price": 73.18,
-      "mp_url": "https://manapool.com/card/ltc/362/cavern-of-souls?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/362/cavern-of-souls?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Argonath, Pillars of the Kings",
@@ -215,7 +293,10 @@
       "tcg_price": 81.68,
       "tcg_url": "https://www.tcgplayer.com/product/498457?Condition=Near+Mint&Printing=Normal",
       "mp_price": 75.99,
-      "mp_url": "https://manapool.com/card/ltc/351/the-ozolith?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/351/the-ozolith?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "The Party Tree",
@@ -223,7 +304,10 @@
       "tcg_price": 88.37,
       "tcg_url": "https://www.tcgplayer.com/product/488284?Condition=Near+Mint&Printing=Normal",
       "mp_price": 88.56,
-      "mp_url": "https://manapool.com/card/ltc/348/the-great-henge?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/348/the-great-henge?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "The Dead Marshes",
@@ -231,7 +315,10 @@
       "tcg_price": 124.09,
       "tcg_url": "https://www.tcgplayer.com/product/499326?Condition=Near+Mint&Printing=Normal",
       "mp_price": 112.05,
-      "mp_url": "https://manapool.com/card/ltc/375/urborg-tomb-of-yawgmoth?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/375/urborg-tomb-of-yawgmoth?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     },
     {
       "lotr_name": "Balin's Tomb",
@@ -239,7 +326,10 @@
       "tcg_price": 181.85,
       "tcg_url": "https://www.tcgplayer.com/product/498456?Condition=Near+Mint&Printing=Normal",
       "mp_price": 158.07,
-      "mp_url": "https://manapool.com/card/ltc/357/ancient-tomb?conditions=NM&finish=nonfoil"
+      "mp_url": "https://manapool.com/card/ltc/357/ancient-tomb?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
     }
   ]
 }

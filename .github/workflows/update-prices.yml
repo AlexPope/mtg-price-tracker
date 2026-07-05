@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install dependencies
+        run: pip install cloudscraper
+
       - name: Fetch prices
         run: python scripts/fetch_prices.py
 

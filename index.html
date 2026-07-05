@@ -96,6 +96,23 @@
     }
     a:hover { text-decoration: underline; }
     .na { color: #aaa; font-style: italic; font-weight: 400; }
+    .owned-check { color: #1a8a4a; font-size: 1.1rem; }
+    .details-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      color: #444;
+    }
+    .foil-badge {
+      background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+    }
 
     #pat-section {
       margin-top: 32px;
@@ -155,6 +172,8 @@
       <th>Card Name</th>
       <th>TCGPlayer</th>
       <th>ManaPool</th>
+      <th>Owned</th>
+      <th>Details</th>
     </tr>
   </thead>
   <tbody id="price-tbody">
@@ -187,14 +206,25 @@ async function loadPrices() {
     const r = await fetch('prices.json?_=' + Date.now());
     const data = await r.json();
     const tbody = document.getElementById('price-tbody');
-    tbody.innerHTML = data.cards.map(c => `
+    tbody.innerHTML = data.cards.map(c => {
+      const ownedCell = c.owned ? '<span class="owned-check" title="Owned">&#10003;</span>' : '';
+      let detailsCell = '';
+      if (c.owned) {
+        const parts = [c.condition];
+        if (c.foil) parts.push('<span class="foil-badge">Foil</span>');
+        detailsCell = `<span class="details-badge">${parts.join(' ')}</span>`;
+      }
+      return `
       <tr>
         <td>${c.lotr_name} (${c.mtg_name})</td>
         <td><a href="${c.tcg_url}" target="_blank">${fmt(c.tcg_price)}</a></td>
         <td>${c.mp_price != null
           ? `<a href="${c.mp_url}" target="_blank">${fmt(c.mp_price)}</a>`
           : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
-      </tr>`).join('');
+        <td style="text-align:center">${ownedCell}</td>
+        <td>${detailsCell}</td>
+      </tr>`;
+    }).join('');
 
     const ts = new Date(data.updated_at);
     document.getElementById('last-updated').textContent =

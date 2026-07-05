@@ -4,6 +4,22 @@ import re
 import subprocess
 import datetime
 
+try:
+    import cloudscraper
+    _have_cloudscraper = True
+except ImportError:
+    _have_cloudscraper = False
+
+MOXFIELD_BINDER_ID = 'f6LqAFGUPEG7FWnGopkU1Q'
+
+CONDITION_MAP = {
+    'nearMint': 'NM',
+    'lightlyPlayed': 'LP',
+    'moderatelyPlayed': 'MP',
+    'heavilyPlayed': 'HP',
+    'damaged': 'DMG',
+}
+
 CARDS = [
     {"lotr_name": "The Party Tree", "mtg_name": "The Great Henge", "scryfall_id": "ltc/348", "manapool_slug": "the-great-henge", "manapool_num": "348", "tcg_id": "488284"},
     {"lotr_name": "Argonath, Pillars of the Kings", "mtg_name": "The Ozolith", "scryfall_id": "ltc/351", "manapool_slug": "the-ozolith", "manapool_num": "351", "tcg_id": "498457"},
@@ -59,28 +75,76 @@ def fetch_manapool_price(card):
         capture_output=True, text=True
     )
     html = result.stdout
-    # Extract from embedded marketPrices JSON: \"marketPrices\":{\"price\": XXXX, \"price_foil\":
     m = re.search(r'\\"marketPrices\\":\{\\"price\\": (\d+),', html)
     if m:
         return int(m.group(1)) / 100.0
     return None
 
+def fetch_owned():
+    """Returns a dict of collector_number -> {condition, foil} for cards in the Moxfield binder."""
+    if not _have_cloudscraper:
+        print("cloudscraper not available, skipping binder fetch")
+        return {}
+
+    scraper = cloudscraper.create_scraper()
+    headers = {
+        'Accept': 'application/json',
+        'Referer': 'https://moxfield.com/',
+        'Origin': 'https://moxfield.com',
+    }
+
+    owned = {}
+    page = 1
+    while True:
+        url = f"https://api2.moxfield.com/v1/trade-binders/{MOXFIELD_BINDER_ID}?pageNumber={page}&pageSize=100"
+        try:
+            r = scraper.get(url, headers=headers, timeout=15)
+            data = r.json()
+        except Exception as e:
+            print(f"  Moxfield fetch error (page {page}): {e}")
+            break
+
+        for entry in data.get("data", []):
+            card = entry.get("card", {})
+            if card.get("set", "").lower() != "ltc":
+                continue
+            cn = card.get("cn", "")
+            if not (cn.isdigit() and 348 <= int(cn) <= 377):
+                continue
+            condition = CONDITION_MAP.get(entry.get("condition", ""), entry.get("condition", ""))
+            is_foil = entry.get("finish", "nonFoil") == "foil"
+            owned[cn] = {"condition": condition, "foil": is_foil}
+
+        if data.get("pageNumber", 1) >= data.get("totalPages", 1):
+            break
+        page += 1
+
+    print(f"  Moxfield: found {len(owned)} owned LTC cards")
+    return owned
+
 def main():
+    print("Fetching Moxfield binder...")
+    owned = fetch_owned()
+
     results = []
     for card in CARDS:
         print(f"Fetching {card['mtg_name']}...")
         tcg_price = fetch_tcg_price(card)
         mp_price = fetch_manapool_price(card)
+        cn = card["manapool_num"]
+        owned_entry = owned.get(cn)
         results.append({
             "lotr_name": card["lotr_name"],
             "mtg_name": card["mtg_name"],
             "tcg_price": tcg_price,
             "tcg_url": f"https://www.tcgplayer.com/product/{card['tcg_id']}?Condition=Near+Mint&Printing=Normal",
             "mp_price": mp_price,
-            "mp_url": f"https://manapool.com/card/ltc/{card['manapool_num']}/{card['manapool_slug']}?conditions=NM&finish=nonfoil",
+            "mp_url": f"https://manapool.com/card/ltc/{cn}/{card['manapool_slug']}?conditions=NM&finish=nonfoil",
+            "owned": owned_entry is not None,
+            "condition": owned_entry["condition"] if owned_entry else None,
+            "foil": owned_entry["foil"] if owned_entry else None,
         })
 
-    # Sort by TCGPlayer price ascending (None prices go last)
     results.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
 
     output = {
@@ -89,7 +153,7 @@ def main():
     }
     with open("prices.json", "w") as f:
         json.dump(output, f, indent=2)
-    print(f"Done. Written to prices.json ({len(results)} cards).")
+    print(f"Done. Written to prices.json ({len(results)} cards, {sum(1 for r in results if r['owned'])} owned).")
 
 if __name__ == "__main__":
     main()
