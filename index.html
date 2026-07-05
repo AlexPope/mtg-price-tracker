@@ -103,6 +103,30 @@
 
     .owned-check { color: #1a8a4a; font-size: 1.1rem; }
 
+    .best-price { color: #128a3f !important; font-weight: 800 !important; }
+    .best-price::after { content: ' ★'; font-size: 0.7em; vertical-align: 2px; }
+
+    .summary {
+      display: flex;
+      gap: 14px;
+      margin: 4px 0 18px;
+      flex-wrap: wrap;
+    }
+    .summary-card {
+      flex: 1 1 220px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      background: #fafafa;
+    }
+    .summary-card.owned { border-color: #b8dcc4; background: #f0faf3; }
+    .summary-card.missing { border-color: #f0d0c0; background: #fdf6f2; }
+    .summary-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .summary-value { font-size: 1.4rem; font-weight: 700; }
+    .summary-card.owned .summary-value { color: #128a3f; }
+    .summary-card.missing .summary-value { color: #b0552a; }
+    .summary-sub { font-size: 0.78rem; color: #777; margin-top: 2px; }
+
     #pat-section {
       margin-top: 32px;
       padding: 16px 20px;
@@ -151,6 +175,7 @@
 
 <div id="tab-realms" class="tab-panel active">
   <p class="meta" style="margin-bottom:12px">Tales of Middle-earth Commander · Borderless Non-Foil · #348–377</p>
+  <div class="summary" id="summary-realms"></div>
   <table>
     <thead>
       <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Collected Non-Foil</th><th>Collected Foil</th></tr>
@@ -163,6 +188,7 @@
 
 <div id="tab-showcase" class="tab-panel">
   <p class="meta" style="margin-bottom:12px">Tales of Middle-earth · Showcase Borderless · #302–331</p>
+  <div class="summary" id="summary-showcase"></div>
   <table>
     <thead>
       <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Collected Non-Foil</th><th>Collected Foil</th></tr>
@@ -195,16 +221,62 @@ function fmt(price) {
 
 const CHECK = '<span class="owned-check" title="Collected">&#10003;</span>';
 
+function bestPrice(c) {
+  if (c.tcg_price == null && c.mp_price == null) return null;
+  if (c.tcg_price == null) return c.mp_price;
+  if (c.mp_price == null) return c.tcg_price;
+  return Math.min(c.tcg_price, c.mp_price);
+}
+
 function buildRows(cards) {
-  return cards.map(c => `<tr>
-    <td>${c.display_name}</td>
-    <td><a href="${c.tcg_url}" target="_blank">${fmt(c.tcg_price)}</a></td>
-    <td>${c.mp_price != null
-      ? `<a href="${c.mp_url}" target="_blank">${fmt(c.mp_price)}</a>`
-      : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
-    <td>${c.collected_nonfoil ? CHECK : ''}</td>
-    <td>${c.collected_foil ? CHECK : ''}</td>
-  </tr>`).join('');
+  return cards.map(c => {
+    const tcg = c.tcg_price, mp = c.mp_price;
+    // Highlight the lower price only when both are present and unequal.
+    const tcgBest = tcg != null && mp != null && tcg < mp;
+    const mpBest  = tcg != null && mp != null && mp < tcg;
+    const tcgCls = tcgBest ? ' class="best-price"' : '';
+    const mpCls  = mpBest  ? 'best-price' : '';
+
+    return `<tr>
+      <td>${c.display_name}</td>
+      <td><a href="${c.tcg_url}" target="_blank"${tcgCls}>${fmt(tcg)}</a></td>
+      <td>${mp != null
+        ? `<a href="${c.mp_url}" target="_blank" class="${mpCls}">${fmt(mp)}</a>`
+        : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
+      <td>${c.collected_nonfoil ? CHECK : ''}</td>
+      <td>${c.collected_foil ? CHECK : ''}</td>
+    </tr>`;
+  }).join('');
+}
+
+function money(n) {
+  return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function buildSummary(cards) {
+  let ownedVal = 0, ownedCount = 0, missCost = 0, missCount = 0, totalCards = cards.length;
+  for (const c of cards) {
+    const bp = bestPrice(c);
+    const isOwned = c.collected_nonfoil || c.collected_foil;
+    if (isOwned) {
+      ownedCount++;
+      if (bp != null) ownedVal += bp;
+    } else {
+      missCount++;
+      if (bp != null) missCost += bp;
+    }
+  }
+  return `
+    <div class="summary-card owned">
+      <div class="summary-label">Current Collection Value</div>
+      <div class="summary-value">${money(ownedVal)}</div>
+      <div class="summary-sub">${ownedCount} / ${totalCards} cards collected</div>
+    </div>
+    <div class="summary-card missing">
+      <div class="summary-label">Cost to Complete</div>
+      <div class="summary-value">${money(missCost)}</div>
+      <div class="summary-sub">${missCount} card${missCount === 1 ? '' : 's'} missing</div>
+    </div>`;
 }
 
 async function loadPrices() {
@@ -212,8 +284,10 @@ async function loadPrices() {
     const r = await fetch('prices.json?_=' + Date.now());
     const data = await r.json();
 
-    document.getElementById('tbody-realms').innerHTML   = buildRows(data.realms_and_relics);
-    document.getElementById('tbody-showcase').innerHTML = buildRows(data.showcase);
+    document.getElementById('tbody-realms').innerHTML    = buildRows(data.realms_and_relics);
+    document.getElementById('tbody-showcase').innerHTML  = buildRows(data.showcase);
+    document.getElementById('summary-realms').innerHTML  = buildSummary(data.realms_and_relics);
+    document.getElementById('summary-showcase').innerHTML = buildSummary(data.showcase);
 
     const ts = new Date(data.updated_at);
     document.getElementById('last-updated').textContent =
