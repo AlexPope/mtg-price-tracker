@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-05T12:25:24Z",
+  "updated_at": "2026-07-05T12:39:01Z",
   "cards": [
     {
       "lotr_name": "Redhorn Pass",
@@ -180,7 +180,7 @@
     {
       "lotr_name": "Dol Amroth",
       "mtg_name": "Minamo, School at Water's Edge",
-      "tcg_price": 57.45,
+      "tcg_price": 57.49,
       "tcg_url": "https://www.tcgplayer.com/product/498460?Condition=Near+Mint&Printing=Normal",
       "mp_price": 57.0,
       "mp_url": "https://manapool.com/card/ltc/369/minamo-school-at-waters-edge?conditions=NM&finish=nonfoil"
@@ -204,7 +204,7 @@
     {
       "lotr_name": "Paths of the Dead",
       "mtg_name": "Cavern of Souls",
-      "tcg_price": 74.69,
+      "tcg_price": 74.59,
       "tcg_url": "https://www.tcgplayer.com/product/498465?Condition=Near+Mint&Printing=Normal",
       "mp_price": 73.18,
       "mp_url": "https://manapool.com/card/ltc/362/cavern-of-souls?conditions=NM&finish=nonfoil"
