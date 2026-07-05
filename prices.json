@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-07-05T12:55:35Z",
-  "cards": [
+  "updated_at": "2026-07-05T13:26:11Z",
+  "realms_and_relics": [
     {
-      "lotr_name": "Redhorn Pass",
+      "display_name": "Redhorn Pass (Mouth of Ronom)",
       "mtg_name": "Mouth of Ronom",
       "tcg_price": 1.76,
       "tcg_url": "https://www.tcgplayer.com/product/499322?Condition=Near+Mint&Printing=Normal",
@@ -13,7 +13,7 @@
       "foil": false
     },
     {
-      "lotr_name": "Shards of Narsil",
+      "display_name": "Shards of Narsil (Thorn of Amethyst)",
       "mtg_name": "Thorn of Amethyst",
       "tcg_price": 2.45,
       "tcg_url": "https://www.tcgplayer.com/product/499315?Condition=Near+Mint&Printing=Normal",
@@ -24,7 +24,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Inn of the Prancing Pony",
+      "display_name": "Inn of the Prancing Pony (Pillar of the Paruns)",
       "mtg_name": "Pillar of the Paruns",
       "tcg_price": 6.22,
       "tcg_url": "https://www.tcgplayer.com/product/499324?Condition=Near+Mint&Printing=Normal",
@@ -35,7 +35,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Meduseld, Golden Hall of Edoras",
+      "display_name": "Meduseld, Golden Hall of Edoras (Castle Ardenvale)",
       "mtg_name": "Castle Ardenvale",
       "tcg_price": 7.53,
       "tcg_url": "https://www.tcgplayer.com/product/499317?Condition=Near+Mint&Printing=Normal",
@@ -46,7 +46,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Weathertop",
+      "display_name": "Weathertop (Deserted Temple)",
       "mtg_name": "Deserted Temple",
       "tcg_price": 8.29,
       "tcg_url": "https://www.tcgplayer.com/product/498458?Condition=Near+Mint&Printing=Normal",
@@ -57,7 +57,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Bag End",
+      "display_name": "Bag End (Horizon Canopy)",
       "mtg_name": "Horizon Canopy",
       "tcg_price": 8.54,
       "tcg_url": "https://www.tcgplayer.com/product/499319?Condition=Near+Mint&Printing=Normal",
@@ -68,7 +68,7 @@
       "foil": false
     },
     {
-      "lotr_name": "Elessar, the Elfstone",
+      "display_name": "Elessar, the Elfstone (Cloudstone Curio)",
       "mtg_name": "Cloudstone Curio",
       "tcg_price": 12.49,
       "tcg_url": "https://www.tcgplayer.com/product/498455?Condition=Near+Mint&Printing=Normal",
@@ -79,7 +79,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Bridge of Khazad-d\u00fbm",
+      "display_name": "Bridge of Khazad-d\u00fbm (Ensnaring Bridge)",
       "mtg_name": "Ensnaring Bridge",
       "tcg_price": 12.92,
       "tcg_url": "https://www.tcgplayer.com/product/488283?Condition=Near+Mint&Printing=Normal",
@@ -90,7 +90,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Three Rings for the Elven-Kings",
+      "display_name": "Three Rings for the Elven-Kings (Rings of Brighthearth)",
       "mtg_name": "Rings of Brighthearth",
       "tcg_price": 13.68,
       "tcg_url": "https://www.tcgplayer.com/product/498466?Condition=Near+Mint&Printing=Normal",
@@ -101,7 +101,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Green Dragon Inn",
+      "display_name": "Green Dragon Inn (Homeward Path)",
       "mtg_name": "Homeward Path",
       "tcg_price": 14.09,
       "tcg_url": "https://www.tcgplayer.com/product/498463?Condition=Near+Mint&Printing=Normal",
@@ -112,7 +112,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Ring of Barahir",
+      "display_name": "Ring of Barahir (Sword of the Animist)",
       "mtg_name": "Sword of the Animist",
       "tcg_price": 15.15,
       "tcg_url": "https://www.tcgplayer.com/product/499314?Condition=Near+Mint&Printing=Normal",
@@ -123,7 +123,7 @@
       "foil": null
     },
     {
-      "lotr_name": "White Tower of Ecthelion",
+      "display_name": "White Tower of Ecthelion (Karakas)",
       "mtg_name": "Karakas",
       "tcg_price": 15.32,
       "tcg_url": "https://www.tcgplayer.com/product/499320?Condition=Near+Mint&Printing=Normal",
@@ -134,7 +134,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Bucklebury Ferry",
+      "display_name": "Bucklebury Ferry (Oboro, Palace in the Clouds)",
       "mtg_name": "Oboro, Palace in the Clouds",
       "tcg_price": 16.34,
       "tcg_url": "https://www.tcgplayer.com/product/499323?Condition=Near+Mint&Printing=Normal",
@@ -145,7 +145,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Isengard, Saruman's Fortress",
+      "display_name": "Isengard, Saruman's Fortress (Boseiju, Who Shelters All)",
       "mtg_name": "Boseiju, Who Shelters All",
       "tcg_price": 17.4,
       "tcg_url": "https://www.tcgplayer.com/product/498462?Condition=Near+Mint&Printing=Normal",
@@ -156,7 +156,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Osgiliath, Fallen Capital",
+      "display_name": "Osgiliath, Fallen Capital (Kor Haven)",
       "mtg_name": "Kor Haven",
       "tcg_price": 18.23,
       "tcg_url": "https://www.tcgplayer.com/product/499321?Condition=Near+Mint&Printing=Normal",
@@ -167,7 +167,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Herugrim, Sword of Rohan",
+      "display_name": "Herugrim, Sword of Rohan (Sword of Hearth and Home)",
       "mtg_name": "Sword of Hearth and Home",
       "tcg_price": 23.91,
       "tcg_url": "https://www.tcgplayer.com/product/499313?Condition=Near+Mint&Printing=Normal",
@@ -178,7 +178,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Henneth Ann\u00fbn",
+      "display_name": "Henneth Ann\u00fbn (Reflecting Pool)",
       "mtg_name": "Reflecting Pool",
       "tcg_price": 24.51,
       "tcg_url": "https://www.tcgplayer.com/product/499327?Condition=Near+Mint&Printing=Normal",
@@ -189,7 +189,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Helm's Deep",
+      "display_name": "Helm's Deep (Shinka, the Bloodsoaked Keep)",
       "mtg_name": "Shinka, the Bloodsoaked Keep",
       "tcg_price": 27.41,
       "tcg_url": "https://www.tcgplayer.com/product/499325?Condition=Near+Mint&Printing=Normal",
@@ -200,7 +200,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Valley of Gorgoroth",
+      "display_name": "Valley of Gorgoroth (Wasteland)",
       "mtg_name": "Wasteland",
       "tcg_price": 29.12,
       "tcg_url": "https://www.tcgplayer.com/product/488281?Condition=Near+Mint&Printing=Normal",
@@ -211,7 +211,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Barrow-Downs",
+      "display_name": "Barrow-Downs (Bojuka Bog)",
       "mtg_name": "Bojuka Bog",
       "tcg_price": 32.0,
       "tcg_url": "https://www.tcgplayer.com/product/498461?Condition=Near+Mint&Printing=Normal",
@@ -222,7 +222,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Fangorn Forest",
+      "display_name": "Fangorn Forest (Yavimaya, Cradle of Growth)",
       "mtg_name": "Yavimaya, Cradle of Growth",
       "tcg_price": 51.21,
       "tcg_url": "https://www.tcgplayer.com/product/498459?Condition=Near+Mint&Printing=Normal",
@@ -233,7 +233,7 @@
       "foil": true
     },
     {
-      "lotr_name": "Minas Morgul",
+      "display_name": "Minas Morgul (Cabal Coffers)",
       "mtg_name": "Cabal Coffers",
       "tcg_price": 57.39,
       "tcg_url": "https://www.tcgplayer.com/product/499316?Condition=Near+Mint&Printing=Normal",
@@ -244,7 +244,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Dol Amroth",
+      "display_name": "Dol Amroth (Minamo, School at Water's Edge)",
       "mtg_name": "Minamo, School at Water's Edge",
       "tcg_price": 57.45,
       "tcg_url": "https://www.tcgplayer.com/product/498460?Condition=Near+Mint&Printing=Normal",
@@ -255,7 +255,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Glittering Caves of Aglarond",
+      "display_name": "Glittering Caves of Aglarond (Gemstone Caverns)",
       "mtg_name": "Gemstone Caverns",
       "tcg_price": 67.98,
       "tcg_url": "https://www.tcgplayer.com/product/499318?Condition=Near+Mint&Printing=Normal",
@@ -266,7 +266,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Morgul-Knife",
+      "display_name": "Morgul-Knife (Shadowspear)",
       "mtg_name": "Shadowspear",
       "tcg_price": 72.84,
       "tcg_url": "https://www.tcgplayer.com/product/498464?Condition=Near+Mint&Printing=Normal",
@@ -277,7 +277,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Paths of the Dead",
+      "display_name": "Paths of the Dead (Cavern of Souls)",
       "mtg_name": "Cavern of Souls",
       "tcg_price": 74.69,
       "tcg_url": "https://www.tcgplayer.com/product/498465?Condition=Near+Mint&Printing=Normal",
@@ -288,7 +288,7 @@
       "foil": null
     },
     {
-      "lotr_name": "Argonath, Pillars of the Kings",
+      "display_name": "Argonath, Pillars of the Kings (The Ozolith)",
       "mtg_name": "The Ozolith",
       "tcg_price": 81.68,
       "tcg_url": "https://www.tcgplayer.com/product/498457?Condition=Near+Mint&Printing=Normal",
@@ -299,7 +299,7 @@
       "foil": null
     },
     {
-      "lotr_name": "The Party Tree",
+      "display_name": "The Party Tree (The Great Henge)",
       "mtg_name": "The Great Henge",
       "tcg_price": 88.37,
       "tcg_url": "https://www.tcgplayer.com/product/488284?Condition=Near+Mint&Printing=Normal",
@@ -310,7 +310,7 @@
       "foil": null
     },
     {
-      "lotr_name": "The Dead Marshes",
+      "display_name": "The Dead Marshes (Urborg, Tomb of Yawgmoth)",
       "mtg_name": "Urborg, Tomb of Yawgmoth",
       "tcg_price": 124.09,
       "tcg_url": "https://www.tcgplayer.com/product/499326?Condition=Near+Mint&Printing=Normal",
@@ -321,12 +321,344 @@
       "foil": null
     },
     {
-      "lotr_name": "Balin's Tomb",
+      "display_name": "Balin's Tomb (Ancient Tomb)",
       "mtg_name": "Ancient Tomb",
       "tcg_price": 181.85,
       "tcg_url": "https://www.tcgplayer.com/product/498456?Condition=Near+Mint&Printing=Normal",
       "mp_price": 158.07,
       "mp_url": "https://manapool.com/card/ltc/357/ancient-tomb?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    }
+  ],
+  "showcase": [
+    {
+      "display_name": "Gandalf, Friend of the Shire",
+      "mtg_name": "Gandalf, Friend of the Shire",
+      "tcg_price": 0.15,
+      "tcg_url": "https://www.tcgplayer.com/product/498446?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.17,
+      "mp_url": "https://manapool.com/card/ltr/308/gandalf-friend-of-the-shire?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Meriadoc Brandybuck",
+      "mtg_name": "Meriadoc Brandybuck",
+      "tcg_price": 0.15,
+      "tcg_url": "https://www.tcgplayer.com/product/498613?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.23,
+      "mp_url": "https://manapool.com/card/ltr/314/meriadoc-brandybuck?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Samwise the Stouthearted",
+      "mtg_name": "Samwise the Stouthearted",
+      "tcg_price": 0.16,
+      "tcg_url": "https://www.tcgplayer.com/product/488266?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.21,
+      "mp_url": "https://manapool.com/card/ltr/306/samwise-the-stouthearted?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Gollum, Patient Plotter",
+      "mtg_name": "Gollum, Patient Plotter",
+      "tcg_price": 0.16,
+      "tcg_url": "https://www.tcgplayer.com/product/488263?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/309/gollum-patient-plotter?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Frodo Baggins",
+      "mtg_name": "Frodo Baggins",
+      "tcg_price": 0.16,
+      "tcg_url": "https://www.tcgplayer.com/product/498429?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/320/frodo-baggins?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Faramir, Field Commander",
+      "mtg_name": "Faramir, Field Commander",
+      "tcg_price": 0.19,
+      "tcg_url": "https://www.tcgplayer.com/product/499461?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/303/faramir-field-commander?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Elrond, Lord of Rivendell",
+      "mtg_name": "Elrond, Lord of Rivendell",
+      "tcg_price": 0.2,
+      "tcg_url": "https://www.tcgplayer.com/product/499198?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/307/elrond-lord-of-rivendell?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Legolas, Counter of Kills",
+      "mtg_name": "Legolas, Counter of Kills",
+      "tcg_price": 0.2,
+      "tcg_url": "https://www.tcgplayer.com/product/498739?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.22,
+      "mp_url": "https://manapool.com/card/ltr/324/legolas-counter-of-kills?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Gimli, Counter of Kills",
+      "mtg_name": "Gimli, Counter of Kills",
+      "tcg_price": 0.21,
+      "tcg_url": "https://www.tcgplayer.com/product/498738?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/312/gimli-counter-of-kills?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Faramir, Prince of Ithilien",
+      "mtg_name": "Faramir, Prince of Ithilien",
+      "tcg_price": 0.34,
+      "tcg_url": "https://www.tcgplayer.com/product/498858?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.35,
+      "mp_url": "https://manapool.com/card/ltr/319/faramir-prince-of-ithilien?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Gimli, Mournful Avenger",
+      "mtg_name": "Gimli, Mournful Avenger",
+      "tcg_price": 0.35,
+      "tcg_url": "https://www.tcgplayer.com/product/498330?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.22,
+      "mp_url": "https://manapool.com/card/ltr/323/gimli-mournful-avenger?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Elrond, Master of Healing",
+      "mtg_name": "Elrond, Master of Healing",
+      "tcg_price": 0.39,
+      "tcg_url": "https://www.tcgplayer.com/product/499864?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.4,
+      "mp_url": "https://manapool.com/card/ltr/318/elrond-master-of-healing?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Sm\u00e9agol, Helpful Guide",
+      "mtg_name": "Sm\u00e9agol, Helpful Guide",
+      "tcg_price": 0.4,
+      "tcg_url": "https://www.tcgplayer.com/product/499398?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.47,
+      "mp_url": "https://manapool.com/card/ltr/330/smeagol-helpful-guide?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Frodo, Sauron's Bane",
+      "mtg_name": "Frodo, Sauron's Bane",
+      "tcg_price": 0.41,
+      "tcg_url": "https://www.tcgplayer.com/product/488264?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.25,
+      "mp_url": "https://manapool.com/card/ltr/304/frodo-saurons-bane?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Legolas, Master Archer",
+      "mtg_name": "Legolas, Master Archer",
+      "tcg_price": 0.42,
+      "tcg_url": "https://www.tcgplayer.com/product/498343?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.5,
+      "mp_url": "https://manapool.com/card/ltr/313/legolas-master-archer?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Peregrin Took",
+      "mtg_name": "Peregrin Took",
+      "tcg_price": 0.42,
+      "tcg_url": "https://www.tcgplayer.com/product/498615?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.45,
+      "mp_url": "https://manapool.com/card/ltr/315/peregrin-took?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Merry, Esquire of Rohan",
+      "mtg_name": "Merry, Esquire of Rohan",
+      "tcg_price": 0.43,
+      "tcg_url": "https://www.tcgplayer.com/product/498349?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.4,
+      "mp_url": "https://manapool.com/card/ltr/325/merry-esquire-of-rohan?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Aragorn, Company Leader",
+      "mtg_name": "Aragorn, Company Leader",
+      "tcg_price": 0.44,
+      "tcg_url": "https://www.tcgplayer.com/product/499954?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.49,
+      "mp_url": "https://manapool.com/card/ltr/316/aragorn-company-leader?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Gandalf the Grey",
+      "mtg_name": "Gandalf the Grey",
+      "tcg_price": 0.45,
+      "tcg_url": "https://www.tcgplayer.com/product/487804?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.45,
+      "mp_url": "https://manapool.com/card/ltr/322/gandalf-the-grey?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Sauron, the Necromancer",
+      "mtg_name": "Sauron, the Necromancer",
+      "tcg_price": 0.48,
+      "tcg_url": "https://www.tcgplayer.com/product/498450?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.23,
+      "mp_url": "https://manapool.com/card/ltr/310/sauron-the-necromancer?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Galadriel of Lothl\u00f3rien",
+      "mtg_name": "Galadriel of Lothl\u00f3rien",
+      "tcg_price": 0.48,
+      "tcg_url": "https://www.tcgplayer.com/product/499863?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.5,
+      "mp_url": "https://manapool.com/card/ltr/321/galadriel-of-lothlorien?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Pippin, Guard of the Citadel",
+      "mtg_name": "Pippin, Guard of the Citadel",
+      "tcg_price": 0.59,
+      "tcg_url": "https://www.tcgplayer.com/product/498371?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.5,
+      "mp_url": "https://manapool.com/card/ltr/326/pippin-guard-of-the-citadel?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Samwise Gamgee",
+      "mtg_name": "Samwise Gamgee",
+      "tcg_price": 0.82,
+      "tcg_url": "https://www.tcgplayer.com/product/498379?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.95,
+      "mp_url": "https://manapool.com/card/ltr/327/samwise-gamgee?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Saruman of Many Colors",
+      "mtg_name": "Saruman of Many Colors",
+      "tcg_price": 1.09,
+      "tcg_url": "https://www.tcgplayer.com/product/498453?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.99,
+      "mp_url": "https://manapool.com/card/ltr/328/saruman-of-many-colors?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Tom Bombadil",
+      "mtg_name": "Tom Bombadil",
+      "tcg_price": 2.24,
+      "tcg_url": "https://www.tcgplayer.com/product/488265?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 2.76,
+      "mp_url": "https://manapool.com/card/ltr/331/tom-bombadil?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Boromir, Warden of the Tower",
+      "mtg_name": "Boromir, Warden of the Tower",
+      "tcg_price": 6.43,
+      "tcg_url": "https://www.tcgplayer.com/product/498306?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 6.33,
+      "mp_url": "https://manapool.com/card/ltr/302/boromir-warden-of-the-tower?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Aragorn, the Uniter",
+      "mtg_name": "Aragorn, the Uniter",
+      "tcg_price": 8.29,
+      "tcg_url": "https://www.tcgplayer.com/product/498299?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 8.22,
+      "mp_url": "https://manapool.com/card/ltr/317/aragorn-the-uniter?conditions=NM&finish=nonfoil",
+      "owned": true,
+      "condition": "NM",
+      "foil": true
+    },
+    {
+      "display_name": "Gandalf the White",
+      "mtg_name": "Gandalf the White",
+      "tcg_price": 11.06,
+      "tcg_url": "https://www.tcgplayer.com/product/498326?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 10.44,
+      "mp_url": "https://manapool.com/card/ltr/305/gandalf-the-white?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Witch-king of Angmar",
+      "mtg_name": "Witch-king of Angmar",
+      "tcg_price": 13.6,
+      "tcg_url": "https://www.tcgplayer.com/product/498426?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 12.45,
+      "mp_url": "https://manapool.com/card/ltr/311/witch-king-of-angmar?conditions=NM&finish=nonfoil",
+      "owned": false,
+      "condition": null,
+      "foil": null
+    },
+    {
+      "display_name": "Sauron, the Dark Lord",
+      "mtg_name": "Sauron, the Dark Lord",
+      "tcg_price": 21.76,
+      "tcg_url": "https://www.tcgplayer.com/product/498382?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 22.63,
+      "mp_url": "https://manapool.com/card/ltr/329/sauron-the-dark-lord?conditions=NM&finish=nonfoil",
       "owned": false,
       "condition": null,
       "foil": null

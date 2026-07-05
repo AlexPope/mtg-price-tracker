@@ -3,30 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LTC Realms &amp; Relics — Price Tracker</title>
+  <title>LTR Price Tracker</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      max-width: 860px;
+      max-width: 920px;
       margin: 40px auto;
       padding: 0 20px;
       color: #1a1a1a;
     }
-    h1 {
-      font-size: 1.4rem;
-      margin-bottom: 4px;
-    }
-    p.meta {
-      font-size: 0.85rem;
-      color: #666;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
+    h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    p.meta { font-size: 0.85rem; color: #666; margin-top: 0; margin-bottom: 0; }
+
     .toolbar {
       display: flex;
       align-items: center;
       gap: 16px;
-      margin: 16px 0 24px;
+      margin: 16px 0 0;
       flex-wrap: wrap;
     }
     #refresh-btn {
@@ -42,17 +35,11 @@
       align-items: center;
       gap: 8px;
     }
-    #refresh-btn:hover {
-      background: #1447c0;
-    }
-    #refresh-btn:disabled {
-      background: #6b9aed;
-      cursor: not-allowed;
-    }
+    #refresh-btn:hover { background: #1447c0; }
+    #refresh-btn:disabled { background: #6b9aed; cursor: not-allowed; }
     #refresh-btn .spinner {
       display: none;
-      width: 14px;
-      height: 14px;
+      width: 14px; height: 14px;
       border: 2px solid rgba(255,255,255,0.4);
       border-top-color: #fff;
       border-radius: 50%;
@@ -60,15 +47,36 @@
     }
     #refresh-btn.loading .spinner { display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #last-updated {
-      font-size: 0.85rem;
-      color: #555;
-    }
-    #status-msg {
-      font-size: 0.82rem;
-      color: #c0392b;
-    }
+    #last-updated { font-size: 0.85rem; color: #555; }
+    #status-msg { font-size: 0.82rem; color: #c0392b; }
     #status-msg.ok { color: #1e8a4a; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin: 20px 0 0;
+      border-bottom: 2px solid #ccc;
+    }
+    .tab-btn {
+      padding: 9px 22px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+    }
+    .tab-btn:hover { color: #1a56db; }
+    .tab-btn.active {
+      color: #1a56db;
+      border-bottom-color: #1a56db;
+    }
+    .tab-panel { display: none; padding-top: 20px; }
+    .tab-panel.active { display: block; }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -81,29 +89,20 @@
       font-weight: 600;
       border-bottom: 2px solid #ccc;
     }
+    thead th:nth-child(4),
+    thead th:nth-child(5) { text-align: center; }
     tbody tr:nth-child(even) { background: #fafafa; }
     tbody tr:hover { background: #f0f4ff; }
-    td {
-      padding: 9px 14px;
-      border-bottom: 1px solid #e8e8e8;
-    }
+    td { padding: 9px 14px; border-bottom: 1px solid #e8e8e8; }
     td:first-child { font-weight: 500; }
-    td:not(:first-child) { white-space: nowrap; }
-    a {
-      color: #1a56db;
-      text-decoration: none;
-      font-weight: 600;
-    }
+    td:nth-child(2), td:nth-child(3) { white-space: nowrap; }
+    td:nth-child(4) { text-align: center; }
+    a { color: #1a56db; text-decoration: none; font-weight: 600; }
     a:hover { text-decoration: underline; }
     .na { color: #aaa; font-style: italic; font-weight: 400; }
+
     .owned-check { color: #1a8a4a; font-size: 1.1rem; }
-    .details-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.8rem;
-      color: #444;
-    }
+    .details-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #444; }
     .foil-badge {
       background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
       color: #fff;
@@ -122,31 +121,20 @@
       border-radius: 8px;
       font-size: 0.85rem;
     }
-    #pat-section summary {
-      cursor: pointer;
-      font-weight: 600;
-      color: #444;
-    }
+    #pat-section summary { cursor: pointer; font-weight: 600; color: #444; }
     #pat-section label { display: block; margin: 12px 0 4px; font-weight: 500; }
     #pat-input {
-      width: 100%;
-      max-width: 420px;
+      width: 100%; max-width: 420px;
       padding: 7px 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 0.85rem;
-      font-family: monospace;
+      border: 1px solid #ccc; border-radius: 5px;
+      font-size: 0.85rem; font-family: monospace;
       box-sizing: border-box;
     }
     #save-pat {
-      margin-top: 8px;
-      padding: 6px 14px;
-      background: #444;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.85rem;
+      margin-top: 8px; padding: 6px 14px;
+      background: #444; color: #fff;
+      border: none; border-radius: 5px;
+      cursor: pointer; font-size: 0.85rem;
     }
     #save-pat:hover { background: #222; }
     .pat-note { color: #888; margin-top: 8px; }
@@ -154,8 +142,8 @@
 </head>
 <body>
 
-<h1>LTC Realms &amp; Relics — Borderless Non-Foil NM Prices</h1>
-<p class="meta">Set: Tales of Middle-earth Commander (#348–377) &nbsp;·&nbsp; Condition: Near Mint &nbsp;·&nbsp; Finish: Non-Foil &nbsp;·&nbsp; Sorted by TCGPlayer price (low → high)</p>
+<h1>Lord of the Rings MTG — Price Tracker</h1>
+<p class="meta">Condition: Near Mint &nbsp;·&nbsp; Finish: Non-Foil &nbsp;·&nbsp; Sorted by TCGPlayer price (low → high)</p>
 
 <div class="toolbar">
   <button id="refresh-btn" onclick="triggerRefresh()">
@@ -166,24 +154,38 @@
   <span id="status-msg"></span>
 </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Card Name</th>
-      <th>TCGPlayer</th>
-      <th>ManaPool</th>
-      <th>Owned</th>
-      <th>Details</th>
-    </tr>
-  </thead>
-  <tbody id="price-tbody">
-    <tr><td colspan="3" style="color:#999;padding:20px 14px;">Loading prices…</td></tr>
-  </tbody>
-</table>
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('realms')">Realms &amp; Relics</button>
+  <button class="tab-btn" onclick="switchTab('showcase')">Showcase</button>
+</div>
+
+<div id="tab-realms" class="tab-panel active">
+  <p class="meta" style="margin-bottom:12px">Tales of Middle-earth Commander · Borderless Non-Foil · #348–377</p>
+  <table>
+    <thead>
+      <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Owned</th><th>Details</th></tr>
+    </thead>
+    <tbody id="tbody-realms">
+      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="tab-showcase" class="tab-panel">
+  <p class="meta" style="margin-bottom:12px">Tales of Middle-earth · Showcase Borderless · #302–331</p>
+  <table>
+    <thead>
+      <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Owned</th><th>Details</th></tr>
+    </thead>
+    <tbody id="tbody-showcase">
+      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <details id="pat-section">
   <summary>Configure GitHub token (required for Refresh button)</summary>
-  <p>The Refresh button triggers a GitHub Actions workflow to re-fetch live prices. It needs a fine-grained personal access token with <strong>Actions: Read and Write</strong> permission on this repository.</p>
+  <p>The Refresh button triggers a GitHub Actions workflow to re-fetch live prices from TCGPlayer, ManaPool, and your Moxfield binder. It needs a fine-grained personal access token with <strong>Actions: Read and Write</strong> permission on this repository.</p>
   <label for="pat-input">GitHub Personal Access Token</label>
   <input type="password" id="pat-input" placeholder="github_pat_...">
   <br>
@@ -192,8 +194,8 @@
 </details>
 
 <script>
-const OWNER = 'ryanfinke';
-const REPO  = 'ltc-price-tracker';
+const OWNER    = 'ryanfinke';
+const REPO     = 'ltc-price-tracker';
 const WORKFLOW = 'update-prices.yml';
 
 function fmt(price) {
@@ -201,30 +203,34 @@ function fmt(price) {
   return '$' + price.toFixed(2);
 }
 
+function buildRows(cards) {
+  return cards.map(c => {
+    const ownedCell = c.owned ? '<span class="owned-check" title="Owned">&#10003;</span>' : '';
+    let detailsCell = '';
+    if (c.owned) {
+      const parts = [c.condition];
+      if (c.foil) parts.push('<span class="foil-badge">Foil</span>');
+      detailsCell = `<span class="details-badge">${parts.join(' ')}</span>`;
+    }
+    return `<tr>
+      <td>${c.display_name}</td>
+      <td><a href="${c.tcg_url}" target="_blank">${fmt(c.tcg_price)}</a></td>
+      <td>${c.mp_price != null
+        ? `<a href="${c.mp_url}" target="_blank">${fmt(c.mp_price)}</a>`
+        : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
+      <td>${ownedCell}</td>
+      <td>${detailsCell}</td>
+    </tr>`;
+  }).join('');
+}
+
 async function loadPrices() {
   try {
     const r = await fetch('prices.json?_=' + Date.now());
     const data = await r.json();
-    const tbody = document.getElementById('price-tbody');
-    tbody.innerHTML = data.cards.map(c => {
-      const ownedCell = c.owned ? '<span class="owned-check" title="Owned">&#10003;</span>' : '';
-      let detailsCell = '';
-      if (c.owned) {
-        const parts = [c.condition];
-        if (c.foil) parts.push('<span class="foil-badge">Foil</span>');
-        detailsCell = `<span class="details-badge">${parts.join(' ')}</span>`;
-      }
-      return `
-      <tr>
-        <td>${c.lotr_name} (${c.mtg_name})</td>
-        <td><a href="${c.tcg_url}" target="_blank">${fmt(c.tcg_price)}</a></td>
-        <td>${c.mp_price != null
-          ? `<a href="${c.mp_url}" target="_blank">${fmt(c.mp_price)}</a>`
-          : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
-        <td style="text-align:center">${ownedCell}</td>
-        <td>${detailsCell}</td>
-      </tr>`;
-    }).join('');
+
+    document.getElementById('tbody-realms').innerHTML   = buildRows(data.realms_and_relics);
+    document.getElementById('tbody-showcase').innerHTML = buildRows(data.showcase);
 
     const ts = new Date(data.updated_at);
     document.getElementById('last-updated').textContent =
@@ -237,9 +243,15 @@ async function loadPrices() {
   }
 }
 
-function getPat() {
-  return localStorage.getItem('gh_pat') || '';
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['realms','showcase'][i] === name);
+  });
+  document.getElementById('tab-realms').classList.toggle('active', name === 'realms');
+  document.getElementById('tab-showcase').classList.toggle('active', name === 'showcase');
 }
+
+function getPat() { return localStorage.getItem('gh_pat') || ''; }
 
 function savePat() {
   const val = document.getElementById('pat-input').value.trim();
@@ -266,7 +278,6 @@ async function triggerRefresh() {
   btn.disabled = true;
   btn.classList.add('loading');
   setStatus('', false);
-
   try {
     const res = await fetch(
       `https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,
@@ -282,7 +293,7 @@ async function triggerRefresh() {
       }
     );
     if (res.status === 204) {
-      setStatus('Workflow triggered — prices will update in ~30 seconds. Reload the page to see new prices.', true);
+      setStatus('Workflow triggered — prices update in ~60 seconds. Reload to see new data.', true);
     } else {
       const body = await res.json().catch(() => ({}));
       setStatus('Error ' + res.status + ': ' + (body.message || 'unknown'), false);
@@ -295,7 +306,6 @@ async function triggerRefresh() {
   }
 }
 
-// Pre-fill token input if already saved
 window.addEventListener('DOMContentLoaded', () => {
   const saved = getPat();
   if (saved) document.getElementById('pat-input').value = saved;
