@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-05T13:36:09Z",
+  "updated_at": "2026-07-05T23:24:10Z",
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -8,6 +8,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499322?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.04,
       "mp_url": "https://manapool.com/card/ltc/370/mouth-of-ronom?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/9/8/98ae549f-8a92-4e70-b2d1-9dfe52e6b9bd.jpg?1782696715",
       "collected_nonfoil": true,
       "collected_foil": false
     },
@@ -18,6 +19,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499315?Condition=Near+Mint&Printing=Normal",
       "mp_price": 3.96,
       "mp_url": "https://manapool.com/card/ltc/356/thorn-of-amethyst?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/6/d/6d6c1b72-6b8d-4f2d-a9d5-3bcf9f63a0c6.jpg?1782696726",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -28,6 +30,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499324?Condition=Near+Mint&Printing=Normal",
       "mp_price": 6.09,
       "mp_url": "https://manapool.com/card/ltc/372/pillar-of-the-paruns?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/5/8/589b0dd5-7ba0-4448-9832-7754b3fccc03.jpg?1782696714",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -38,6 +41,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499317?Condition=Near+Mint&Printing=Normal",
       "mp_price": 6.17,
       "mp_url": "https://manapool.com/card/ltc/361/castle-ardenvale?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/6/b65d2bc3-7f36-4c81-95da-a22c3a47b2e4.jpg?1782696723",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -48,6 +52,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498458?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.59,
       "mp_url": "https://manapool.com/card/ltc/363/deserted-temple?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/3/b/3b53d6c2-b078-4204-aae8-0891284ee877.jpg?1782696720",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -58,6 +63,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499319?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.92,
       "mp_url": "https://manapool.com/card/ltc/366/horizon-canopy?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/4/a439ed1c-b599-4469-82d9-df812f6c5bbd.jpg?1782696718",
       "collected_nonfoil": true,
       "collected_foil": false
     },
@@ -68,6 +74,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498455?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.48,
       "mp_url": "https://manapool.com/card/ltc/349/cloudstone-curio?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/1/a1f3fc27-b3ea-476c-be23-f1c30ef27f96.jpg?1782696731",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -78,6 +85,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/488283?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.52,
       "mp_url": "https://manapool.com/card/ltc/350/ensnaring-bridge?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/1/b/1b251eca-06c2-4609-aaed-a88711ef6a45.jpg?1782696731",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -88,16 +96,18 @@
       "tcg_url": "https://www.tcgplayer.com/product/498466?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.12,
       "mp_url": "https://manapool.com/card/ltc/352/rings-of-brighthearth?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/7/3/730d64cf-e71b-46dd-8e26-d2dec2608fc0.jpg?1782696730",
       "collected_nonfoil": false,
       "collected_foil": false
     },
     {
       "display_name": "Green Dragon Inn (Homeward Path)",
       "mtg_name": "Homeward Path",
-      "tcg_price": 14.09,
+      "tcg_price": 14.02,
       "tcg_url": "https://www.tcgplayer.com/product/498463?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.31,
       "mp_url": "https://manapool.com/card/ltc/365/homeward-path?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/9/b926c3a5-c672-45ac-96b9-82183bfd9344.jpg?1782696718",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -108,6 +118,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499314?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.49,
       "mp_url": "https://manapool.com/card/ltc/355/sword-of-the-animist?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/7/e/7ee0bfdb-1b81-4ce2-a63e-69b75eba6c57.jpg?1782696727",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -118,6 +129,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499320?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.25,
       "mp_url": "https://manapool.com/card/ltc/367/karakas?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/d/9/d939ad90-b4b6-452d-a318-b8895d185a0c.jpg?1782696717",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -128,6 +140,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499323?Condition=Near+Mint&Printing=Normal",
       "mp_price": 16.95,
       "mp_url": "https://manapool.com/card/ltc/371/oboro-palace-in-the-clouds?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/2/2/22b7f560-ef32-496e-ac22-e1b725d08a08.jpg?1782696714",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -138,6 +151,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498462?Condition=Near+Mint&Printing=Normal",
       "mp_price": 17.59,
       "mp_url": "https://manapool.com/card/ltc/359/boseiju-who-shelters-all?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/a/bafe3253-feed-4cb9-a13c-9a9105462a8b.jpg?1782696723",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -148,6 +162,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499321?Condition=Near+Mint&Printing=Normal",
       "mp_price": 15.46,
       "mp_url": "https://manapool.com/card/ltc/368/kor-haven?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/f/8/f8aa8193-abed-4e78-9e1a-70e4c2c0c670.jpg?1782696717",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -158,6 +173,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499313?Condition=Near+Mint&Printing=Normal",
       "mp_price": 23.97,
       "mp_url": "https://manapool.com/card/ltc/354/sword-of-hearth-and-home?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/9/e/9e30230a-4b75-4fc6-9c98-b12791beea2d.jpg?1782696727",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -168,6 +184,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499327?Condition=Near+Mint&Printing=Normal",
       "mp_price": 25.23,
       "mp_url": "https://manapool.com/card/ltc/373/reflecting-pool?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/9/0/90600867-9b2b-4174-8fb5-3f58469e8733.jpg?1782696713",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -178,6 +195,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499325?Condition=Near+Mint&Printing=Normal",
       "mp_price": 25.38,
       "mp_url": "https://manapool.com/card/ltc/374/shinka-the-bloodsoaked-keep?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/f/6/f6cd3fbc-908d-4653-a133-e35843a5ac65.jpg?1782696712",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -188,6 +206,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/488281?Condition=Near+Mint&Printing=Normal",
       "mp_price": 32.94,
       "mp_url": "https://manapool.com/card/ltc/376/wasteland?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/8/2/829bbc9b-9185-4d9b-8e4e-9f04ece48fff.jpg?1782696710",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -198,6 +217,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498461?Condition=Near+Mint&Printing=Normal",
       "mp_price": 32.65,
       "mp_url": "https://manapool.com/card/ltc/358/bojuka-bog?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/7/6/763fee38-68bf-4c2f-837f-bd5077138368.jpg?1782696724",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -208,6 +228,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498459?Condition=Near+Mint&Printing=Normal",
       "mp_price": 49.76,
       "mp_url": "https://manapool.com/card/ltc/377/yavimaya-cradle-of-growth?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/f/4/f442758d-4fee-43fa-a2cb-d09c326da149.jpg?1782696709",
       "collected_nonfoil": false,
       "collected_foil": true
     },
@@ -218,16 +239,18 @@
       "tcg_url": "https://www.tcgplayer.com/product/499316?Condition=Near+Mint&Printing=Normal",
       "mp_price": 50.0,
       "mp_url": "https://manapool.com/card/ltc/360/cabal-coffers?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/2/a2e5e26d-f211-4c0f-8fe0-611e22e8cc8f.jpg?1782696723",
       "collected_nonfoil": false,
       "collected_foil": false
     },
     {
       "display_name": "Dol Amroth (Minamo, School at Water's Edge)",
       "mtg_name": "Minamo, School at Water's Edge",
-      "tcg_price": 57.45,
+      "tcg_price": 57.49,
       "tcg_url": "https://www.tcgplayer.com/product/498460?Condition=Near+Mint&Printing=Normal",
       "mp_price": 57.0,
       "mp_url": "https://manapool.com/card/ltc/369/minamo-school-at-waters-edge?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/7/9/798c0faf-0de2-4397-8f03-2120d2a35351.jpg?1782696715",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -238,6 +261,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499318?Condition=Near+Mint&Printing=Normal",
       "mp_price": 68.29,
       "mp_url": "https://manapool.com/card/ltc/364/gemstone-caverns?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/d/ad361175-1127-40e5-8990-24e651fc2a4d.jpg?1782696720",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -248,6 +272,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498464?Condition=Near+Mint&Printing=Normal",
       "mp_price": 75.79,
       "mp_url": "https://manapool.com/card/ltc/353/shadowspear?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/0/e/0e818a8b-d0b1-4524-91b7-89ee03d12e41.jpg?1782696727",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -258,6 +283,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498465?Condition=Near+Mint&Printing=Normal",
       "mp_price": 73.18,
       "mp_url": "https://manapool.com/card/ltc/362/cavern-of-souls?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/6/9/69d55219-32b0-4281-a020-52107db6d16a.jpg?1782696721",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -268,6 +294,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498457?Condition=Near+Mint&Printing=Normal",
       "mp_price": 75.99,
       "mp_url": "https://manapool.com/card/ltc/351/the-ozolith?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/8/3/83a46e68-7fb5-4c17-b5aa-ed039cea59d6.jpg?1782696730",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -278,6 +305,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/488284?Condition=Near+Mint&Printing=Normal",
       "mp_price": 88.56,
       "mp_url": "https://manapool.com/card/ltc/348/the-great-henge?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/0/6/064efadf-fdba-41fb-bf2f-ef42b274e934.jpg?1782696732",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -288,6 +316,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499326?Condition=Near+Mint&Printing=Normal",
       "mp_price": 112.05,
       "mp_url": "https://manapool.com/card/ltc/375/urborg-tomb-of-yawgmoth?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/4/1/4116f1c7-9191-4d92-81ca-54d9ae3c8166.jpg?1782696710",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -298,11 +327,23 @@
       "tcg_url": "https://www.tcgplayer.com/product/498456?Condition=Near+Mint&Printing=Normal",
       "mp_price": 158.07,
       "mp_url": "https://manapool.com/card/ltc/357/ancient-tomb?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/d/f/dfd176e9-55e7-454c-bd35-24a6e3fb0d81.jpg?1782696724",
       "collected_nonfoil": false,
       "collected_foil": false
     }
   ],
   "showcase": [
+    {
+      "display_name": "Meriadoc Brandybuck",
+      "mtg_name": "Meriadoc Brandybuck",
+      "tcg_price": 0.13,
+      "tcg_url": "https://www.tcgplayer.com/product/498613?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.23,
+      "mp_url": "https://manapool.com/card/ltr/314/meriadoc-brandybuck?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/f/f/ff7cea33-4d46-450a-a54e-b8d70910eee8.jpg?1782701383",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
     {
       "display_name": "Gandalf, Friend of the Shire",
       "mtg_name": "Gandalf, Friend of the Shire",
@@ -310,16 +351,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498446?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.17,
       "mp_url": "https://manapool.com/card/ltr/308/gandalf-friend-of-the-shire?conditions=NM&finish=nonfoil",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
-      "display_name": "Meriadoc Brandybuck",
-      "mtg_name": "Meriadoc Brandybuck",
-      "tcg_price": 0.15,
-      "tcg_url": "https://www.tcgplayer.com/product/498613?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.23,
-      "mp_url": "https://manapool.com/card/ltr/314/meriadoc-brandybuck?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/e/a/eae80537-f355-4aa3-8952-b08f3d1a1e41.jpg?1782701374",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -330,16 +362,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/488266?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.21,
       "mp_url": "https://manapool.com/card/ltr/306/samwise-the-stouthearted?conditions=NM&finish=nonfoil",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
-      "display_name": "Gollum, Patient Plotter",
-      "mtg_name": "Gollum, Patient Plotter",
-      "tcg_price": 0.16,
-      "tcg_url": "https://www.tcgplayer.com/product/488263?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.15,
-      "mp_url": "https://manapool.com/card/ltr/309/gollum-patient-plotter?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/4/4/44c6a273-9307-432a-96f5-3e536da70f95.jpg?1782701382",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -350,6 +373,18 @@
       "tcg_url": "https://www.tcgplayer.com/product/498429?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/320/frodo-baggins?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/7/4/741a266c-b2e9-4981-93ef-843cea95ca76.jpg?1782701376",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Gollum, Patient Plotter",
+      "mtg_name": "Gollum, Patient Plotter",
+      "tcg_price": 0.17,
+      "tcg_url": "https://www.tcgplayer.com/product/488263?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/309/gollum-patient-plotter?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/8/a881aa61-fc7c-4ffb-a129-f75be8b2e498.jpg?1782701375",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -360,6 +395,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499461?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/303/faramir-field-commander?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/0/0/008b953a-da2b-4c30-9424-6d6e3e938251.jpg?1782701378",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -370,6 +406,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499198?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/307/elrond-lord-of-rivendell?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/3/0/308465a9-2143-49f2-b9d0-a09272dd1b62.jpg?1782701374",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -380,6 +417,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498739?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.22,
       "mp_url": "https://manapool.com/card/ltr/324/legolas-counter-of-kills?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/3/0/30fe0cb4-71f0-4acb-af1a-a48775826487.jpg?1782701330",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -390,6 +428,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498738?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/312/gimli-counter-of-kills?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/7/b72c5bd1-cca1-4735-b4fc-7a5182fb8cd6.jpg?1782701382",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -400,6 +439,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498858?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.35,
       "mp_url": "https://manapool.com/card/ltr/319/faramir-prince-of-ithilien?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/2/f/2faf5eee-c378-4ddf-a172-c0a703757fff.jpg?1782701381",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -410,6 +450,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498330?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.22,
       "mp_url": "https://manapool.com/card/ltr/323/gimli-mournful-avenger?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/7/2/72778dc1-0d93-4ba8-a194-51df78d4beba.jpg?1782701379",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -420,6 +461,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499864?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.4,
       "mp_url": "https://manapool.com/card/ltr/318/elrond-master-of-healing?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/4/7/476e2a30-4410-432d-9c8a-beaaa40220c1.jpg?1782701383",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -430,6 +472,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499398?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.47,
       "mp_url": "https://manapool.com/card/ltr/330/smeagol-helpful-guide?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/3/b3ebf3a3-3dd1-48e0-ad84-c3295de2e032.jpg?1782701332",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -440,6 +483,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/488264?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.25,
       "mp_url": "https://manapool.com/card/ltr/304/frodo-saurons-bane?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/6/d/6d08e637-c2b3-4b38-9b07-5bba1f13efc3.jpg?1782701375",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -450,6 +494,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498343?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.5,
       "mp_url": "https://manapool.com/card/ltr/313/legolas-master-archer?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/8/4/84cea85e-dfcc-438e-8b24-4b2e251b86dc.jpg?1782701385",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -460,6 +505,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498615?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.45,
       "mp_url": "https://manapool.com/card/ltr/315/peregrin-took?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/f/b/fbbdd288-83ec-4be9-b55f-17771fd5ecc4.jpg?1782701382",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -470,6 +516,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498349?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.4,
       "mp_url": "https://manapool.com/card/ltr/325/merry-esquire-of-rohan?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/d/9/d9d21bce-a381-4c5d-9e0f-b2cdc96a20b6.jpg?1782701330",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -480,6 +527,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499954?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.49,
       "mp_url": "https://manapool.com/card/ltr/316/aragorn-company-leader?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/1/4/142c3004-fe39-4ca3-bf14-f4af8b20fa80.jpg?1782701385",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -490,6 +538,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/487804?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.45,
       "mp_url": "https://manapool.com/card/ltr/322/gandalf-the-grey?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/d/0/d0ff7dea-1ed2-4987-b42a-6d1d8c493f5a.jpg?1782701378",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -500,6 +549,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498450?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.23,
       "mp_url": "https://manapool.com/card/ltr/310/sauron-the-necromancer?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/2/4/24521350-ffa6-46d9-95ed-6573c681e095.jpg?1782701376",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -510,6 +560,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/499863?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.5,
       "mp_url": "https://manapool.com/card/ltr/321/galadriel-of-lothlorien?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/9/a971745b-5d5c-46bb-95ca-329b6ee7ed75.jpg?1782701377",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -520,6 +571,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498371?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.5,
       "mp_url": "https://manapool.com/card/ltr/326/pippin-guard-of-the-citadel?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/2/5/25630509-c9ba-4faf-b154-32be8649d9fa.jpg?1782701332",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -530,6 +582,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498379?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.95,
       "mp_url": "https://manapool.com/card/ltr/327/samwise-gamgee?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/c/d/cd3ecb73-2720-4c1c-8f67-78983f16e584.jpg?1782701330",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -540,6 +593,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/498453?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.99,
       "mp_url": "https://manapool.com/card/ltr/328/saruman-of-many-colors?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/0/1/018238ae-b740-4185-8747-b68f6d1e7989.jpg?1782701333",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -550,6 +604,7 @@
       "tcg_url": "https://www.tcgplayer.com/product/488265?Condition=Near+Mint&Printing=Normal",
       "mp_price": 2.76,
       "mp_url": "https://manapool.com/card/ltr/331/tom-bombadil?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/3/c/3c7ce623-bcf8-4d42-8a88-450bea7d7529.jpg?1782701332",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -558,8 +613,9 @@
       "mtg_name": "Boromir, Warden of the Tower",
       "tcg_price": 6.43,
       "tcg_url": "https://www.tcgplayer.com/product/498306?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 6.33,
+      "mp_price": 5.72,
       "mp_url": "https://manapool.com/card/ltr/302/boromir-warden-of-the-tower?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/e/1/e186ef93-f369-4b4d-a683-36f338b6ce3f.jpg?1782701374",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -570,36 +626,40 @@
       "tcg_url": "https://www.tcgplayer.com/product/498299?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.22,
       "mp_url": "https://manapool.com/card/ltr/317/aragorn-the-uniter?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/e/2/e287844c-a829-4f7f-8c4c-ab856e6815f6.jpg?1782701385",
       "collected_nonfoil": true,
       "collected_foil": true
     },
     {
       "display_name": "Gandalf the White",
       "mtg_name": "Gandalf the White",
-      "tcg_price": 11.06,
+      "tcg_price": 11.1,
       "tcg_url": "https://www.tcgplayer.com/product/498326?Condition=Near+Mint&Printing=Normal",
       "mp_price": 10.44,
       "mp_url": "https://manapool.com/card/ltr/305/gandalf-the-white?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/2/c/2c9dc67a-5c26-4044-82b6-d5b6e195ae64.jpg?1782701373",
       "collected_nonfoil": false,
       "collected_foil": false
     },
     {
       "display_name": "Witch-king of Angmar",
       "mtg_name": "Witch-king of Angmar",
-      "tcg_price": 13.6,
+      "tcg_price": 13.63,
       "tcg_url": "https://www.tcgplayer.com/product/498426?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.45,
       "mp_url": "https://manapool.com/card/ltr/311/witch-king-of-angmar?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/9/4/944f01f2-b736-42ff-a871-6b6e726b231b.jpg?1782701384",
       "collected_nonfoil": false,
       "collected_foil": false
     },
     {
       "display_name": "Sauron, the Dark Lord",
       "mtg_name": "Sauron, the Dark Lord",
-      "tcg_price": 21.76,
+      "tcg_price": 21.55,
       "tcg_url": "https://www.tcgplayer.com/product/498382?Condition=Near+Mint&Printing=Normal",
       "mp_price": 22.63,
       "mp_url": "https://manapool.com/card/ltr/329/sauron-the-dark-lord?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/8/b83261ba-c239-4b6a-88eb-bdfc411916b3.jpg?1782701331",
       "collected_nonfoil": false,
       "collected_foil": false
     }

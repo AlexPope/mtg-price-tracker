@@ -89,7 +89,8 @@ SHOWCASE_CARDS = [
 ]
 
 
-def fetch_tcg_price(card):
+def fetch_scryfall(card):
+    """Returns dict with tcg price and image_url for the card."""
     url = f"https://api.scryfall.com/cards/{card['set']}/{card['num']}"
     result = subprocess.run(
         ["curl", "-s", "-A", "Mozilla/5.0", url],
@@ -98,9 +99,17 @@ def fetch_tcg_price(card):
     try:
         data = json.loads(result.stdout)
         price = data.get("prices", {}).get("usd")
-        return float(price) if price else None
+        images = data.get("image_uris") or {}
+        # Fallback for double-faced cards
+        if not images and data.get("card_faces"):
+            images = data["card_faces"][0].get("image_uris") or {}
+        image_url = images.get("normal") or images.get("large") or images.get("small")
+        return {
+            "tcg_price": float(price) if price else None,
+            "image_url": image_url,
+        }
     except Exception:
-        return None
+        return {"tcg_price": None, "image_url": None}
 
 
 def fetch_manapool_price(card):
@@ -175,7 +184,7 @@ def fetch_owned():
 
 def build_card_row(card, owned):
     print(f"  {card['mtg_name']}...")
-    tcg_price = fetch_tcg_price(card)
+    scryfall = fetch_scryfall(card)
     mp_price = fetch_manapool_price(card)
     key = (card["set"], card["num"])
     owned_entry = owned.get(key)
@@ -185,10 +194,11 @@ def build_card_row(card, owned):
     return {
         "display_name": display_name,
         "mtg_name": card["mtg_name"],
-        "tcg_price": tcg_price,
+        "tcg_price": scryfall["tcg_price"],
         "tcg_url": f"https://www.tcgplayer.com/product/{card['tcg_id']}?Condition=Near+Mint&Printing=Normal",
         "mp_price": mp_price,
         "mp_url": f"https://manapool.com/card/{card['set']}/{card['num']}/{card['slug']}?conditions=NM&finish=nonfoil",
+        "image_url": scryfall["image_url"],
         "collected_nonfoil": owned_entry["nonfoil"] if owned_entry else False,
         "collected_foil": owned_entry["foil"] if owned_entry else False,
     }
