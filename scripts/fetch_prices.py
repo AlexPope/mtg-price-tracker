@@ -157,9 +157,13 @@ def fetch_owned():
             lo, hi = ranges[card_set]
             if not (cn.isdigit() and lo <= int(cn) <= hi):
                 continue
-            condition = CONDITION_MAP.get(entry.get("condition", ""), entry.get("condition", ""))
-            is_foil = entry.get("finish", "nonFoil") == "foil"
-            owned[(card_set, cn)] = {"condition": condition, "foil": is_foil}
+            key = (card_set, cn)
+            if key not in owned:
+                owned[key] = {"nonfoil": False, "foil": False}
+            if entry.get("finish", "nonFoil") == "foil":
+                owned[key]["foil"] = True
+            else:
+                owned[key]["nonfoil"] = True
 
         if data.get("pageNumber", 1) >= data.get("totalPages", 1):
             break
@@ -185,9 +189,8 @@ def build_card_row(card, owned):
         "tcg_url": f"https://www.tcgplayer.com/product/{card['tcg_id']}?Condition=Near+Mint&Printing=Normal",
         "mp_price": mp_price,
         "mp_url": f"https://manapool.com/card/{card['set']}/{card['num']}/{card['slug']}?conditions=NM&finish=nonfoil",
-        "owned": owned_entry is not None,
-        "condition": owned_entry["condition"] if owned_entry else None,
-        "foil": owned_entry["foil"] if owned_entry else None,
+        "collected_nonfoil": owned_entry["nonfoil"] if owned_entry else False,
+        "collected_foil": owned_entry["foil"] if owned_entry else False,
     }
 
 
@@ -211,7 +214,7 @@ def main():
     with open("prices.json", "w") as f:
         json.dump(output, f, indent=2)
 
-    owned_count = sum(1 for r in realms + showcase if r["owned"])
+    owned_count = sum(1 for r in realms + showcase if r["collected_nonfoil"] or r["collected_foil"])
     print(f"Done. {len(realms)} Realms & Relics + {len(showcase)} Showcase cards, {owned_count} owned.")
 
 

@@ -102,16 +102,6 @@
     .na { color: #aaa; font-style: italic; font-weight: 400; }
 
     .owned-check { color: #1a8a4a; font-size: 1.1rem; }
-    .details-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #444; }
-    .foil-badge {
-      background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 3px;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.4);
-    }
 
     #pat-section {
       margin-top: 32px;
@@ -163,7 +153,7 @@
   <p class="meta" style="margin-bottom:12px">Tales of Middle-earth Commander · Borderless Non-Foil · #348–377</p>
   <table>
     <thead>
-      <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Owned</th><th>Details</th></tr>
+      <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Collected Non-Foil</th><th>Collected Foil</th></tr>
     </thead>
     <tbody id="tbody-realms">
       <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
@@ -175,7 +165,7 @@
   <p class="meta" style="margin-bottom:12px">Tales of Middle-earth · Showcase Borderless · #302–331</p>
   <table>
     <thead>
-      <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Owned</th><th>Details</th></tr>
+      <tr><th>Card Name</th><th>TCGPlayer</th><th>ManaPool</th><th>Collected Non-Foil</th><th>Collected Foil</th></tr>
     </thead>
     <tbody id="tbody-showcase">
       <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
@@ -203,25 +193,18 @@ function fmt(price) {
   return '$' + price.toFixed(2);
 }
 
+const CHECK = '<span class="owned-check" title="Collected">&#10003;</span>';
+
 function buildRows(cards) {
-  return cards.map(c => {
-    const ownedCell = c.owned ? '<span class="owned-check" title="Owned">&#10003;</span>' : '';
-    let detailsCell = '';
-    if (c.owned) {
-      const parts = [c.condition];
-      if (c.foil) parts.push('<span class="foil-badge">Foil</span>');
-      detailsCell = `<span class="details-badge">${parts.join(' ')}</span>`;
-    }
-    return `<tr>
-      <td>${c.display_name}</td>
-      <td><a href="${c.tcg_url}" target="_blank">${fmt(c.tcg_price)}</a></td>
-      <td>${c.mp_price != null
-        ? `<a href="${c.mp_url}" target="_blank">${fmt(c.mp_price)}</a>`
-        : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
-      <td>${ownedCell}</td>
-      <td>${detailsCell}</td>
-    </tr>`;
-  }).join('');
+  return cards.map(c => `<tr>
+    <td>${c.display_name}</td>
+    <td><a href="${c.tcg_url}" target="_blank">${fmt(c.tcg_price)}</a></td>
+    <td>${c.mp_price != null
+      ? `<a href="${c.mp_url}" target="_blank">${fmt(c.mp_price)}</a>`
+      : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
+    <td>${c.collected_nonfoil ? CHECK : ''}</td>
+    <td>${c.collected_foil ? CHECK : ''}</td>
+  </tr>`).join('');
 }
 
 async function loadPrices() {
