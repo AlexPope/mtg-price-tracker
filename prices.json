@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-05T23:24:10Z",
+  "updated_at": "2026-07-06T02:41:39Z",
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -303,7 +303,7 @@
       "mtg_name": "The Great Henge",
       "tcg_price": 88.37,
       "tcg_url": "https://www.tcgplayer.com/product/488284?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 88.56,
+      "mp_price": 89.24,
       "mp_url": "https://manapool.com/card/ltc/348/the-great-henge?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/0/6/064efadf-fdba-41fb-bf2f-ef42b274e934.jpg?1782696732",
       "collected_nonfoil": false,
@@ -402,7 +402,7 @@
     {
       "display_name": "Elrond, Lord of Rivendell",
       "mtg_name": "Elrond, Lord of Rivendell",
-      "tcg_price": 0.2,
+      "tcg_price": 0.19,
       "tcg_url": "https://www.tcgplayer.com/product/499198?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/307/elrond-lord-of-rivendell?conditions=NM&finish=nonfoil",
