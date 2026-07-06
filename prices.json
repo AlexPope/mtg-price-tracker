@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-06T13:07:22Z",
+  "updated_at": "2026-07-06T15:39:30Z",
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -336,7 +336,7 @@
     {
       "display_name": "Meriadoc Brandybuck",
       "mtg_name": "Meriadoc Brandybuck",
-      "tcg_price": 0.13,
+      "tcg_price": 0.12,
       "tcg_url": "https://www.tcgplayer.com/product/498613?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.23,
       "mp_url": "https://manapool.com/card/ltr/314/meriadoc-brandybuck?conditions=NM&finish=nonfoil",
@@ -512,7 +512,7 @@
     {
       "display_name": "Merry, Esquire of Rohan",
       "mtg_name": "Merry, Esquire of Rohan",
-      "tcg_price": 0.43,
+      "tcg_price": 0.42,
       "tcg_url": "https://www.tcgplayer.com/product/498349?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.4,
       "mp_url": "https://manapool.com/card/ltr/325/merry-esquire-of-rohan?conditions=NM&finish=nonfoil",
@@ -567,7 +567,7 @@
     {
       "display_name": "Pippin, Guard of the Citadel",
       "mtg_name": "Pippin, Guard of the Citadel",
-      "tcg_price": 0.59,
+      "tcg_price": 0.72,
       "tcg_url": "https://www.tcgplayer.com/product/498371?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.5,
       "mp_url": "https://manapool.com/card/ltr/326/pippin-guard-of-the-citadel?conditions=NM&finish=nonfoil",
@@ -655,7 +655,7 @@
     {
       "display_name": "Sauron, the Dark Lord",
       "mtg_name": "Sauron, the Dark Lord",
-      "tcg_price": 21.55,
+      "tcg_price": 21.09,
       "tcg_url": "https://www.tcgplayer.com/product/498382?Condition=Near+Mint&Printing=Normal",
       "mp_price": 21.99,
       "mp_url": "https://manapool.com/card/ltr/329/sauron-the-dark-lord?conditions=NM&finish=nonfoil",
