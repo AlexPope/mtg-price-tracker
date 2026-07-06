@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-06T02:41:39Z",
+  "updated_at": "2026-07-06T13:05:07Z",
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -81,7 +81,7 @@
     {
       "display_name": "Bridge of Khazad-d\u00fbm (Ensnaring Bridge)",
       "mtg_name": "Ensnaring Bridge",
-      "tcg_price": 12.92,
+      "tcg_price": 13.1,
       "tcg_url": "https://www.tcgplayer.com/product/488283?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.52,
       "mp_url": "https://manapool.com/card/ltc/350/ensnaring-bridge?conditions=NM&finish=nonfoil",
@@ -114,7 +114,7 @@
     {
       "display_name": "Ring of Barahir (Sword of the Animist)",
       "mtg_name": "Sword of the Animist",
-      "tcg_price": 15.15,
+      "tcg_price": 15.14,
       "tcg_url": "https://www.tcgplayer.com/product/499314?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.49,
       "mp_url": "https://manapool.com/card/ltc/355/sword-of-the-animist?conditions=NM&finish=nonfoil",
@@ -125,7 +125,7 @@
     {
       "display_name": "White Tower of Ecthelion (Karakas)",
       "mtg_name": "Karakas",
-      "tcg_price": 15.32,
+      "tcg_price": 15.21,
       "tcg_url": "https://www.tcgplayer.com/product/499320?Condition=Near+Mint&Printing=Normal",
       "mp_price": 14.25,
       "mp_url": "https://manapool.com/card/ltc/367/karakas?conditions=NM&finish=nonfoil",
@@ -147,7 +147,7 @@
     {
       "display_name": "Isengard, Saruman's Fortress (Boseiju, Who Shelters All)",
       "mtg_name": "Boseiju, Who Shelters All",
-      "tcg_price": 17.4,
+      "tcg_price": 17.46,
       "tcg_url": "https://www.tcgplayer.com/product/498462?Condition=Near+Mint&Printing=Normal",
       "mp_price": 17.59,
       "mp_url": "https://manapool.com/card/ltc/359/boseiju-who-shelters-all?conditions=NM&finish=nonfoil",
@@ -213,7 +213,7 @@
     {
       "display_name": "Barrow-Downs (Bojuka Bog)",
       "mtg_name": "Bojuka Bog",
-      "tcg_price": 32.0,
+      "tcg_price": 32.35,
       "tcg_url": "https://www.tcgplayer.com/product/498461?Condition=Near+Mint&Printing=Normal",
       "mp_price": 32.65,
       "mp_url": "https://manapool.com/card/ltc/358/bojuka-bog?conditions=NM&finish=nonfoil",
@@ -268,7 +268,7 @@
     {
       "display_name": "Morgul-Knife (Shadowspear)",
       "mtg_name": "Shadowspear",
-      "tcg_price": 72.84,
+      "tcg_price": 72.86,
       "tcg_url": "https://www.tcgplayer.com/product/498464?Condition=Near+Mint&Printing=Normal",
       "mp_price": 75.79,
       "mp_url": "https://manapool.com/card/ltc/353/shadowspear?conditions=NM&finish=nonfoil",
@@ -279,7 +279,7 @@
     {
       "display_name": "Paths of the Dead (Cavern of Souls)",
       "mtg_name": "Cavern of Souls",
-      "tcg_price": 74.69,
+      "tcg_price": 74.74,
       "tcg_url": "https://www.tcgplayer.com/product/498465?Condition=Near+Mint&Printing=Normal",
       "mp_price": 73.18,
       "mp_url": "https://manapool.com/card/ltc/362/cavern-of-souls?conditions=NM&finish=nonfoil",
@@ -349,7 +349,7 @@
       "mtg_name": "Gandalf, Friend of the Shire",
       "tcg_price": 0.15,
       "tcg_url": "https://www.tcgplayer.com/product/498446?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.17,
+      "mp_price": 0.16,
       "mp_url": "https://manapool.com/card/ltr/308/gandalf-friend-of-the-shire?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/e/a/eae80537-f355-4aa3-8952-b08f3d1a1e41.jpg?1782701374",
       "collected_nonfoil": false,
@@ -657,7 +657,7 @@
       "mtg_name": "Sauron, the Dark Lord",
       "tcg_price": 21.55,
       "tcg_url": "https://www.tcgplayer.com/product/498382?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 22.63,
+      "mp_price": 21.99,
       "mp_url": "https://manapool.com/card/ltr/329/sauron-the-dark-lord?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/b/8/b83261ba-c239-4b6a-88eb-bdfc411916b3.jpg?1782701331",
       "collected_nonfoil": false,
