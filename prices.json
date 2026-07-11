@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-10T14:32:53Z",
+  "updated_at": "2026-07-11T13:25:34Z",
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -180,7 +180,7 @@
     {
       "display_name": "Herugrim, Sword of Rohan (Sword of Hearth and Home)",
       "mtg_name": "Sword of Hearth and Home",
-      "tcg_price": 24.06,
+      "tcg_price": 24.11,
       "tcg_url": "https://www.tcgplayer.com/product/499313?Condition=Near+Mint&Printing=Normal",
       "mp_price": 23.97,
       "mp_url": "https://manapool.com/card/ltc/354/sword-of-hearth-and-home?conditions=NM&finish=nonfoil",
@@ -312,7 +312,7 @@
     {
       "display_name": "The Dead Marshes (Urborg, Tomb of Yawgmoth)",
       "mtg_name": "Urborg, Tomb of Yawgmoth",
-      "tcg_price": 123.41,
+      "tcg_price": 123.64,
       "tcg_url": "https://www.tcgplayer.com/product/499326?Condition=Near+Mint&Printing=Normal",
       "mp_price": 112.05,
       "mp_url": "https://manapool.com/card/ltc/375/urborg-tomb-of-yawgmoth?conditions=NM&finish=nonfoil",
@@ -356,17 +356,6 @@
       "collected_foil": false
     },
     {
-      "display_name": "Samwise the Stouthearted",
-      "mtg_name": "Samwise the Stouthearted",
-      "tcg_price": 0.16,
-      "tcg_url": "https://www.tcgplayer.com/product/488266?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.15,
-      "mp_url": "https://manapool.com/card/ltr/306/samwise-the-stouthearted?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/4/4/44c6a273-9307-432a-96f5-3e536da70f95.jpg?1782701382",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
       "display_name": "Gollum, Patient Plotter",
       "mtg_name": "Gollum, Patient Plotter",
       "tcg_price": 0.17,
@@ -389,6 +378,17 @@
       "collected_foil": false
     },
     {
+      "display_name": "Samwise the Stouthearted",
+      "mtg_name": "Samwise the Stouthearted",
+      "tcg_price": 0.18,
+      "tcg_url": "https://www.tcgplayer.com/product/488266?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/306/samwise-the-stouthearted?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/4/4/44c6a273-9307-432a-96f5-3e536da70f95.jpg?1782701382",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
       "display_name": "Elrond, Lord of Rivendell",
       "mtg_name": "Elrond, Lord of Rivendell",
       "tcg_price": 0.18,
@@ -402,7 +402,7 @@
     {
       "display_name": "Frodo Baggins",
       "mtg_name": "Frodo Baggins",
-      "tcg_price": 0.18,
+      "tcg_price": 0.19,
       "tcg_url": "https://www.tcgplayer.com/product/498429?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/320/frodo-baggins?conditions=NM&finish=nonfoil",
@@ -448,7 +448,7 @@
       "mtg_name": "Peregrin Took",
       "tcg_price": 0.38,
       "tcg_url": "https://www.tcgplayer.com/product/498615?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.5,
+      "mp_price": 0.47,
       "mp_url": "https://manapool.com/card/ltr/315/peregrin-took?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/f/b/fbbdd288-83ec-4be9-b55f-17771fd5ecc4.jpg?1782701382",
       "collected_nonfoil": false,
@@ -470,7 +470,7 @@
       "mtg_name": "Faramir, Prince of Ithilien",
       "tcg_price": 0.41,
       "tcg_url": "https://www.tcgplayer.com/product/498858?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.4,
+      "mp_price": 0.3,
       "mp_url": "https://manapool.com/card/ltr/319/faramir-prince-of-ithilien?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/2/f/2faf5eee-c378-4ddf-a172-c0a703757fff.jpg?1782701381",
       "collected_nonfoil": false,
@@ -481,7 +481,7 @@
       "mtg_name": "Frodo, Sauron's Bane",
       "tcg_price": 0.42,
       "tcg_url": "https://www.tcgplayer.com/product/488264?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.18,
+      "mp_price": 0.25,
       "mp_url": "https://manapool.com/card/ltr/304/frodo-saurons-bane?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/6/d/6d08e637-c2b3-4b38-9b07-5bba1f13efc3.jpg?1782701375",
       "collected_nonfoil": false,
@@ -543,17 +543,6 @@
       "collected_foil": false
     },
     {
-      "display_name": "Galadriel of Lothl\u00f3rien",
-      "mtg_name": "Galadriel of Lothl\u00f3rien",
-      "tcg_price": 0.47,
-      "tcg_url": "https://www.tcgplayer.com/product/499863?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.5,
-      "mp_url": "https://manapool.com/card/ltr/321/galadriel-of-lothlorien?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/a/9/a971745b-5d5c-46bb-95ca-329b6ee7ed75.jpg?1782701377",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
       "display_name": "Gandalf the Grey",
       "mtg_name": "Gandalf the Grey",
       "tcg_price": 0.47,
@@ -565,11 +554,22 @@
       "collected_foil": false
     },
     {
+      "display_name": "Galadriel of Lothl\u00f3rien",
+      "mtg_name": "Galadriel of Lothl\u00f3rien",
+      "tcg_price": 0.49,
+      "tcg_url": "https://www.tcgplayer.com/product/499863?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.5,
+      "mp_url": "https://manapool.com/card/ltr/321/galadriel-of-lothlorien?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/9/a971745b-5d5c-46bb-95ca-329b6ee7ed75.jpg?1782701377",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
       "display_name": "Samwise Gamgee",
       "mtg_name": "Samwise Gamgee",
       "tcg_price": 0.71,
       "tcg_url": "https://www.tcgplayer.com/product/498379?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 1.0,
+      "mp_price": 0.97,
       "mp_url": "https://manapool.com/card/ltr/327/samwise-gamgee?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/c/d/cd3ecb73-2720-4c1c-8f67-78983f16e584.jpg?1782701330",
       "collected_nonfoil": false,
@@ -613,7 +613,7 @@
       "mtg_name": "Boromir, Warden of the Tower",
       "tcg_price": 6.51,
       "tcg_url": "https://www.tcgplayer.com/product/498306?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 5.75,
+      "mp_price": 6.33,
       "mp_url": "https://manapool.com/card/ltr/302/boromir-warden-of-the-tower?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/e/1/e186ef93-f369-4b4d-a683-36f338b6ce3f.jpg?1782701374",
       "collected_nonfoil": false,
