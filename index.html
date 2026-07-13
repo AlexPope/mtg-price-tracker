@@ -234,6 +234,8 @@
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('realms')">Realms &amp; Relics</button>
   <button class="tab-btn" onclick="switchTab('showcase')">Showcase</button>
+  <button class="tab-btn" onclick="switchTab('stellar1')">Stellar Sights I</button>
+  <button class="tab-btn" onclick="switchTab('stellar2')">Stellar Sights II</button>
 </div>
 
 <div id="tab-realms" class="tab-panel active">
@@ -274,6 +276,44 @@
   </table>
 </div>
 
+<div id="tab-stellar1" class="tab-panel">
+  <p class="meta" style="margin-bottom:12px">Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45</p>
+  <div class="summary" id="summary-stellar1"></div>
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
+      </tr>
+    </thead>
+    <tbody id="tbody-stellar1">
+      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="tab-stellar2" class="tab-panel">
+  <p class="meta" style="margin-bottom:12px">Edge of Eternities: Stellar Sights · Borderless Non-Foil · #46–90</p>
+  <div class="summary" id="summary-stellar2"></div>
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
+      </tr>
+    </thead>
+    <tbody id="tbody-stellar2">
+      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
 <details id="pat-section">
   <summary>Configure GitHub token (required for Refresh button)</summary>
   <p>The Refresh button triggers a GitHub Actions workflow to re-fetch live prices from TCGPlayer, ManaPool, and your Moxfield binder. It needs a fine-grained personal access token with <strong>Actions: Read and Write</strong> permission on this repository.</p>
@@ -304,11 +344,22 @@ function fmt(price) {
 
 const CHECK = '<span class="owned-check" title="Collected">&#10003;</span>';
 
+// Map UI tab name → key in prices.json
+const TAB_DATA_KEY = {
+  realms:   'realms_and_relics',
+  showcase: 'showcase',
+  stellar1: 'stellar_sights_i',
+  stellar2: 'stellar_sights_ii',
+};
+const TAB_NAMES = Object.keys(TAB_DATA_KEY);
+
 const state = {
   data: null,
   sort: {
     realms:   { col: 'tcg', dir: 'asc' },
     showcase: { col: 'tcg', dir: 'asc' },
+    stellar1: { col: 'tcg', dir: 'asc' },
+    stellar2: { col: 'tcg', dir: 'asc' },
   },
 };
 
@@ -411,7 +462,7 @@ function buildSummary(cards) {
 }
 
 function renderTab(tabName) {
-  const key = tabName === 'realms' ? 'realms_and_relics' : 'showcase';
+  const key = TAB_DATA_KEY[tabName];
   const cards = state.data[key];
   const {col, dir} = state.sort[tabName];
   const sorted = sortCards(cards, col, dir);
@@ -441,7 +492,7 @@ function wireSortHeaders() {
 }
 
 function showCard(tabName, idx) {
-  const key = tabName === 'realms' ? 'realms_and_relics' : 'showcase';
+  const key = TAB_DATA_KEY[tabName];
   const card = state.data[key].find(c => c._idx === idx);
   if (!card || !card.image_url) return;
   document.getElementById('modal-img').src = card.image_url;
@@ -460,13 +511,17 @@ async function loadPrices() {
     const r = await fetch('prices.json?_=' + Date.now());
     const data = await r.json();
 
-    // Assign stable indexes so sort/render can reference by _idx
-    data.realms_and_relics.forEach((c, i) => c._idx = i);
-    data.showcase.forEach((c, i) => c._idx = i);
+    // Assign stable indexes so sort/render can reference by _idx.
+    // Tolerate a missing key gracefully so an older prices.json (with only
+    // realms + showcase) still renders those two tabs.
+    for (const tab of TAB_NAMES) {
+      const key = TAB_DATA_KEY[tab];
+      if (Array.isArray(data[key])) data[key].forEach((c, i) => c._idx = i);
+      else data[key] = [];
+    }
     state.data = data;
 
-    renderTab('realms');
-    renderTab('showcase');
+    TAB_NAMES.forEach(renderTab);
 
     const ts = new Date(data.updated_at);
     document.getElementById('last-updated').textContent =
@@ -481,10 +536,11 @@ async function loadPrices() {
 
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', ['realms','showcase'][i] === name);
+    b.classList.toggle('active', TAB_NAMES[i] === name);
   });
-  document.getElementById('tab-realms').classList.toggle('active', name === 'realms');
-  document.getElementById('tab-showcase').classList.toggle('active', name === 'showcase');
+  for (const tab of TAB_NAMES) {
+    document.getElementById('tab-' + tab).classList.toggle('active', name === tab);
+  }
 }
 
 function getPat() { return localStorage.getItem('gh_pat') || ''; }

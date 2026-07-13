@@ -88,6 +88,104 @@ SHOWCASE_CARDS = [
     {"mtg_name": "Tom Bombadil",                    "set": "ltr", "num": "331", "slug": "tom-bombadil",                   "tcg_id": "488265"},
 ]
 
+# EOS #1-45 — Edge of Eternities: Stellar Sights, first art treatment
+STELLAR_SIGHTS_I_CARDS = [
+    {"mtg_name": "Ancient Tomb"           , "set": "eos", "num": "1"  , "slug": "ancient-tomb"           , "tcg_id": "643635"},
+    {"mtg_name": "Blast Zone"             , "set": "eos", "num": "2"  , "slug": "blast-zone"             , "tcg_id": "644786"},
+    {"mtg_name": "Blinkmoth Nexus"        , "set": "eos", "num": "3"  , "slug": "blinkmoth-nexus"        , "tcg_id": "641820"},
+    {"mtg_name": "Bonders' Enclave"       , "set": "eos", "num": "4"  , "slug": "bonders-enclave"        , "tcg_id": "642774"},
+    {"mtg_name": "Cascading Cataracts"    , "set": "eos", "num": "5"  , "slug": "cascading-cataracts"    , "tcg_id": "644787"},
+    {"mtg_name": "Cathedral of War"       , "set": "eos", "num": "6"  , "slug": "cathedral-of-war"       , "tcg_id": "643905"},
+    {"mtg_name": "Celestial Colonnade"    , "set": "eos", "num": "7"  , "slug": "celestial-colonnade"    , "tcg_id": "641797"},
+    {"mtg_name": "Contested War Zone"     , "set": "eos", "num": "8"  , "slug": "contested-war-zone"     , "tcg_id": "644788"},
+    {"mtg_name": "Creeping Tar Pit"       , "set": "eos", "num": "9"  , "slug": "creeping-tar-pit"       , "tcg_id": "643906"},
+    {"mtg_name": "Crystal Quarry"         , "set": "eos", "num": "10" , "slug": "crystal-quarry"         , "tcg_id": "643639"},
+    {"mtg_name": "Deserted Temple"        , "set": "eos", "num": "11" , "slug": "deserted-temple"        , "tcg_id": "643907"},
+    {"mtg_name": "Dust Bowl"              , "set": "eos", "num": "12" , "slug": "dust-bowl"              , "tcg_id": "643643"},
+    {"mtg_name": "Echoing Deeps"          , "set": "eos", "num": "13" , "slug": "echoing-deeps"          , "tcg_id": "643647"},
+    {"mtg_name": "Eldrazi Temple"         , "set": "eos", "num": "14" , "slug": "eldrazi-temple"         , "tcg_id": "641822"},
+    {"mtg_name": "Endless Sands"          , "set": "eos", "num": "15" , "slug": "endless-sands"          , "tcg_id": "644789"},
+    {"mtg_name": "Gemstone Caverns"       , "set": "eos", "num": "16" , "slug": "gemstone-caverns"       , "tcg_id": "641799"},
+    {"mtg_name": "Grove of the Burnwillows","set": "eos", "num": "17" , "slug": "grove-of-the-burnwillows","tcg_id": "643908"},
+    {"mtg_name": "High Market"            , "set": "eos", "num": "18" , "slug": "high-market"            , "tcg_id": "641814"},
+    {"mtg_name": "Hissing Quagmire"       , "set": "eos", "num": "19" , "slug": "hissing-quagmire"       , "tcg_id": "643909"},
+    {"mtg_name": "Inkmoth Nexus"          , "set": "eos", "num": "20" , "slug": "inkmoth-nexus"          , "tcg_id": "643058"},
+    {"mtg_name": "Inventors' Fair"        , "set": "eos", "num": "21" , "slug": "inventors-fair"         , "tcg_id": "644790"},
+    {"mtg_name": "Lavaclaw Reaches"       , "set": "eos", "num": "22" , "slug": "lavaclaw-reaches"       , "tcg_id": "643910"},
+    {"mtg_name": "Lotus Field"            , "set": "eos", "num": "23" , "slug": "lotus-field"            , "tcg_id": "643911"},
+    {"mtg_name": "Lumbering Falls"        , "set": "eos", "num": "24" , "slug": "lumbering-falls"        , "tcg_id": "643912"},
+    {"mtg_name": "Mana Confluence"        , "set": "eos", "num": "25" , "slug": "mana-confluence"        , "tcg_id": "641801"},
+    {"mtg_name": "Meteor Crater"          , "set": "eos", "num": "26" , "slug": "meteor-crater"          , "tcg_id": "643651"},
+    {"mtg_name": "Mirrorpool"             , "set": "eos", "num": "27" , "slug": "mirrorpool"             , "tcg_id": "643913"},
+    {"mtg_name": "Mutavault"              , "set": "eos", "num": "28" , "slug": "mutavault"              , "tcg_id": "638925"},
+    {"mtg_name": "Mystifying Maze"        , "set": "eos", "num": "29" , "slug": "mystifying-maze"        , "tcg_id": "643657"},
+    {"mtg_name": "Needle Spires"          , "set": "eos", "num": "30" , "slug": "needle-spires"          , "tcg_id": "643914"},
+    {"mtg_name": "Nesting Grounds"        , "set": "eos", "num": "31" , "slug": "nesting-grounds"        , "tcg_id": "641804"},
+    {"mtg_name": "Petrified Field"        , "set": "eos", "num": "32" , "slug": "petrified-field"        , "tcg_id": "644791"},
+    {"mtg_name": "Plaza of Heroes"        , "set": "eos", "num": "33" , "slug": "plaza-of-heroes"        , "tcg_id": "643661"},
+    {"mtg_name": "Power Depot"            , "set": "eos", "num": "34" , "slug": "power-depot"            , "tcg_id": "644792"},
+    {"mtg_name": "Raging Ravine"          , "set": "eos", "num": "35" , "slug": "raging-ravine"          , "tcg_id": "643915"},
+    {"mtg_name": "Reflecting Pool"        , "set": "eos", "num": "36" , "slug": "reflecting-pool"        , "tcg_id": "642776"},
+    {"mtg_name": "Scavenger Grounds"      , "set": "eos", "num": "37" , "slug": "scavenger-grounds"      , "tcg_id": "644793"},
+    {"mtg_name": "Shambling Vent"         , "set": "eos", "num": "38" , "slug": "shambling-vent"         , "tcg_id": "643916"},
+    {"mtg_name": "Stirring Wildwood"      , "set": "eos", "num": "39" , "slug": "stirring-wildwood"      , "tcg_id": "643917"},
+    {"mtg_name": "Strip Mine"             , "set": "eos", "num": "40" , "slug": "strip-mine"             , "tcg_id": "643665"},
+    {"mtg_name": "Sunken Citadel"         , "set": "eos", "num": "41" , "slug": "sunken-citadel"         , "tcg_id": "643508"},
+    {"mtg_name": "Swarmyard"              , "set": "eos", "num": "42" , "slug": "swarmyard"              , "tcg_id": "643670"},
+    {"mtg_name": "Terrain Generator"      , "set": "eos", "num": "43" , "slug": "terrain-generator"      , "tcg_id": "643675"},
+    {"mtg_name": "Thespian's Stage"       , "set": "eos", "num": "44" , "slug": "thespians-stage"        , "tcg_id": "641824"},
+    {"mtg_name": "Wandering Fumarole"     , "set": "eos", "num": "45" , "slug": "wandering-fumarole"     , "tcg_id": "643918"},
+]
+
+# EOS #46-90 — Edge of Eternities: Stellar Sights, second art treatment
+STELLAR_SIGHTS_II_CARDS = [
+    {"mtg_name": "Ancient Tomb"           , "set": "eos", "num": "46" , "slug": "ancient-tomb"           , "tcg_id": "643637"},
+    {"mtg_name": "Blast Zone"             , "set": "eos", "num": "47" , "slug": "blast-zone"             , "tcg_id": "644801"},
+    {"mtg_name": "Blinkmoth Nexus"        , "set": "eos", "num": "48" , "slug": "blinkmoth-nexus"        , "tcg_id": "641821"},
+    {"mtg_name": "Bonders' Enclave"       , "set": "eos", "num": "49" , "slug": "bonders-enclave"        , "tcg_id": "642778"},
+    {"mtg_name": "Cascading Cataracts"    , "set": "eos", "num": "50" , "slug": "cascading-cataracts"    , "tcg_id": "644806"},
+    {"mtg_name": "Cathedral of War"       , "set": "eos", "num": "51" , "slug": "cathedral-of-war"       , "tcg_id": "643919"},
+    {"mtg_name": "Celestial Colonnade"    , "set": "eos", "num": "52" , "slug": "celestial-colonnade"    , "tcg_id": "641810"},
+    {"mtg_name": "Contested War Zone"     , "set": "eos", "num": "53" , "slug": "contested-war-zone"     , "tcg_id": "644809"},
+    {"mtg_name": "Creeping Tar Pit"       , "set": "eos", "num": "54" , "slug": "creeping-tar-pit"       , "tcg_id": "643920"},
+    {"mtg_name": "Crystal Quarry"         , "set": "eos", "num": "55" , "slug": "crystal-quarry"         , "tcg_id": "643641"},
+    {"mtg_name": "Deserted Temple"        , "set": "eos", "num": "56" , "slug": "deserted-temple"        , "tcg_id": "643921"},
+    {"mtg_name": "Dust Bowl"              , "set": "eos", "num": "57" , "slug": "dust-bowl"              , "tcg_id": "643645"},
+    {"mtg_name": "Echoing Deeps"          , "set": "eos", "num": "58" , "slug": "echoing-deeps"          , "tcg_id": "643649"},
+    {"mtg_name": "Eldrazi Temple"         , "set": "eos", "num": "59" , "slug": "eldrazi-temple"         , "tcg_id": "641823"},
+    {"mtg_name": "Endless Sands"          , "set": "eos", "num": "60" , "slug": "endless-sands"          , "tcg_id": "644812"},
+    {"mtg_name": "Gemstone Caverns"       , "set": "eos", "num": "61" , "slug": "gemstone-caverns"       , "tcg_id": "641811"},
+    {"mtg_name": "Grove of the Burnwillows","set": "eos", "num": "62" , "slug": "grove-of-the-burnwillows","tcg_id": "643923"},
+    {"mtg_name": "High Market"            , "set": "eos", "num": "63" , "slug": "high-market"            , "tcg_id": "641815"},
+    {"mtg_name": "Hissing Quagmire"       , "set": "eos", "num": "64" , "slug": "hissing-quagmire"       , "tcg_id": "643924"},
+    {"mtg_name": "Inkmoth Nexus"          , "set": "eos", "num": "65" , "slug": "inkmoth-nexus"          , "tcg_id": "643060"},
+    {"mtg_name": "Inventors' Fair"        , "set": "eos", "num": "66" , "slug": "inventors-fair"         , "tcg_id": "644815"},
+    {"mtg_name": "Lavaclaw Reaches"       , "set": "eos", "num": "67" , "slug": "lavaclaw-reaches"       , "tcg_id": "643925"},
+    {"mtg_name": "Lotus Field"            , "set": "eos", "num": "68" , "slug": "lotus-field"            , "tcg_id": "643926"},
+    {"mtg_name": "Lumbering Falls"        , "set": "eos", "num": "69" , "slug": "lumbering-falls"        , "tcg_id": "643922"},
+    {"mtg_name": "Mana Confluence"        , "set": "eos", "num": "70" , "slug": "mana-confluence"        , "tcg_id": "641816"},
+    {"mtg_name": "Meteor Crater"          , "set": "eos", "num": "71" , "slug": "meteor-crater"          , "tcg_id": "643654"},
+    {"mtg_name": "Mirrorpool"             , "set": "eos", "num": "72" , "slug": "mirrorpool"             , "tcg_id": "643927"},
+    {"mtg_name": "Mutavault"              , "set": "eos", "num": "73" , "slug": "mutavault"              , "tcg_id": "638926"},
+    {"mtg_name": "Mystifying Maze"        , "set": "eos", "num": "74" , "slug": "mystifying-maze"        , "tcg_id": "643659"},
+    {"mtg_name": "Needle Spires"          , "set": "eos", "num": "75" , "slug": "needle-spires"          , "tcg_id": "643928"},
+    {"mtg_name": "Nesting Grounds"        , "set": "eos", "num": "76" , "slug": "nesting-grounds"        , "tcg_id": "641819"},
+    {"mtg_name": "Petrified Field"        , "set": "eos", "num": "77" , "slug": "petrified-field"        , "tcg_id": "644818"},
+    {"mtg_name": "Plaza of Heroes"        , "set": "eos", "num": "78" , "slug": "plaza-of-heroes"        , "tcg_id": "643663"},
+    {"mtg_name": "Power Depot"            , "set": "eos", "num": "79" , "slug": "power-depot"            , "tcg_id": "644821"},
+    {"mtg_name": "Raging Ravine"          , "set": "eos", "num": "80" , "slug": "raging-ravine"          , "tcg_id": "643929"},
+    {"mtg_name": "Reflecting Pool"        , "set": "eos", "num": "81" , "slug": "reflecting-pool"        , "tcg_id": "642780"},
+    {"mtg_name": "Scavenger Grounds"      , "set": "eos", "num": "82" , "slug": "scavenger-grounds"      , "tcg_id": "644824"},
+    {"mtg_name": "Shambling Vent"         , "set": "eos", "num": "83" , "slug": "shambling-vent"         , "tcg_id": "643930"},
+    {"mtg_name": "Stirring Wildwood"      , "set": "eos", "num": "84" , "slug": "stirring-wildwood"      , "tcg_id": "643931"},
+    {"mtg_name": "Strip Mine"             , "set": "eos", "num": "85" , "slug": "strip-mine"             , "tcg_id": "643667"},
+    {"mtg_name": "Sunken Citadel"         , "set": "eos", "num": "86" , "slug": "sunken-citadel"         , "tcg_id": "643510"},
+    {"mtg_name": "Swarmyard"              , "set": "eos", "num": "87" , "slug": "swarmyard"              , "tcg_id": "643672"},
+    {"mtg_name": "Terrain Generator"      , "set": "eos", "num": "88" , "slug": "terrain-generator"      , "tcg_id": "643678"},
+    {"mtg_name": "Thespian's Stage"       , "set": "eos", "num": "89" , "slug": "thespians-stage"        , "tcg_id": "641825"},
+    {"mtg_name": "Wandering Fumarole"     , "set": "eos", "num": "90" , "slug": "wandering-fumarole"     , "tcg_id": "643932"},
+]
+
 
 def fetch_scryfall(card):
     """Returns dict with tcg price and image_url for the card."""
@@ -144,6 +242,7 @@ def fetch_owned():
     ranges = {
         'ltc': (348, 377),
         'ltr': (302, 331),
+        'eos': (1, 90),
     }
 
     owned = {}
@@ -216,16 +315,27 @@ def main():
     showcase = [build_card_row(c, owned) for c in SHOWCASE_CARDS]
     showcase.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
 
+    print("Fetching Stellar Sights I prices (EOS #1-45)...")
+    stellar_i = [build_card_row(c, owned) for c in STELLAR_SIGHTS_I_CARDS]
+    stellar_i.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
+
+    print("Fetching Stellar Sights II prices (EOS #46-90)...")
+    stellar_ii = [build_card_row(c, owned) for c in STELLAR_SIGHTS_II_CARDS]
+    stellar_ii.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
+
     output = {
         "updated_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
         "realms_and_relics": realms,
         "showcase": showcase,
+        "stellar_sights_i": stellar_i,
+        "stellar_sights_ii": stellar_ii,
     }
     with open("prices.json", "w") as f:
         json.dump(output, f, indent=2)
 
-    owned_count = sum(1 for r in realms + showcase if r["collected_nonfoil"] or r["collected_foil"])
-    print(f"Done. {len(realms)} Realms & Relics + {len(showcase)} Showcase cards, {owned_count} owned.")
+    all_cards = realms + showcase + stellar_i + stellar_ii
+    owned_count = sum(1 for r in all_cards if r["collected_nonfoil"] or r["collected_foil"])
+    print(f"Done. {len(realms)} R&R + {len(showcase)} Showcase + {len(stellar_i)} SS-I + {len(stellar_ii)} SS-II cards, {owned_count} owned.")
 
 
 if __name__ == "__main__":
