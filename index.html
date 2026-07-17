@@ -512,17 +512,26 @@ window.addEventListener('DOMContentLoaded', () => {
   wireSortHeaders();
 
   // Card image preview via event delegation
+  let hoverTimer = null;
   const previewCard = (e) => {
     const link = e.target.closest('.card-link');
-    if (link) showCard(link.dataset.tab, Number(link.dataset.idx));
+    if (!link) return;
+    clearTimeout(hoverTimer);
+    hoverTimer = setTimeout(() => {
+      showCard(link.dataset.tab, Number(link.dataset.idx));
+    }, 500);
   };
 
   document.addEventListener('mouseover', previewCard);
-  document.addEventListener('click', previewCard);
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('.card-link');
+    if (link) showCard(link.dataset.tab, Number(link.dataset.idx));
+  });
 
   document.addEventListener('mouseout', (e) => {
     const link = e.target.closest('.card-link');
     if (!link) return;
+    clearTimeout(hoverTimer);
     const modal = document.getElementById('card-modal');
     const related = e.relatedTarget;
     if (!related || (!link.contains(related) && !modal.contains(related))) {

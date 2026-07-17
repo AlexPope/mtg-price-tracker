@@ -314,8 +314,9 @@ def build_card_row(card, owned):
 
 
 def main():
-    print("Fetching Moxfield binder...")
-    owned = fetch_owned()
+    # Moxfield ownership fetch temporarily disabled.
+    # owned = fetch_owned()
+    owned = {}
 
     print("Fetching Realms & Relics prices (LTC #348-377)...")
     realms = [build_card_row(c, owned) for c in REALMS_CARDS]
