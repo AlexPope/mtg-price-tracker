@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-17T17:19:48Z",
+  "updated_at": "2026-07-17T17:55:49Z",
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -224,7 +224,7 @@
     {
       "display_name": "Fangorn Forest (Yavimaya, Cradle of Growth)",
       "mtg_name": "Yavimaya, Cradle of Growth",
-      "tcg_price": 51.5,
+      "tcg_price": 51.48,
       "tcg_url": "https://www.tcgplayer.com/product/498459?Condition=Near+Mint&Printing=Normal",
       "mp_price": 49.75,
       "mp_url": "https://manapool.com/card/ltc/377/yavimaya-cradle-of-growth?conditions=NM&finish=nonfoil",
@@ -367,17 +367,6 @@
       "collected_foil": false
     },
     {
-      "display_name": "Elrond, Lord of Rivendell",
-      "mtg_name": "Elrond, Lord of Rivendell",
-      "tcg_price": 0.16,
-      "tcg_url": "https://www.tcgplayer.com/product/499198?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.15,
-      "mp_url": "https://manapool.com/card/ltr/307/elrond-lord-of-rivendell?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/3/0/308465a9-2143-49f2-b9d0-a09272dd1b62.jpg?1783916213",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
       "display_name": "Gandalf, Friend of the Shire",
       "mtg_name": "Gandalf, Friend of the Shire",
       "tcg_price": 0.16,
@@ -396,6 +385,17 @@
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/309/gollum-patient-plotter?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/a/8/a881aa61-fc7c-4ffb-a129-f75be8b2e498.jpg?1783916212",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Elrond, Lord of Rivendell",
+      "mtg_name": "Elrond, Lord of Rivendell",
+      "tcg_price": 0.17,
+      "tcg_url": "https://www.tcgplayer.com/product/499198?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/ltr/307/elrond-lord-of-rivendell?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/3/0/308465a9-2143-49f2-b9d0-a09272dd1b62.jpg?1783916213",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -789,7 +789,7 @@
     {
       "display_name": "Hissing Quagmire",
       "mtg_name": "Hissing Quagmire",
-      "tcg_price": 0.46,
+      "tcg_price": 0.47,
       "tcg_url": "https://www.tcgplayer.com/product/643909?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.48,
       "mp_url": "https://manapool.com/card/eos/19/hissing-quagmire?conditions=NM&finish=nonfoil",
@@ -943,7 +943,7 @@
     {
       "display_name": "Power Depot",
       "mtg_name": "Power Depot",
-      "tcg_price": 1.5,
+      "tcg_price": 1.49,
       "tcg_url": "https://www.tcgplayer.com/product/644792?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.35,
       "mp_url": "https://manapool.com/card/eos/34/power-depot?conditions=NM&finish=nonfoil",
@@ -954,7 +954,7 @@
     {
       "display_name": "Terrain Generator",
       "mtg_name": "Terrain Generator",
-      "tcg_price": 1.73,
+      "tcg_price": 1.65,
       "tcg_url": "https://www.tcgplayer.com/product/643675?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.65,
       "mp_url": "https://manapool.com/card/eos/43/terrain-generator?conditions=NM&finish=nonfoil",
@@ -976,7 +976,7 @@
     {
       "display_name": "Petrified Field",
       "mtg_name": "Petrified Field",
-      "tcg_price": 1.92,
+      "tcg_price": 1.94,
       "tcg_url": "https://www.tcgplayer.com/product/644791?Condition=Near+Mint&Printing=Normal",
       "mp_price": 2.19,
       "mp_url": "https://manapool.com/card/eos/32/petrified-field?conditions=NM&finish=nonfoil",
@@ -1020,7 +1020,7 @@
     {
       "display_name": "Mirrorpool",
       "mtg_name": "Mirrorpool",
-      "tcg_price": 4.31,
+      "tcg_price": 4.3,
       "tcg_url": "https://www.tcgplayer.com/product/643913?Condition=Near+Mint&Printing=Normal",
       "mp_price": 4.65,
       "mp_url": "https://manapool.com/card/eos/27/mirrorpool?conditions=NM&finish=nonfoil",
@@ -1042,7 +1042,7 @@
     {
       "display_name": "Mutavault",
       "mtg_name": "Mutavault",
-      "tcg_price": 5.47,
+      "tcg_price": 5.51,
       "tcg_url": "https://www.tcgplayer.com/product/638925?Condition=Near+Mint&Printing=Normal",
       "mp_price": 5.26,
       "mp_url": "https://manapool.com/card/eos/28/mutavault?conditions=NM&finish=nonfoil",
@@ -1086,7 +1086,7 @@
     {
       "display_name": "Inkmoth Nexus",
       "mtg_name": "Inkmoth Nexus",
-      "tcg_price": 11.32,
+      "tcg_price": 11.2,
       "tcg_url": "https://www.tcgplayer.com/product/643058?Condition=Near+Mint&Printing=Normal",
       "mp_price": 11.35,
       "mp_url": "https://manapool.com/card/eos/20/inkmoth-nexus?conditions=NM&finish=nonfoil",
@@ -1130,7 +1130,7 @@
     {
       "display_name": "Mana Confluence",
       "mtg_name": "Mana Confluence",
-      "tcg_price": 36.37,
+      "tcg_price": 36.44,
       "tcg_url": "https://www.tcgplayer.com/product/641801?Condition=Near+Mint&Printing=Normal",
       "mp_price": 35.05,
       "mp_url": "https://manapool.com/card/eos/25/mana-confluence?conditions=NM&finish=nonfoil",
@@ -1152,7 +1152,7 @@
     {
       "display_name": "Ancient Tomb",
       "mtg_name": "Ancient Tomb",
-      "tcg_price": 107.56,
+      "tcg_price": 108.63,
       "tcg_url": "https://www.tcgplayer.com/product/643635?Condition=Near+Mint&Printing=Normal",
       "mp_price": 114.99,
       "mp_url": "https://manapool.com/card/eos/1/ancient-tomb?conditions=NM&finish=nonfoil",
@@ -1418,7 +1418,7 @@
     {
       "display_name": "Power Depot",
       "mtg_name": "Power Depot",
-      "tcg_price": 4.91,
+      "tcg_price": 4.81,
       "tcg_url": "https://www.tcgplayer.com/product/644821?Condition=Near+Mint&Printing=Normal",
       "mp_price": 3.86,
       "mp_url": "https://manapool.com/card/eos/79/power-depot?conditions=NM&finish=nonfoil",
@@ -1484,7 +1484,7 @@
     {
       "display_name": "Petrified Field",
       "mtg_name": "Petrified Field",
-      "tcg_price": 7.21,
+      "tcg_price": 7.16,
       "tcg_url": "https://www.tcgplayer.com/product/644818?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.62,
       "mp_url": "https://manapool.com/card/eos/77/petrified-field?conditions=NM&finish=nonfoil",
@@ -1572,7 +1572,7 @@
     {
       "display_name": "Inventors' Fair",
       "mtg_name": "Inventors' Fair",
-      "tcg_price": 29.24,
+      "tcg_price": 29.99,
       "tcg_url": "https://www.tcgplayer.com/product/644815?Condition=Near+Mint&Printing=Normal",
       "mp_price": 27.61,
       "mp_url": "https://manapool.com/card/eos/66/inventors-fair?conditions=NM&finish=nonfoil",

@@ -334,7 +334,7 @@ def main():
     stellar_ii.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
 
     output = {
-        "updated_at": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "updated_at": datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "realms_and_relics": realms,
         "showcase": showcase,
         "stellar_sights_i": stellar_i,
