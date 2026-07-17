@@ -190,31 +190,6 @@
     .summary-card.missing .summary-value { color: #b0552a; }
     .summary-sub { font-size: 0.78rem; color: #777; margin-top: 2px; }
 
-    #pat-section {
-      margin-top: 32px;
-      padding: 16px 20px;
-      background: #f8f8f8;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 0.85rem;
-    }
-    #pat-section summary { cursor: pointer; font-weight: 600; color: #444; }
-    #pat-section label { display: block; margin: 12px 0 4px; font-weight: 500; }
-    #pat-input {
-      width: 100%; max-width: 420px;
-      padding: 7px 10px;
-      border: 1px solid #ccc; border-radius: 5px;
-      font-size: 0.85rem; font-family: monospace;
-      box-sizing: border-box;
-    }
-    #save-pat {
-      margin-top: 8px; padding: 6px 14px;
-      background: #444; color: #fff;
-      border: none; border-radius: 5px;
-      cursor: pointer; font-size: 0.85rem;
-    }
-    #save-pat:hover { background: #222; }
-    .pat-note { color: #888; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -223,12 +198,11 @@
 <p class="meta">Condition: Near Mint &nbsp;·&nbsp; Finish: Non-Foil &nbsp;·&nbsp; Click any column header to sort · Click a card name to preview the art</p>
 
 <div class="toolbar">
-  <button id="refresh-btn" onclick="triggerRefresh()">
+  <button id="refresh-btn" disabled title="Prices are refreshed automatically once per day.">
     <span class="spinner"></span>
-    Refresh Prices
+    Scheduled Daily Refresh
   </button>
   <span id="last-updated">Loading...</span>
-  <span id="status-msg"></span>
 </div>
 
 <div class="tabs">
@@ -314,16 +288,6 @@
   </table>
 </div>
 
-<details id="pat-section">
-  <summary>Configure GitHub token (required for Refresh button)</summary>
-  <p>The Refresh button triggers a GitHub Actions workflow to re-fetch live prices from TCGPlayer, ManaPool, and your Moxfield binder. It needs a fine-grained personal access token with <strong>Actions: Read and Write</strong> permission on this repository.</p>
-  <label for="pat-input">GitHub Personal Access Token</label>
-  <input type="password" id="pat-input" placeholder="github_pat_...">
-  <br>
-  <button id="save-pat" onclick="savePat()">Save token (stored locally in your browser)</button>
-  <p class="pat-note">Your token is saved only in your browser's localStorage — it is never sent anywhere except directly to the GitHub API.</p>
-</details>
-
 <div id="card-modal" onclick="closeModal(event)">
   <button class="modal-close" onclick="closeModal(event, true)" aria-label="Close">&times;</button>
   <div class="modal-inner" onclick="event.stopPropagation()">
@@ -333,8 +297,8 @@
 </div>
 
 <script>
-const OWNER    = 'ryanfinke';
-const REPO     = 'ltc-price-tracker';
+const OWNER    = 'AlexPope';
+const REPO     = 'mtg-price-tracker';
 const WORKFLOW = 'update-prices.yml';
 
 function fmt(price) {
@@ -543,64 +507,7 @@ function switchTab(name) {
   }
 }
 
-function getPat() { return localStorage.getItem('gh_pat') || ''; }
-
-function savePat() {
-  const val = document.getElementById('pat-input').value.trim();
-  if (!val) return;
-  localStorage.setItem('gh_pat', val);
-  setStatus('Token saved.', true);
-  setTimeout(() => setStatus('', false), 3000);
-}
-
-function setStatus(msg, ok) {
-  const el = document.getElementById('status-msg');
-  el.textContent = msg;
-  el.className = ok ? 'ok' : '';
-}
-
-async function triggerRefresh() {
-  const pat = getPat();
-  if (!pat) {
-    setStatus('Add a GitHub token below first.', false);
-    document.getElementById('pat-section').open = true;
-    return;
-  }
-  const btn = document.getElementById('refresh-btn');
-  btn.disabled = true;
-  btn.classList.add('loading');
-  setStatus('', false);
-  try {
-    const res = await fetch(
-      `https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + pat,
-          'Accept': 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ref: 'main' }),
-      }
-    );
-    if (res.status === 204) {
-      setStatus('Workflow triggered — prices update in ~60 seconds. Reload to see new data.', true);
-    } else {
-      const body = await res.json().catch(() => ({}));
-      setStatus('Error ' + res.status + ': ' + (body.message || 'unknown'), false);
-    }
-  } catch (e) {
-    setStatus('Network error: ' + e.message, false);
-  } finally {
-    btn.disabled = false;
-    btn.classList.remove('loading');
-  }
-}
-
 window.addEventListener('DOMContentLoaded', () => {
-  const saved = getPat();
-  if (saved) document.getElementById('pat-input').value = saved;
   loadPrices();
   wireSortHeaders();
 
