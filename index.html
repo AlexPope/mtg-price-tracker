@@ -195,7 +195,7 @@
 <body>
 
 <h1>Lord of the Rings MTG — Price Tracker</h1>
-<p class="meta">Condition: Near Mint &nbsp;·&nbsp; Finish: Non-Foil &nbsp;·&nbsp; Click any column header to sort · Click a card name to preview the art</p>
+<p class="meta">Condition: Near Mint &nbsp;·&nbsp; Finish: Non-Foil &nbsp;·&nbsp; Click any column header to sort · Hover a card name to preview the art</p>
 
 <div class="toolbar">
   <button id="refresh-btn" disabled title="Prices are refreshed automatically once per day.">
@@ -512,9 +512,22 @@ window.addEventListener('DOMContentLoaded', () => {
   wireSortHeaders();
 
   // Card image preview via event delegation
-  document.addEventListener('click', (e) => {
+  const previewCard = (e) => {
     const link = e.target.closest('.card-link');
     if (link) showCard(link.dataset.tab, Number(link.dataset.idx));
+  };
+
+  document.addEventListener('mouseover', previewCard);
+  document.addEventListener('click', previewCard);
+
+  document.addEventListener('mouseout', (e) => {
+    const link = e.target.closest('.card-link');
+    if (!link) return;
+    const modal = document.getElementById('card-modal');
+    const related = e.relatedTarget;
+    if (!related || (!link.contains(related) && !modal.contains(related))) {
+      closeModal(null, true);
+    }
   });
 
   // ESC closes modal
