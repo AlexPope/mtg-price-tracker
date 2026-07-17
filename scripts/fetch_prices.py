@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 import json
+import os
 import re
 import subprocess
 import datetime
-
-try:
-    import cloudscraper
-    _have_cloudscraper = True
-except ImportError:
-    _have_cloudscraper = False
+import urllib.request
+import urllib.error
 
 MOXFIELD_BINDER_ID = 'f6LqAFGUPEG7FWnGopkU1Q'
 
@@ -192,10 +189,12 @@ def fetch_scryfall(card):
     url = f"https://api.scryfall.com/cards/{card['set']}/{card['num']}"
     result = subprocess.run(
         ["curl", "-s", "-A", "Mozilla/5.0", url],
-        capture_output=True, text=True
+        capture_output=True,
+        text=False,
     )
     try:
-        data = json.loads(result.stdout)
+        stdout = result.stdout.decode("utf-8", errors="replace")
+        data = json.loads(stdout)
         price = data.get("prices", {}).get("usd")
         images = data.get("image_uris") or {}
         # Fallback for double-faced cards
@@ -216,9 +215,10 @@ def fetch_manapool_price(card):
         ["curl", "-s", "-A", "Mozilla/5.0",
          "-H", "Accept: text/html,application/xhtml+xml",
          url],
-        capture_output=True, text=True
+        capture_output=True,
+        text=False,
     )
-    html = result.stdout
+    html = result.stdout.decode("utf-8", errors="replace")
     m = re.search(r'\\"marketPrices\\":\{\\"price\\": (\d+),', html)
     if m:
         return int(m.group(1)) / 100.0
@@ -227,16 +227,19 @@ def fetch_manapool_price(card):
 
 def fetch_owned():
     """Returns {(set, cn): {condition, foil}} for all cards in the Moxfield binder."""
-    if not _have_cloudscraper:
-        print("  cloudscraper not available, skipping binder fetch")
-        return {}
-
-    scraper = cloudscraper.create_scraper()
     headers = {
         'Accept': 'application/json',
         'Referer': 'https://moxfield.com/',
         'Origin': 'https://moxfield.com',
+        'User-Agent': 'Mozilla/5.0',
     }
+
+    session_cookie = os.environ.get("MOXFIELD_SESSION_COOKIE", "").strip()
+    if session_cookie:
+        headers['Cookie'] = session_cookie
+        print("  Using authenticated Moxfield session cookie")
+    else:
+        print("  No Moxfield session cookie configured; binder ownership data will be skipped")
 
     # Collector number ranges we care about, by set
     ranges = {
@@ -249,12 +252,19 @@ def fetch_owned():
     page = 1
     while True:
         url = f"https://api2.moxfield.com/v1/trade-binders/{MOXFIELD_BINDER_ID}?pageNumber={page}&pageSize=100"
+        request = urllib.request.Request(url, headers=headers)
         try:
-            r = scraper.get(url, headers=headers, timeout=15)
-            data = r.json()
+            with urllib.request.urlopen(request, timeout=15) as response:
+                data = json.load(response)
+        except urllib.error.HTTPError as e:
+            if e.code == 403:
+                print("  Moxfield API returned HTTP 403; binder ownership data will be skipped")
+            else:
+                print(f"  Moxfield fetch error (page {page}): {e}")
+            return {}
         except Exception as e:
             print(f"  Moxfield fetch error (page {page}): {e}")
-            break
+            return {}
 
         for entry in data.get("data", []):
             card = entry.get("card", {})

@@ -1,0 +1,7 @@
+# Editor / workspace files
+.vscode/
+
+# Python cache / environment
+__pycache__/
+*.pyc
+.venv/

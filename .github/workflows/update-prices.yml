@@ -19,10 +19,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: pip install cloudscraper
-
       - name: Fetch prices
+        env:
+          MOXFIELD_SESSION_COOKIE: ${{ secrets.MOXFIELD_SESSION_COOKIE }}
         run: python scripts/fetch_prices.py
 
       - name: Commit prices.json
