@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import csv
 import json
 import os
 import re
@@ -6,6 +7,7 @@ import subprocess
 import datetime
 import urllib.request
 import urllib.error
+from pathlib import Path
 
 MOXFIELD_BINDER_ID = 'f6LqAFGUPEG7FWnGopkU1Q'
 
@@ -226,22 +228,16 @@ def fetch_manapool_price(card):
 
 
 def fetch_owned():
-    """Returns {(set, cn): {condition, foil}} for all cards in the Moxfield binder."""
-    headers = {
-        'Accept': 'application/json',
-        'Referer': 'https://moxfield.com/',
-        'Origin': 'https://moxfield.com',
-        'User-Agent': 'Mozilla/5.0',
-    }
+    """Returns {(set, cn): {condition, foil}} for all cards in the latest Moxfield CSV snapshot."""
+    data_dir = Path("data")
+    csv_files = sorted(data_dir.glob("*.csv"), key=lambda p: p.stat().st_mtime)
+    if not csv_files:
+        print("  No Moxfield CSV snapshot found in data/; binder ownership data will be skipped")
+        return {}
 
-    session_cookie = os.environ.get("MOXFIELD_SESSION_COOKIE", "").strip()
-    if session_cookie:
-        headers['Cookie'] = session_cookie
-        print("  Using authenticated Moxfield session cookie")
-    else:
-        print("  No Moxfield session cookie configured; binder ownership data will be skipped")
+    latest_file = csv_files[-1]
+    print(f"  Using latest Moxfield CSV snapshot: {latest_file.name}")
 
-    # Collector number ranges we care about, by set
     ranges = {
         'ltc': (348, 377),
         'ltr': (302, 331),
@@ -249,45 +245,29 @@ def fetch_owned():
     }
 
     owned = {}
-    page = 1
-    while True:
-        url = f"https://api2.moxfield.com/v1/trade-binders/{MOXFIELD_BINDER_ID}?pageNumber={page}&pageSize=100"
-        request = urllib.request.Request(url, headers=headers)
-        try:
-            with urllib.request.urlopen(request, timeout=15) as response:
-                data = json.load(response)
-        except urllib.error.HTTPError as e:
-            if e.code == 403:
-                print("  Moxfield API returned HTTP 403; binder ownership data will be skipped")
-            else:
-                print(f"  Moxfield fetch error (page {page}): {e}")
-            return {}
-        except Exception as e:
-            print(f"  Moxfield fetch error (page {page}): {e}")
-            return {}
-
-        for entry in data.get("data", []):
-            card = entry.get("card", {})
-            card_set = card.get("set", "").lower()
+    with latest_file.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            card_set = (row.get("Edition") or "").strip().lower()
             if card_set not in ranges:
                 continue
-            cn = card.get("cn", "")
+
+            cn = (row.get("Collector Number") or "").strip()
             lo, hi = ranges[card_set]
             if not (cn.isdigit() and lo <= int(cn) <= hi):
                 continue
+
             key = (card_set, cn)
             if key not in owned:
                 owned[key] = {"nonfoil": False, "foil": False}
-            if entry.get("finish", "nonFoil") == "foil":
+
+            foil_value = (row.get("Foil") or "").strip().lower()
+            if foil_value == "foil":
                 owned[key]["foil"] = True
             else:
                 owned[key]["nonfoil"] = True
 
-        if data.get("pageNumber", 1) >= data.get("totalPages", 1):
-            break
-        page += 1
-
-    print(f"  Moxfield: found {len(owned)} owned cards across both sets")
+    print(f"  Moxfield CSV snapshot: found {len(owned)} owned cards across both sets")
     return owned
 
 
@@ -314,9 +294,8 @@ def build_card_row(card, owned):
 
 
 def main():
-    # Moxfield ownership fetch temporarily disabled.
-    # owned = fetch_owned()
-    owned = {}
+    print("Fetching Moxfield binder...")
+    owned = fetch_owned()
 
     print("Fetching Realms & Relics prices (LTC #348-377)...")
     realms = [build_card_row(c, owned) for c in REALMS_CARDS]
