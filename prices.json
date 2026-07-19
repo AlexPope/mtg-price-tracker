@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-18T13:02:47Z",
+  "updated_at": "2026-07-19T13:05:24Z",
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -26,7 +26,7 @@
     {
       "display_name": "Inn of the Prancing Pony (Pillar of the Paruns)",
       "mtg_name": "Pillar of the Paruns",
-      "tcg_price": 6.45,
+      "tcg_price": 6.41,
       "tcg_url": "https://www.tcgplayer.com/product/499324?Condition=Near+Mint&Printing=Normal",
       "mp_price": 6.09,
       "mp_url": "https://manapool.com/card/ltc/372/pillar-of-the-paruns?conditions=NM&finish=nonfoil",
@@ -37,7 +37,7 @@
     {
       "display_name": "Meduseld, Golden Hall of Edoras (Castle Ardenvale)",
       "mtg_name": "Castle Ardenvale",
-      "tcg_price": 7.45,
+      "tcg_price": 7.36,
       "tcg_url": "https://www.tcgplayer.com/product/499317?Condition=Near+Mint&Printing=Normal",
       "mp_price": 6.17,
       "mp_url": "https://manapool.com/card/ltc/361/castle-ardenvale?conditions=NM&finish=nonfoil",
@@ -46,25 +46,25 @@
       "collected_foil": false
     },
     {
-      "display_name": "Weathertop (Deserted Temple)",
-      "mtg_name": "Deserted Temple",
-      "tcg_price": 8.56,
-      "tcg_url": "https://www.tcgplayer.com/product/498458?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 8.59,
-      "mp_url": "https://manapool.com/card/ltc/363/deserted-temple?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/3/b/3b53d6c2-b078-4204-aae8-0891284ee877.jpg?1783915839",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
       "display_name": "Bag End (Horizon Canopy)",
       "mtg_name": "Horizon Canopy",
-      "tcg_price": 8.56,
+      "tcg_price": 8.46,
       "tcg_url": "https://www.tcgplayer.com/product/499319?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.92,
       "mp_url": "https://manapool.com/card/ltc/366/horizon-canopy?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/a/4/a439ed1c-b599-4469-82d9-df812f6c5bbd.jpg?1783915838",
       "collected_nonfoil": true,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Weathertop (Deserted Temple)",
+      "mtg_name": "Deserted Temple",
+      "tcg_price": 8.63,
+      "tcg_url": "https://www.tcgplayer.com/product/498458?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 8.59,
+      "mp_url": "https://manapool.com/card/ltc/363/deserted-temple?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/3/b/3b53d6c2-b078-4204-aae8-0891284ee877.jpg?1783915839",
+      "collected_nonfoil": false,
       "collected_foil": false
     },
     {
@@ -81,7 +81,7 @@
     {
       "display_name": "Bridge of Khazad-d\u00fbm (Ensnaring Bridge)",
       "mtg_name": "Ensnaring Bridge",
-      "tcg_price": 13.13,
+      "tcg_price": 13.15,
       "tcg_url": "https://www.tcgplayer.com/product/488283?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.75,
       "mp_url": "https://manapool.com/card/ltc/350/ensnaring-bridge?conditions=NM&finish=nonfoil",
@@ -92,7 +92,7 @@
     {
       "display_name": "Three Rings for the Elven-Kings (Rings of Brighthearth)",
       "mtg_name": "Rings of Brighthearth",
-      "tcg_price": 13.63,
+      "tcg_price": 13.75,
       "tcg_url": "https://www.tcgplayer.com/product/498466?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.25,
       "mp_url": "https://manapool.com/card/ltc/352/rings-of-brighthearth?conditions=NM&finish=nonfoil",
@@ -125,7 +125,7 @@
     {
       "display_name": "Ring of Barahir (Sword of the Animist)",
       "mtg_name": "Sword of the Animist",
-      "tcg_price": 15.63,
+      "tcg_price": 15.66,
       "tcg_url": "https://www.tcgplayer.com/product/499314?Condition=Near+Mint&Printing=Normal",
       "mp_price": 15.31,
       "mp_url": "https://manapool.com/card/ltc/355/sword-of-the-animist?conditions=NM&finish=nonfoil",
@@ -147,7 +147,7 @@
     {
       "display_name": "Isengard, Saruman's Fortress (Boseiju, Who Shelters All)",
       "mtg_name": "Boseiju, Who Shelters All",
-      "tcg_price": 17.49,
+      "tcg_price": 17.33,
       "tcg_url": "https://www.tcgplayer.com/product/498462?Condition=Near+Mint&Printing=Normal",
       "mp_price": 17.59,
       "mp_url": "https://manapool.com/card/ltc/359/boseiju-who-shelters-all?conditions=NM&finish=nonfoil",
@@ -169,7 +169,7 @@
     {
       "display_name": "Henneth Ann\u00fbn (Reflecting Pool)",
       "mtg_name": "Reflecting Pool",
-      "tcg_price": 23.14,
+      "tcg_price": 23.03,
       "tcg_url": "https://www.tcgplayer.com/product/499327?Condition=Near+Mint&Printing=Normal",
       "mp_price": 25.23,
       "mp_url": "https://manapool.com/card/ltc/373/reflecting-pool?conditions=NM&finish=nonfoil",
@@ -180,7 +180,7 @@
     {
       "display_name": "Herugrim, Sword of Rohan (Sword of Hearth and Home)",
       "mtg_name": "Sword of Hearth and Home",
-      "tcg_price": 24.12,
+      "tcg_price": 24.22,
       "tcg_url": "https://www.tcgplayer.com/product/499313?Condition=Near+Mint&Printing=Normal",
       "mp_price": 23.97,
       "mp_url": "https://manapool.com/card/ltc/354/sword-of-hearth-and-home?conditions=NM&finish=nonfoil",
@@ -191,7 +191,7 @@
     {
       "display_name": "Helm's Deep (Shinka, the Bloodsoaked Keep)",
       "mtg_name": "Shinka, the Bloodsoaked Keep",
-      "tcg_price": 28.28,
+      "tcg_price": 27.27,
       "tcg_url": "https://www.tcgplayer.com/product/499325?Condition=Near+Mint&Printing=Normal",
       "mp_price": 25.38,
       "mp_url": "https://manapool.com/card/ltc/374/shinka-the-bloodsoaked-keep?conditions=NM&finish=nonfoil",
@@ -279,7 +279,7 @@
     {
       "display_name": "Paths of the Dead (Cavern of Souls)",
       "mtg_name": "Cavern of Souls",
-      "tcg_price": 75.96,
+      "tcg_price": 76.0,
       "tcg_url": "https://www.tcgplayer.com/product/498465?Condition=Near+Mint&Printing=Normal",
       "mp_price": 73.18,
       "mp_url": "https://manapool.com/card/ltc/362/cavern-of-souls?conditions=NM&finish=nonfoil",
@@ -336,7 +336,7 @@
     {
       "display_name": "Faramir, Field Commander",
       "mtg_name": "Faramir, Field Commander",
-      "tcg_price": 0.14,
+      "tcg_price": 0.13,
       "tcg_url": "https://www.tcgplayer.com/product/499461?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/303/faramir-field-commander?conditions=NM&finish=nonfoil",
@@ -391,7 +391,7 @@
     {
       "display_name": "Elrond, Lord of Rivendell",
       "mtg_name": "Elrond, Lord of Rivendell",
-      "tcg_price": 0.17,
+      "tcg_price": 0.19,
       "tcg_url": "https://www.tcgplayer.com/product/499198?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/307/elrond-lord-of-rivendell?conditions=NM&finish=nonfoil",
@@ -411,24 +411,24 @@
       "collected_foil": false
     },
     {
-      "display_name": "Gimli, Counter of Kills",
-      "mtg_name": "Gimli, Counter of Kills",
-      "tcg_price": 0.22,
-      "tcg_url": "https://www.tcgplayer.com/product/498738?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.15,
-      "mp_url": "https://manapool.com/card/ltr/312/gimli-counter-of-kills?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/b/7/b72c5bd1-cca1-4735-b4fc-7a5182fb8cd6.jpg?1783916210",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
       "display_name": "Legolas, Counter of Kills",
       "mtg_name": "Legolas, Counter of Kills",
-      "tcg_price": 0.23,
+      "tcg_price": 0.24,
       "tcg_url": "https://www.tcgplayer.com/product/498739?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.23,
       "mp_url": "https://manapool.com/card/ltr/324/legolas-counter-of-kills?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/3/0/30fe0cb4-71f0-4acb-af1a-a48775826487.jpg?1783916203",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Gimli, Counter of Kills",
+      "mtg_name": "Gimli, Counter of Kills",
+      "tcg_price": 0.25,
+      "tcg_url": "https://www.tcgplayer.com/product/498738?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.2,
+      "mp_url": "https://manapool.com/card/ltr/312/gimli-counter-of-kills?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/7/b72c5bd1-cca1-4735-b4fc-7a5182fb8cd6.jpg?1783916210",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -446,7 +446,7 @@
     {
       "display_name": "Frodo, Sauron's Bane",
       "mtg_name": "Frodo, Sauron's Bane",
-      "tcg_price": 0.38,
+      "tcg_price": 0.37,
       "tcg_url": "https://www.tcgplayer.com/product/488264?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.28,
       "mp_url": "https://manapool.com/card/ltr/304/frodo-saurons-bane?conditions=NM&finish=nonfoil",
@@ -468,9 +468,9 @@
     {
       "display_name": "Peregrin Took",
       "mtg_name": "Peregrin Took",
-      "tcg_price": 0.39,
+      "tcg_price": 0.4,
       "tcg_url": "https://www.tcgplayer.com/product/498615?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.49,
+      "mp_price": 0.48,
       "mp_url": "https://manapool.com/card/ltr/315/peregrin-took?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/f/b/fbbdd288-83ec-4be9-b55f-17771fd5ecc4.jpg?1783916208",
       "collected_nonfoil": false,
@@ -479,7 +479,7 @@
     {
       "display_name": "Legolas, Master Archer",
       "mtg_name": "Legolas, Master Archer",
-      "tcg_price": 0.41,
+      "tcg_price": 0.42,
       "tcg_url": "https://www.tcgplayer.com/product/498343?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.5,
       "mp_url": "https://manapool.com/card/ltr/313/legolas-master-archer?conditions=NM&finish=nonfoil",
@@ -545,9 +545,9 @@
     {
       "display_name": "Sm\u00e9agol, Helpful Guide",
       "mtg_name": "Sm\u00e9agol, Helpful Guide",
-      "tcg_price": 0.48,
+      "tcg_price": 0.49,
       "tcg_url": "https://www.tcgplayer.com/product/499398?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.44,
+      "mp_price": 0.43,
       "mp_url": "https://manapool.com/card/ltr/330/smeagol-helpful-guide?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/b/3/b3ebf3a3-3dd1-48e0-ad84-c3295de2e032.jpg?1783916201",
       "collected_nonfoil": false,
@@ -556,7 +556,7 @@
     {
       "display_name": "Aragorn, Company Leader",
       "mtg_name": "Aragorn, Company Leader",
-      "tcg_price": 0.51,
+      "tcg_price": 0.5,
       "tcg_url": "https://www.tcgplayer.com/product/499954?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.49,
       "mp_url": "https://manapool.com/card/ltr/316/aragorn-company-leader?conditions=NM&finish=nonfoil",
@@ -567,7 +567,7 @@
     {
       "display_name": "Samwise Gamgee",
       "mtg_name": "Samwise Gamgee",
-      "tcg_price": 0.69,
+      "tcg_price": 0.73,
       "tcg_url": "https://www.tcgplayer.com/product/498379?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.98,
       "mp_url": "https://manapool.com/card/ltr/327/samwise-gamgee?conditions=NM&finish=nonfoil",
@@ -589,7 +589,7 @@
     {
       "display_name": "Saruman of Many Colors",
       "mtg_name": "Saruman of Many Colors",
-      "tcg_price": 1.15,
+      "tcg_price": 1.13,
       "tcg_url": "https://www.tcgplayer.com/product/498453?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.15,
       "mp_url": "https://manapool.com/card/ltr/328/saruman-of-many-colors?conditions=NM&finish=nonfoil",
@@ -600,9 +600,9 @@
     {
       "display_name": "Tom Bombadil",
       "mtg_name": "Tom Bombadil",
-      "tcg_price": 1.99,
+      "tcg_price": 1.97,
       "tcg_url": "https://www.tcgplayer.com/product/488265?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 2.56,
+      "mp_price": 2.7,
       "mp_url": "https://manapool.com/card/ltr/331/tom-bombadil?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/3/c/3c7ce623-bcf8-4d42-8a88-450bea7d7529.jpg?1783916200",
       "collected_nonfoil": false,
@@ -611,7 +611,7 @@
     {
       "display_name": "Boromir, Warden of the Tower",
       "mtg_name": "Boromir, Warden of the Tower",
-      "tcg_price": 6.63,
+      "tcg_price": 6.61,
       "tcg_url": "https://www.tcgplayer.com/product/498306?Condition=Near+Mint&Printing=Normal",
       "mp_price": 5.75,
       "mp_url": "https://manapool.com/card/ltr/302/boromir-warden-of-the-tower?conditions=NM&finish=nonfoil",
@@ -633,7 +633,7 @@
     {
       "display_name": "Gandalf the White",
       "mtg_name": "Gandalf the White",
-      "tcg_price": 11.16,
+      "tcg_price": 11.22,
       "tcg_url": "https://www.tcgplayer.com/product/498326?Condition=Near+Mint&Printing=Normal",
       "mp_price": 11.02,
       "mp_url": "https://manapool.com/card/ltr/305/gandalf-the-white?conditions=NM&finish=nonfoil",
@@ -668,7 +668,7 @@
     {
       "display_name": "Contested War Zone",
       "mtg_name": "Contested War Zone",
-      "tcg_price": 0.35,
+      "tcg_price": 0.36,
       "tcg_url": "https://www.tcgplayer.com/product/644788?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/eos/8/contested-war-zone?conditions=NM&finish=nonfoil",
@@ -692,7 +692,7 @@
       "mtg_name": "Mystifying Maze",
       "tcg_price": 0.4,
       "tcg_url": "https://www.tcgplayer.com/product/643657?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.41,
+      "mp_price": 0.4,
       "mp_url": "https://manapool.com/card/eos/29/mystifying-maze?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/2/5/2520c11e-5751-493e-bdae-defe2e05e448.jpg?1783905857",
       "collected_nonfoil": false,
@@ -723,7 +723,7 @@
     {
       "display_name": "Raging Ravine",
       "mtg_name": "Raging Ravine",
-      "tcg_price": 0.41,
+      "tcg_price": 0.42,
       "tcg_url": "https://www.tcgplayer.com/product/643915?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.24,
       "mp_url": "https://manapool.com/card/eos/35/raging-ravine?conditions=NM&finish=nonfoil",
@@ -739,17 +739,6 @@
       "mp_price": 0.38,
       "mp_url": "https://manapool.com/card/eos/39/stirring-wildwood?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/7/5/75ea63a8-3046-4578-a190-72efa34f8d88.jpg?1783905852",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
-      "display_name": "Wandering Fumarole",
-      "mtg_name": "Wandering Fumarole",
-      "tcg_price": 0.42,
-      "tcg_url": "https://www.tcgplayer.com/product/643918?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.43,
-      "mp_url": "https://manapool.com/card/eos/45/wandering-fumarole?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/8/9/89d53010-d85f-48e4-bf75-c02e8942f508.jpg?1783905851",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -787,20 +776,20 @@
       "collected_foil": false
     },
     {
-      "display_name": "Hissing Quagmire",
-      "mtg_name": "Hissing Quagmire",
-      "tcg_price": 0.47,
-      "tcg_url": "https://www.tcgplayer.com/product/643909?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.48,
-      "mp_url": "https://manapool.com/card/eos/19/hissing-quagmire?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/d/9/d9bb686f-d66d-4de3-9497-a7d23d5c87b7.jpg?1783905859",
+      "display_name": "Wandering Fumarole",
+      "mtg_name": "Wandering Fumarole",
+      "tcg_price": 0.44,
+      "tcg_url": "https://www.tcgplayer.com/product/643918?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.43,
+      "mp_url": "https://manapool.com/card/eos/45/wandering-fumarole?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/8/9/89d53010-d85f-48e4-bf75-c02e8942f508.jpg?1783905851",
       "collected_nonfoil": false,
       "collected_foil": false
     },
     {
       "display_name": "Blast Zone",
       "mtg_name": "Blast Zone",
-      "tcg_price": 0.48,
+      "tcg_price": 0.47,
       "tcg_url": "https://www.tcgplayer.com/product/644786?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.45,
       "mp_url": "https://manapool.com/card/eos/2/blast-zone?conditions=NM&finish=nonfoil",
@@ -809,9 +798,20 @@
       "collected_foil": false
     },
     {
+      "display_name": "Hissing Quagmire",
+      "mtg_name": "Hissing Quagmire",
+      "tcg_price": 0.47,
+      "tcg_url": "https://www.tcgplayer.com/product/643909?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.46,
+      "mp_url": "https://manapool.com/card/eos/19/hissing-quagmire?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/d/9/d9bb686f-d66d-4de3-9497-a7d23d5c87b7.jpg?1783905859",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
       "display_name": "Creeping Tar Pit",
       "mtg_name": "Creeping Tar Pit",
-      "tcg_price": 0.59,
+      "tcg_price": 0.6,
       "tcg_url": "https://www.tcgplayer.com/product/643906?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.4,
       "mp_url": "https://manapool.com/card/eos/9/creeping-tar-pit?conditions=NM&finish=nonfoil",
@@ -822,7 +822,7 @@
     {
       "display_name": "Crystal Quarry",
       "mtg_name": "Crystal Quarry",
-      "tcg_price": 0.62,
+      "tcg_price": 0.63,
       "tcg_url": "https://www.tcgplayer.com/product/643639?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.62,
       "mp_url": "https://manapool.com/card/eos/10/crystal-quarry?conditions=NM&finish=nonfoil",
@@ -831,11 +831,22 @@
       "collected_foil": false
     },
     {
+      "display_name": "Nesting Grounds",
+      "mtg_name": "Nesting Grounds",
+      "tcg_price": 0.69,
+      "tcg_url": "https://www.tcgplayer.com/product/641804?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.56,
+      "mp_url": "https://manapool.com/card/eos/31/nesting-grounds?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/3/5/352b132b-7f97-46e3-8efd-238cb7f87b29.jpg?1783905856",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
       "display_name": "Cathedral of War",
       "mtg_name": "Cathedral of War",
-      "tcg_price": 0.73,
+      "tcg_price": 0.75,
       "tcg_url": "https://www.tcgplayer.com/product/643905?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.69,
+      "mp_price": 0.65,
       "mp_url": "https://manapool.com/card/eos/6/cathedral-of-war?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/d/6/d6ca2f32-dd29-4fd5-9d36-253209230ebd.jpg?1783905864",
       "collected_nonfoil": false,
@@ -844,7 +855,7 @@
     {
       "display_name": "Echoing Deeps",
       "mtg_name": "Echoing Deeps",
-      "tcg_price": 0.74,
+      "tcg_price": 0.76,
       "tcg_url": "https://www.tcgplayer.com/product/643647?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.49,
       "mp_url": "https://manapool.com/card/eos/13/echoing-deeps?conditions=NM&finish=nonfoil",
@@ -853,22 +864,11 @@
       "collected_foil": false
     },
     {
-      "display_name": "Nesting Grounds",
-      "mtg_name": "Nesting Grounds",
-      "tcg_price": 0.74,
-      "tcg_url": "https://www.tcgplayer.com/product/641804?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.52,
-      "mp_url": "https://manapool.com/card/eos/31/nesting-grounds?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/3/5/352b132b-7f97-46e3-8efd-238cb7f87b29.jpg?1783905856",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
       "display_name": "Bonders' Enclave",
       "mtg_name": "Bonders' Enclave",
-      "tcg_price": 0.76,
+      "tcg_price": 0.78,
       "tcg_url": "https://www.tcgplayer.com/product/642774?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.91,
+      "mp_price": 0.92,
       "mp_url": "https://manapool.com/card/eos/4/bonders-enclave?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/0/2/02a16e1e-1ea8-49af-9cde-2166134f7bdc.jpg?1783905865",
       "collected_nonfoil": false,
@@ -910,7 +910,7 @@
     {
       "display_name": "Scavenger Grounds",
       "mtg_name": "Scavenger Grounds",
-      "tcg_price": 1.1,
+      "tcg_price": 1.03,
       "tcg_url": "https://www.tcgplayer.com/product/644793?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.82,
       "mp_url": "https://manapool.com/card/eos/37/scavenger-grounds?conditions=NM&finish=nonfoil",
@@ -921,7 +921,7 @@
     {
       "display_name": "High Market",
       "mtg_name": "High Market",
-      "tcg_price": 1.2,
+      "tcg_price": 1.17,
       "tcg_url": "https://www.tcgplayer.com/product/641814?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.05,
       "mp_url": "https://manapool.com/card/eos/18/high-market?conditions=NM&finish=nonfoil",
@@ -932,29 +932,18 @@
     {
       "display_name": "Meteor Crater",
       "mtg_name": "Meteor Crater",
-      "tcg_price": 1.49,
+      "tcg_price": 1.46,
       "tcg_url": "https://www.tcgplayer.com/product/643651?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 1.23,
+      "mp_price": 1.43,
       "mp_url": "https://manapool.com/card/eos/26/meteor-crater?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/c/c/cc67cb3d-76ae-4394-9f45-41865b12edf5.jpg?1783905857",
       "collected_nonfoil": false,
       "collected_foil": false
     },
     {
-      "display_name": "Power Depot",
-      "mtg_name": "Power Depot",
-      "tcg_price": 1.49,
-      "tcg_url": "https://www.tcgplayer.com/product/644792?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 1.35,
-      "mp_url": "https://manapool.com/card/eos/34/power-depot?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/f/e/feaffb58-26e0-4f14-80af-681b785bb059.jpg?1783905855",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
       "display_name": "Terrain Generator",
       "mtg_name": "Terrain Generator",
-      "tcg_price": 1.65,
+      "tcg_price": 1.69,
       "tcg_url": "https://www.tcgplayer.com/product/643675?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.72,
       "mp_url": "https://manapool.com/card/eos/43/terrain-generator?conditions=NM&finish=nonfoil",
@@ -963,9 +952,20 @@
       "collected_foil": false
     },
     {
+      "display_name": "Power Depot",
+      "mtg_name": "Power Depot",
+      "tcg_price": 1.7,
+      "tcg_url": "https://www.tcgplayer.com/product/644792?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 1.35,
+      "mp_url": "https://manapool.com/card/eos/34/power-depot?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/f/e/feaffb58-26e0-4f14-80af-681b785bb059.jpg?1783905855",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
       "display_name": "Cascading Cataracts",
       "mtg_name": "Cascading Cataracts",
-      "tcg_price": 1.83,
+      "tcg_price": 1.82,
       "tcg_url": "https://www.tcgplayer.com/product/644787?Condition=Near+Mint&Printing=Normal",
       "mp_price": 2.03,
       "mp_url": "https://manapool.com/card/eos/5/cascading-cataracts?conditions=NM&finish=nonfoil",
@@ -976,9 +976,9 @@
     {
       "display_name": "Petrified Field",
       "mtg_name": "Petrified Field",
-      "tcg_price": 1.94,
+      "tcg_price": 2.01,
       "tcg_url": "https://www.tcgplayer.com/product/644791?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 2.19,
+      "mp_price": 2.22,
       "mp_url": "https://manapool.com/card/eos/32/petrified-field?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/b/f/bf41d9f3-4e77-4b93-b153-d0aeb01ac312.jpg?1783905856",
       "collected_nonfoil": false,
@@ -987,9 +987,9 @@
     {
       "display_name": "Dust Bowl",
       "mtg_name": "Dust Bowl",
-      "tcg_price": 2.64,
+      "tcg_price": 2.68,
       "tcg_url": "https://www.tcgplayer.com/product/643643?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 3.1,
+      "mp_price": 2.7,
       "mp_url": "https://manapool.com/card/eos/12/dust-bowl?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/6/d/6d9b32b9-837f-438f-b0dd-1f8fb74b9e6b.jpg?1783905862",
       "collected_nonfoil": false,
@@ -1000,7 +1000,7 @@
       "mtg_name": "Eldrazi Temple",
       "tcg_price": 3.07,
       "tcg_url": "https://www.tcgplayer.com/product/641822?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 2.9,
+      "mp_price": 2.94,
       "mp_url": "https://manapool.com/card/eos/14/eldrazi-temple?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/0/1/010abd40-3f9c-44bc-8570-d539750c3cd7.jpg?1783905861",
       "collected_nonfoil": false,
@@ -1022,7 +1022,7 @@
       "mtg_name": "Mirrorpool",
       "tcg_price": 4.3,
       "tcg_url": "https://www.tcgplayer.com/product/643913?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 4.65,
+      "mp_price": 4.49,
       "mp_url": "https://manapool.com/card/eos/27/mirrorpool?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/e/e/eebffbb3-5421-40e4-af92-999d8eb504f4.jpg?1783905858",
       "collected_nonfoil": false,
@@ -1031,9 +1031,9 @@
     {
       "display_name": "Swarmyard",
       "mtg_name": "Swarmyard",
-      "tcg_price": 5.26,
+      "tcg_price": 5.5,
       "tcg_url": "https://www.tcgplayer.com/product/643670?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 4.99,
+      "mp_price": 4.98,
       "mp_url": "https://manapool.com/card/eos/42/swarmyard?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/2/b/2b4ee0e7-7528-4fdc-a768-055d2c097f05.jpg?1783905852",
       "collected_nonfoil": false,
@@ -1042,7 +1042,7 @@
     {
       "display_name": "Mutavault",
       "mtg_name": "Mutavault",
-      "tcg_price": 5.51,
+      "tcg_price": 5.56,
       "tcg_url": "https://www.tcgplayer.com/product/638925?Condition=Near+Mint&Printing=Normal",
       "mp_price": 5.45,
       "mp_url": "https://manapool.com/card/eos/28/mutavault?conditions=NM&finish=nonfoil",
@@ -1064,9 +1064,9 @@
     {
       "display_name": "Lotus Field",
       "mtg_name": "Lotus Field",
-      "tcg_price": 9.22,
+      "tcg_price": 9.23,
       "tcg_url": "https://www.tcgplayer.com/product/643911?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 9.82,
+      "mp_price": 9.8,
       "mp_url": "https://manapool.com/card/eos/23/lotus-field?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/e/2/e2fdbc99-7696-434e-bbc5-366393ea7f04.jpg?1783905856",
       "collected_nonfoil": false,
@@ -1097,9 +1097,9 @@
     {
       "display_name": "Reflecting Pool",
       "mtg_name": "Reflecting Pool",
-      "tcg_price": 14.63,
+      "tcg_price": 14.95,
       "tcg_url": "https://www.tcgplayer.com/product/642776?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 15.44,
+      "mp_price": 15.59,
       "mp_url": "https://manapool.com/card/eos/36/reflecting-pool?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/2/b/2b4e8ad6-7a60-43d6-a402-c91284993c14.jpg?1783905854",
       "collected_nonfoil": false,
@@ -1119,9 +1119,9 @@
     {
       "display_name": "Strip Mine",
       "mtg_name": "Strip Mine",
-      "tcg_price": 22.01,
+      "tcg_price": 22.26,
       "tcg_url": "https://www.tcgplayer.com/product/643665?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 18.57,
+      "mp_price": 18.38,
       "mp_url": "https://manapool.com/card/eos/40/strip-mine?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/6/2/62aa232c-6034-4417-95a6-77b3a81c505c.jpg?1783905852",
       "collected_nonfoil": false,
@@ -1141,7 +1141,7 @@
     {
       "display_name": "Gemstone Caverns",
       "mtg_name": "Gemstone Caverns",
-      "tcg_price": 51.45,
+      "tcg_price": 51.42,
       "tcg_url": "https://www.tcgplayer.com/product/641799?Condition=Near+Mint&Printing=Normal",
       "mp_price": 54.88,
       "mp_url": "https://manapool.com/card/eos/16/gemstone-caverns?conditions=NM&finish=nonfoil",
@@ -1152,7 +1152,7 @@
     {
       "display_name": "Ancient Tomb",
       "mtg_name": "Ancient Tomb",
-      "tcg_price": 109.71,
+      "tcg_price": 110.28,
       "tcg_url": "https://www.tcgplayer.com/product/643635?Condition=Near+Mint&Printing=Normal",
       "mp_price": 114.99,
       "mp_url": "https://manapool.com/card/eos/1/ancient-tomb?conditions=NM&finish=nonfoil",
@@ -1176,7 +1176,7 @@
     {
       "display_name": "Needle Spires",
       "mtg_name": "Needle Spires",
-      "tcg_price": 1.17,
+      "tcg_price": 1.18,
       "tcg_url": "https://www.tcgplayer.com/product/643928?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.9,
       "mp_url": "https://manapool.com/card/eos/75/needle-spires?conditions=NM&finish=nonfoil",
@@ -1187,7 +1187,7 @@
     {
       "display_name": "Hissing Quagmire",
       "mtg_name": "Hissing Quagmire",
-      "tcg_price": 1.3,
+      "tcg_price": 1.31,
       "tcg_url": "https://www.tcgplayer.com/product/643924?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.26,
       "mp_url": "https://manapool.com/card/eos/64/hissing-quagmire?conditions=NM&finish=nonfoil",
@@ -1220,7 +1220,7 @@
     {
       "display_name": "Stirring Wildwood",
       "mtg_name": "Stirring Wildwood",
-      "tcg_price": 1.56,
+      "tcg_price": 1.54,
       "tcg_url": "https://www.tcgplayer.com/product/643931?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.15,
       "mp_url": "https://manapool.com/card/eos/84/stirring-wildwood?conditions=NM&finish=nonfoil",
@@ -1251,6 +1251,17 @@
       "collected_foil": false
     },
     {
+      "display_name": "Lumbering Falls",
+      "mtg_name": "Lumbering Falls",
+      "tcg_price": 1.98,
+      "tcg_url": "https://www.tcgplayer.com/product/643922?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 1.28,
+      "mp_url": "https://manapool.com/card/eos/69/lumbering-falls?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/9/e/9e1cc021-a41a-4969-a007-3cf88d7b8c8e.jpg?1783905843",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
       "display_name": "Lavaclaw Reaches",
       "mtg_name": "Lavaclaw Reaches",
       "tcg_price": 2.01,
@@ -1262,35 +1273,24 @@
       "collected_foil": false
     },
     {
-      "display_name": "Lumbering Falls",
-      "mtg_name": "Lumbering Falls",
-      "tcg_price": 2.05,
-      "tcg_url": "https://www.tcgplayer.com/product/643922?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 1.28,
-      "mp_url": "https://manapool.com/card/eos/69/lumbering-falls?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/9/e/9e1cc021-a41a-4969-a007-3cf88d7b8c8e.jpg?1783905843",
+      "display_name": "Endless Sands",
+      "mtg_name": "Endless Sands",
+      "tcg_price": 2.21,
+      "tcg_url": "https://www.tcgplayer.com/product/644812?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 1.75,
+      "mp_url": "https://manapool.com/card/eos/60/endless-sands?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/b/c/bce02db1-3a50-4ba8-a527-81d2bb3ddfcf.jpg?1783905845",
       "collected_nonfoil": false,
       "collected_foil": false
     },
     {
       "display_name": "Creeping Tar Pit",
       "mtg_name": "Creeping Tar Pit",
-      "tcg_price": 2.21,
+      "tcg_price": 2.3,
       "tcg_url": "https://www.tcgplayer.com/product/643920?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.77,
       "mp_url": "https://manapool.com/card/eos/54/creeping-tar-pit?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/4/9/49fec8b8-f418-40d7-9a81-0a1312db622b.jpg?1783905848",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
-      "display_name": "Endless Sands",
-      "mtg_name": "Endless Sands",
-      "tcg_price": 2.21,
-      "tcg_url": "https://www.tcgplayer.com/product/644812?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 1.74,
-      "mp_url": "https://manapool.com/card/eos/60/endless-sands?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/b/c/bce02db1-3a50-4ba8-a527-81d2bb3ddfcf.jpg?1783905845",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -1341,7 +1341,7 @@
     {
       "display_name": "Bonders' Enclave",
       "mtg_name": "Bonders' Enclave",
-      "tcg_price": 3.07,
+      "tcg_price": 3.11,
       "tcg_url": "https://www.tcgplayer.com/product/642778?Condition=Near+Mint&Printing=Normal",
       "mp_price": 2.17,
       "mp_url": "https://manapool.com/card/eos/49/bonders-enclave?conditions=NM&finish=nonfoil",
@@ -1374,7 +1374,7 @@
     {
       "display_name": "Meteor Crater",
       "mtg_name": "Meteor Crater",
-      "tcg_price": 3.29,
+      "tcg_price": 3.34,
       "tcg_url": "https://www.tcgplayer.com/product/643654?Condition=Near+Mint&Printing=Normal",
       "mp_price": 2.44,
       "mp_url": "https://manapool.com/card/eos/71/meteor-crater?conditions=NM&finish=nonfoil",
@@ -1429,7 +1429,7 @@
     {
       "display_name": "Scavenger Grounds",
       "mtg_name": "Scavenger Grounds",
-      "tcg_price": 5.05,
+      "tcg_price": 4.98,
       "tcg_url": "https://www.tcgplayer.com/product/644824?Condition=Near+Mint&Printing=Normal",
       "mp_price": 4.25,
       "mp_url": "https://manapool.com/card/eos/82/scavenger-grounds?conditions=NM&finish=nonfoil",
@@ -1484,7 +1484,7 @@
     {
       "display_name": "Petrified Field",
       "mtg_name": "Petrified Field",
-      "tcg_price": 7.21,
+      "tcg_price": 7.19,
       "tcg_url": "https://www.tcgplayer.com/product/644818?Condition=Near+Mint&Printing=Normal",
       "mp_price": 7.0,
       "mp_url": "https://manapool.com/card/eos/77/petrified-field?conditions=NM&finish=nonfoil",
@@ -1506,9 +1506,9 @@
     {
       "display_name": "Eldrazi Temple",
       "mtg_name": "Eldrazi Temple",
-      "tcg_price": 8.47,
+      "tcg_price": 8.76,
       "tcg_url": "https://www.tcgplayer.com/product/641823?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 7.79,
+      "mp_price": 7.11,
       "mp_url": "https://manapool.com/card/eos/59/eldrazi-temple?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/9/3/93183338-d692-48d4-9549-164006ef776f.jpg?1783905846",
       "collected_nonfoil": false,
@@ -1517,7 +1517,7 @@
     {
       "display_name": "Mutavault",
       "mtg_name": "Mutavault",
-      "tcg_price": 9.68,
+      "tcg_price": 9.65,
       "tcg_url": "https://www.tcgplayer.com/product/638926?Condition=Near+Mint&Printing=Normal",
       "mp_price": 9.98,
       "mp_url": "https://manapool.com/card/eos/73/mutavault?conditions=NM&finish=nonfoil",
@@ -1539,7 +1539,7 @@
     {
       "display_name": "Grove of the Burnwillows",
       "mtg_name": "Grove of the Burnwillows",
-      "tcg_price": 10.79,
+      "tcg_price": 12.35,
       "tcg_url": "https://www.tcgplayer.com/product/643923?Condition=Near+Mint&Printing=Normal",
       "mp_price": 8.83,
       "mp_url": "https://manapool.com/card/eos/62/grove-of-the-burnwillows?conditions=NM&finish=nonfoil",
@@ -1638,7 +1638,7 @@
     {
       "display_name": "Gemstone Caverns",
       "mtg_name": "Gemstone Caverns",
-      "tcg_price": 76.71,
+      "tcg_price": 78.28,
       "tcg_url": "https://www.tcgplayer.com/product/641811?Condition=Near+Mint&Printing=Normal",
       "mp_price": 77.0,
       "mp_url": "https://manapool.com/card/eos/61/gemstone-caverns?conditions=NM&finish=nonfoil",
