@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-12T23:35:54Z",
+  "updated_at": "2026-08-12T23:47:42Z",
   "tabs": [
     {
       "key": "realms_and_relics",
@@ -393,7 +393,7 @@
       "mtg_name": "Gandalf, Friend of the Shire",
       "tcg_price": 0.23,
       "tcg_url": "https://www.tcgplayer.com/product/498446?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.16,
+      "mp_price": 0.15,
       "mp_url": "https://manapool.com/card/ltr/308/gandalf-friend-of-the-shire?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/e/a/eae80537-f355-4aa3-8952-b08f3d1a1e41.jpg?1783916213",
       "collected_nonfoil": false,
@@ -569,7 +569,7 @@
       "mtg_name": "Sauron, the Necromancer",
       "tcg_price": 0.52,
       "tcg_url": "https://www.tcgplayer.com/product/498450?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.43,
+      "mp_price": 0.4,
       "mp_url": "https://manapool.com/card/ltr/310/sauron-the-necromancer?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/2/4/24521350-ffa6-46d9-95ed-6573c681e095.jpg?1783916211",
       "collected_nonfoil": false,
