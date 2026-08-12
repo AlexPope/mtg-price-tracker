@@ -8,3 +8,7 @@ __pycache__/
 
 # Local run output
 fetch.log
+
+# Claude Code settings. Kept local: the accumulated permission allowlist is
+# machine-specific and embeds absolute paths.
+.claude/
