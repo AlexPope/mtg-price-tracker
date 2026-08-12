@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-12T22:52:55Z",
+  "updated_at": "2026-08-12T23:35:54Z",
   "tabs": [
     {
       "key": "realms_and_relics",
@@ -624,7 +624,7 @@
       "mtg_name": "Tom Bombadil",
       "tcg_price": 2.21,
       "tcg_url": "https://www.tcgplayer.com/product/488265?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 2.86,
+      "mp_price": 2.9,
       "mp_url": "https://manapool.com/card/ltr/331/tom-bombadil?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/3/c/3c7ce623-bcf8-4d42-8a88-450bea7d7529.jpg?1783916200",
       "collected_nonfoil": false,
@@ -934,7 +934,7 @@
       "mtg_name": "Meteor Crater",
       "tcg_price": 1.19,
       "tcg_url": "https://www.tcgplayer.com/product/643651?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 1.32,
+      "mp_price": 1.2,
       "mp_url": "https://manapool.com/card/eos/26/meteor-crater?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/c/c/cc67cb3d-76ae-4394-9f45-41865b12edf5.jpg?1783905857",
       "collected_nonfoil": false,
@@ -1055,7 +1055,7 @@
       "mtg_name": "Swarmyard",
       "tcg_price": 5.6,
       "tcg_url": "https://www.tcgplayer.com/product/643670?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 4.78,
+      "mp_price": 4.98,
       "mp_url": "https://manapool.com/card/eos/42/swarmyard?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/2/b/2b4ee0e7-7528-4fdc-a768-055d2c097f05.jpg?1783905852",
       "collected_nonfoil": false,
@@ -1310,7 +1310,7 @@
       "mtg_name": "Creeping Tar Pit",
       "tcg_price": 2.38,
       "tcg_url": "https://www.tcgplayer.com/product/643920?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 1.73,
+      "mp_price": 2.09,
       "mp_url": "https://manapool.com/card/eos/54/creeping-tar-pit?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/4/9/49fec8b8-f418-40d7-9a81-0a1312db622b.jpg?1783905848",
       "collected_nonfoil": false,
