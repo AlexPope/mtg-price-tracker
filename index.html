@@ -250,108 +250,10 @@
   <span id="last-updated">Loading...</span>
 </div>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('realms')">LTC - Realms &amp; Relics</button>
-  <button class="tab-btn" onclick="switchTab('showcase')">LTR - Showcase</button>
-  <button class="tab-btn" onclick="switchTab('stellar1')">EOE - Stellar Sights I</button>
-  <button class="tab-btn" onclick="switchTab('stellar2')">EOE - Stellar Sights II</button>
-</div>
-
-<div id="tab-realms" class="tab-panel active">
-  <p class="meta" style="margin-bottom:12px">Tales of Middle-earth Commander · Borderless Non-Foil · #348–377</p>
-  <div class="summary" id="summary-realms"></div>
-  <table>
-    <colgroup>
-      <col class="c-name"><col class="c-tcg"><col class="c-mp">
-      <col class="c-trend"><col class="c-nf"><col class="c-foil">
-    </colgroup>
-    <thead>
-      <tr>
-        <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
-      </tr>
-    </thead>
-    <tbody id="tbody-realms">
-      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div id="tab-showcase" class="tab-panel">
-  <p class="meta" style="margin-bottom:12px">Tales of Middle-earth · Showcase Borderless · #302–331</p>
-  <div class="summary" id="summary-showcase"></div>
-  <table>
-    <colgroup>
-      <col class="c-name"><col class="c-tcg"><col class="c-mp">
-      <col class="c-trend"><col class="c-nf"><col class="c-foil">
-    </colgroup>
-    <thead>
-      <tr>
-        <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
-      </tr>
-    </thead>
-    <tbody id="tbody-showcase">
-      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div id="tab-stellar1" class="tab-panel">
-  <p class="meta" style="margin-bottom:12px">Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45</p>
-  <div class="summary" id="summary-stellar1"></div>
-  <table>
-    <colgroup>
-      <col class="c-name"><col class="c-tcg"><col class="c-mp">
-      <col class="c-trend"><col class="c-nf"><col class="c-foil">
-    </colgroup>
-    <thead>
-      <tr>
-        <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
-      </tr>
-    </thead>
-    <tbody id="tbody-stellar1">
-      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div id="tab-stellar2" class="tab-panel">
-  <p class="meta" style="margin-bottom:12px">Edge of Eternities: Stellar Sights · Borderless Non-Foil · #46–90</p>
-  <div class="summary" id="summary-stellar2"></div>
-  <table>
-    <colgroup>
-      <col class="c-name"><col class="c-tcg"><col class="c-mp">
-      <col class="c-trend"><col class="c-nf"><col class="c-foil">
-    </colgroup>
-    <thead>
-      <tr>
-        <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
-      </tr>
-    </thead>
-    <tbody id="tbody-stellar2">
-      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
-    </tbody>
-  </table>
-</div>
+<!-- Tabs and panels are built from the "tabs" block in prices.json, so
+     adding a set needs no change here. -->
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
 
 <div id="card-modal" onclick="closeModal(event)">
   <button class="modal-close" onclick="closeModal(event, true)" aria-label="Close">&times;</button>
@@ -373,14 +275,19 @@ function fmt(price) {
 
 const CHECK = '<span class="owned-check" title="Collected">&#10003;</span>';
 
-// Map UI tab name → key in prices.json
-const TAB_DATA_KEY = {
-  realms:   'realms_and_relics',
-  showcase: 'showcase',
-  stellar1: 'stellar_sights_i',
-  stellar2: 'stellar_sights_ii',
-};
-const TAB_NAMES = Object.keys(TAB_DATA_KEY);
+// Tabs come from prices.json; a tab's key is also its key into the data and
+// the suffix of its DOM ids.
+let TABS = [];
+const tabKeys = () => TABS.map(t => t.key);
+
+// Older prices.json files predate the "tabs" block. Fall back to whatever
+// sections are present so the page still renders something useful.
+function deriveTabs(data) {
+  if (Array.isArray(data.tabs) && data.tabs.length) return data.tabs;
+  return Object.keys(data)
+    .filter(k => Array.isArray(data[k]))
+    .map(k => ({ key: k, label: k.replace(/_/g, ' '), subtitle: '' }));
+}
 
 // Card identity that survives re-sorting and schema changes; mirrors
 // CARD_KEY_RE in scripts/build_history.py.
@@ -396,13 +303,50 @@ const SPARK_DAYS = 30;  // window for the sparkline
 const state = {
   data: null,
   history: null,
-  sort: {
-    realms:   { col: 'tcg', dir: 'asc' },
-    showcase: { col: 'tcg', dir: 'asc' },
-    stellar1: { col: 'tcg', dir: 'asc' },
-    stellar2: { col: 'tcg', dir: 'asc' },
-  },
+  sort: {},   // keyed by tab, populated once the tabs are known
 };
+
+const COLUMNS = [
+  { col: 'name',  label: 'Card Name' },
+  { col: 'tcg',   label: 'TCGPlayer' },
+  { col: 'mp',    label: 'ManaPool' },
+  { col: 'trend', label: '30-Day Trend (TCG)',
+    title: 'TCGplayer price: 30-day sparkline, with the change over the last 7 days' },
+  { col: 'nf',    label: 'Collected Non-Foil', cls: 'col-check' },
+  { col: 'foil',  label: 'Collected Foil',     cls: 'col-check' },
+];
+
+// Builds the tab bar and one panel per tab. Everything below this point works
+// off the generated DOM, so a new set arrives with no markup change.
+function buildScaffold(tabs) {
+  const head = COLUMNS.map(c =>
+    `<th class="sortable${c.cls ? ' ' + c.cls : ''}" data-col="${c.col}"`
+    + `${c.title ? ` title="${escapeHTML(c.title)}"` : ''}>`
+    + `${escapeHTML(c.label)}<span class="sort-ind"></span></th>`).join('');
+
+  document.getElementById('tabs').innerHTML = tabs.map((t, i) =>
+    `<button class="tab-btn${i === 0 ? ' active' : ''}" data-tab="${escapeHTML(t.key)}">`
+    + `${escapeHTML(t.label)}</button>`).join('');
+
+  document.getElementById('panels').innerHTML = tabs.map((t, i) => `
+    <div id="tab-${escapeHTML(t.key)}" class="tab-panel${i === 0 ? ' active' : ''}">
+      ${t.subtitle ? `<p class="meta" style="margin-bottom:12px">${escapeHTML(t.subtitle)}</p>` : ''}
+      <div class="summary" id="summary-${escapeHTML(t.key)}"></div>
+      <table>
+        <colgroup>
+          <col class="c-name"><col class="c-tcg"><col class="c-mp">
+          <col class="c-trend"><col class="c-nf"><col class="c-foil">
+        </colgroup>
+        <thead><tr>${head}</tr></thead>
+        <tbody id="tbody-${escapeHTML(t.key)}">
+          <tr><td colspan="${COLUMNS.length}" style="color:#999;padding:20px 14px">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>`).join('');
+
+  state.sort = {};
+  for (const t of tabs) state.sort[t.key] = { col: 'tcg', dir: 'asc' };
+}
 
 function bestPrice(c) {
   if (c.tcg_price == null && c.mp_price == null) return null;
@@ -612,8 +556,7 @@ function buildSummary(cards) {
 }
 
 function renderTab(tabName) {
-  const key = TAB_DATA_KEY[tabName];
-  const cards = state.data[key];
+  const cards = state.data[tabName];
   const {col, dir} = state.sort[tabName];
   const sorted = sortCards(cards, col, dir);
   document.getElementById('tbody-' + tabName).innerHTML = buildRows(sorted, tabName);
@@ -642,8 +585,7 @@ function wireSortHeaders() {
 }
 
 function showCard(tabName, idx, viaHover) {
-  const key = TAB_DATA_KEY[tabName];
-  const card = state.data[key].find(c => c._idx === idx);
+  const card = (state.data[tabName] || []).find(c => c._idx === idx);
   if (!card || !card.image_url) return;
   document.getElementById('modal-img').src = card.image_url;
   document.getElementById('modal-img').alt = card.display_name;
@@ -681,17 +623,19 @@ async function loadPrices() {
     state.history = history;
     const data = await r.json();
 
-    // Assign stable indexes so sort/render can reference by _idx.
-    // Tolerate a missing key gracefully so an older prices.json (with only
-    // realms + showcase) still renders those two tabs.
-    for (const tab of TAB_NAMES) {
-      const key = TAB_DATA_KEY[tab];
+    TABS = deriveTabs(data);
+    buildScaffold(TABS);
+    wireSortHeaders();
+
+    // Assign stable indexes so sort/render can reference by _idx. A tab whose
+    // section is missing renders as empty rather than throwing.
+    for (const key of tabKeys()) {
       if (Array.isArray(data[key])) data[key].forEach((c, i) => c._idx = i);
       else data[key] = [];
     }
     state.data = data;
 
-    TAB_NAMES.forEach(renderTab);
+    tabKeys().forEach(renderTab);
 
     const ts = new Date(data.updated_at);
     document.getElementById('last-updated').textContent =
@@ -704,18 +648,25 @@ async function loadPrices() {
   }
 }
 
+// Matches on the button's own data-tab rather than its position, so the tab
+// bar and the panels can never drift out of step.
 function switchTab(name) {
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', TAB_NAMES[i] === name);
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
   });
-  for (const tab of TAB_NAMES) {
-    document.getElementById('tab-' + tab).classList.toggle('active', name === tab);
+  for (const key of tabKeys()) {
+    document.getElementById('tab-' + key).classList.toggle('active', key === name);
   }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  loadPrices();
-  wireSortHeaders();
+  loadPrices();   // builds the scaffold, then wires the sort headers
+
+  // Tab buttons are generated, so listen on the bar rather than each button.
+  document.getElementById('tabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('.tab-btn');
+    if (btn) switchTab(btn.dataset.tab);
+  });
 
   // Card image preview via event delegation
   let hoverTimer = null;

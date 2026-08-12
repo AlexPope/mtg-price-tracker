@@ -1,0 +1,34 @@
+[
+  {
+    "key": "realms_and_relics",
+    "label": "LTC - Realms & Relics",
+    "subtitle": "Tales of Middle-earth Commander · Borderless Non-Foil · #348–377",
+    "set": "ltc",
+    "from": 348,
+    "to": 377
+  },
+  {
+    "key": "showcase",
+    "label": "LTR - Showcase",
+    "subtitle": "Tales of Middle-earth · Showcase Borderless · #302–331",
+    "set": "ltr",
+    "from": 302,
+    "to": 331
+  },
+  {
+    "key": "stellar_sights_i",
+    "label": "EOE - Stellar Sights I",
+    "subtitle": "Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45",
+    "set": "eos",
+    "from": 1,
+    "to": 45
+  },
+  {
+    "key": "stellar_sights_ii",
+    "label": "EOE - Stellar Sights II",
+    "subtitle": "Edge of Eternities: Stellar Sights · Borderless Non-Foil · #46–90",
+    "set": "eos",
+    "from": 46,
+    "to": 90
+  }
+]
