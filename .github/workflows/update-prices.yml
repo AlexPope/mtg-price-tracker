@@ -29,6 +29,11 @@ jobs:
       - name: Build price history
         run: python scripts/build_history.py
 
+      # Runs against the freshly generated files, so a regression stops the run
+      # before anything is committed.
+      - name: Run tests
+        run: python -m unittest discover -s tests
+
       - name: Commit prices.json and history.json
         run: |
           git config user.name "github-actions[bot]"

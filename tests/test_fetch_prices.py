@@ -1,0 +1,284 @@
+"""Tests for scripts/fetch_prices.py.
+
+These run offline. The one test that talks to Scryfall - confirming the derived
+slug and tcgplayer_id still match reality for every tracked card - is opt-in via
+RUN_NETWORK_TESTS=1, so the suite stays fast and deterministic by default.
+"""
+import contextlib
+import io
+import json
+import os
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+
+import fetch_prices as fp
+
+
+class TestSlugify(unittest.TestCase):
+    """The ManaPool slug is the one derived value with no second source to
+    cross-check, so pin the awkward cases that appear in the tracked sets."""
+
+    CASES = [
+        ("The Great Henge",              "the-great-henge"),
+        ("Boseiju, Who Shelters All",    "boseiju-who-shelters-all"),
+        ("Minamo, School at Water's Edge", "minamo-school-at-waters-edge"),
+        ("Sméagol, Helpful Guide",       "smeagol-helpful-guide"),
+        ("Thespian's Stage",             "thespians-stage"),
+        ("Bonders' Enclave",             "bonders-enclave"),
+        ("Galadriel of Lothlórien",      "galadriel-of-lothlorien"),
+        ("Inventors' Fair",              "inventors-fair"),
+        ("Nazgûl",                       "nazgul"),
+        ("Witch-king of Angmar",         "witch-king-of-angmar"),
+    ]
+
+    def test_known_slugs(self):
+        for name, expected in self.CASES:
+            with self.subTest(name=name):
+                self.assertEqual(fp.slugify(name), expected)
+
+    def test_typographic_apostrophe_matches_ascii(self):
+        self.assertEqual(fp.slugify("Thespian’s Stage"), fp.slugify("Thespian's Stage"))
+
+    def test_shape(self):
+        for messy in ["  Leading and trailing  ", "Double--Hyphen", "Comma, Period."]:
+            with self.subTest(messy=messy):
+                slug = fp.slugify(messy)
+                self.assertEqual(slug, slug.lower())
+                self.assertFalse(slug.startswith("-") or slug.endswith("-"))
+                self.assertNotIn("--", slug)
+
+
+class TestManapoolRegex(unittest.TestCase):
+    """ManaPool has changed this quoting twice; a third change silently nulled
+    every price for two days before the guard rails existed."""
+
+    def test_all_known_formats(self):
+        for label, html in [
+            ("escaped JSON", r'...\"marketPrices\":{\"price\": 8217,\"price_foil\": 9370}...'),
+            ("plain JSON",    '..."marketPrices":{"price":8217,"price_foil":9370}...'),
+            ("JS object",     '...,marketPrices:{price:8217,price_foil:9370},legalities:[]...'),
+        ]:
+            with self.subTest(format=label):
+                m = fp.MANAPOOL_PRICE_RE.search(html)
+                self.assertIsNotNone(m, f"{label} no longer parses")
+                self.assertEqual(int(m.group(1)) / 100.0, 82.17)
+
+    def test_no_match_on_unrelated_page(self):
+        self.assertIsNone(fp.MANAPOOL_PRICE_RE.search("<html>no prices here</html>"))
+
+
+class TestLoadSets(unittest.TestCase):
+    def setUp(self):
+        self._orig = fp.SETS_FILE
+        self.tmp = Path(tempfile.mkdtemp())
+
+    def tearDown(self):
+        fp.SETS_FILE = self._orig
+
+    def _write(self, obj):
+        f = self.tmp / "sets.json"
+        f.write_text(json.dumps(obj), encoding="utf-8")
+        fp.SETS_FILE = f
+
+    def test_rejects_missing_field(self):
+        self._write([{"key": "x", "label": "X", "set": "ltr", "from": 1, "to": 2}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_inverted_range(self):
+        self._write([{"key": "x", "label": "X", "subtitle": "",
+                      "set": "ltr", "from": 9, "to": 2}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_duplicate_key(self):
+        entry = {"key": "x", "label": "X", "subtitle": "", "set": "ltr", "from": 1, "to": 2}
+        self._write([entry, dict(entry)])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_real_sets_file_is_valid(self):
+        """Catches a typo in data/sets.json before a run publishes bad data."""
+        fp.SETS_FILE = REPO_ROOT / "data" / "sets.json"
+        definitions = fp.load_sets()
+        self.assertGreater(len(definitions), 0)
+        for d in definitions:
+            with self.subTest(key=d["key"]):
+                self.assertRegex(d["set"], r"^[a-z0-9]+$")
+                self.assertGreaterEqual(d["from"], 1)
+                self.assertLessEqual(d["from"], d["to"])
+                self.assertTrue(d["label"].strip())
+
+    def test_card_numbers_is_inclusive(self):
+        self.assertEqual(fp.card_numbers({"from": 3, "to": 6}), ["3", "4", "5", "6"])
+        self.assertEqual(fp.card_numbers({"from": 5, "to": 5}), ["5"])
+
+
+class TestRunStats(unittest.TestCase):
+    """The thresholds are what stand between a bad vendor day and a published
+    prices.json full of nulls."""
+
+    def test_clean_run_passes(self):
+        s = fp.RunStats()
+        s.cards = 150
+        self.assertEqual(s.failures(), [])
+
+    def test_zero_cards_is_a_failure(self):
+        self.assertEqual(fp.RunStats().failures(), ["no cards were processed"])
+
+    def test_scryfall_threshold(self):
+        s = fp.RunStats()
+        s.cards = 100
+        s.scryfall_errors = [("c", "HTTP 500")] * 10   # exactly at the limit
+        self.assertEqual(s.failures(), [])
+        s.scryfall_errors.append(("c", "HTTP 500"))    # 11% > 10%
+        self.assertEqual(len(s.failures()), 1)
+
+    def test_manapool_error_threshold(self):
+        s = fp.RunStats()
+        s.cards = 100
+        s.manapool_errors = [("c", "HTTP 503")] * 11
+        self.assertEqual(len(s.failures()), 1)
+
+    def test_manapool_parse_miss_threshold(self):
+        """The exact failure that shipped 150 nulls: pages load fine but no
+        price parses out of them."""
+        s = fp.RunStats()
+        s.cards = 150
+        s.manapool_misses = ["card"] * 75              # 50%, at the limit
+        self.assertEqual(s.failures(), [])
+        s.manapool_misses = ["card"] * 150             # the real-world case
+        reasons = s.failures()
+        self.assertEqual(len(reasons), 1)
+        self.assertIn("page format", reasons[0])
+
+
+class TestScryfallImage(unittest.TestCase):
+    def test_prefers_normal(self):
+        self.assertEqual(
+            fp.scryfall_image({"image_uris": {"small": "s", "normal": "n", "large": "l"}}), "n")
+
+    def test_falls_back_to_large_then_small(self):
+        self.assertEqual(fp.scryfall_image({"image_uris": {"large": "l", "small": "s"}}), "l")
+        self.assertEqual(fp.scryfall_image({"image_uris": {"small": "s"}}), "s")
+
+    def test_double_faced_card_uses_first_face(self):
+        card = {"card_faces": [{"image_uris": {"normal": "front"}},
+                               {"image_uris": {"normal": "back"}}]}
+        self.assertEqual(fp.scryfall_image(card), "front")
+
+    def test_missing_images(self):
+        self.assertIsNone(fp.scryfall_image({}))
+
+
+class TestBuildCardRow(unittest.TestCase):
+    """Row assembly, with the network stubbed out."""
+
+    DEFINITION = {"key": "k", "label": "L", "subtitle": "", "set": "ltc", "from": 348, "to": 348}
+
+    def setUp(self):
+        self._orig = fp.fetch_manapool_price
+        fp.fetch_manapool_price = lambda s, n, slug: 82.17
+        self._sleep = fp.time.sleep
+        fp.time.sleep = lambda *_: None
+        # build_card_row logs each card; keep it out of the test output.
+        self._quiet = contextlib.redirect_stdout(io.StringIO())
+        self._quiet.__enter__()
+
+    def tearDown(self):
+        self._quiet.__exit__(None, None, None)
+        fp.fetch_manapool_price = self._orig
+        fp.time.sleep = self._sleep
+
+    def _card(self, **over):
+        card = {"name": "The Great Henge", "tcgplayer_id": 488284,
+                "prices": {"usd": "90.22"}, "image_uris": {"normal": "img"}}
+        card.update(over)
+        return card
+
+    def test_plain_card(self):
+        row = fp.build_card_row(self.DEFINITION, "348", self._card(), {}, fp.RunStats())
+        self.assertEqual(row["display_name"], "The Great Henge")
+        self.assertEqual(row["mtg_name"], "The Great Henge")
+        self.assertEqual(row["tcg_price"], 90.22)
+        self.assertEqual(row["mp_price"], 82.17)
+        self.assertIn("/product/488284", row["tcg_url"])
+        self.assertEqual(
+            row["mp_url"],
+            "https://manapool.com/card/ltc/348/the-great-henge?conditions=NM&finish=nonfoil")
+        self.assertFalse(row["collected_nonfoil"] or row["collected_foil"])
+
+    def test_flavor_name_becomes_display_name(self):
+        row = fp.build_card_row(self.DEFINITION, "348",
+                                self._card(flavor_name="The Party Tree"), {}, fp.RunStats())
+        self.assertEqual(row["display_name"], "The Party Tree (The Great Henge)")
+        self.assertEqual(row["mtg_name"], "The Great Henge")
+
+    def test_ownership_is_applied(self):
+        owned = {("ltc", "348"): {"nonfoil": True, "foil": False}}
+        row = fp.build_card_row(self.DEFINITION, "348", self._card(), owned, fp.RunStats())
+        self.assertTrue(row["collected_nonfoil"])
+        self.assertFalse(row["collected_foil"])
+
+    def test_missing_price_is_null_not_an_error(self):
+        stats = fp.RunStats()
+        row = fp.build_card_row(self.DEFINITION, "348",
+                                self._card(prices={}), {}, stats)
+        self.assertIsNone(row["tcg_price"])
+        self.assertEqual(stats.scryfall_errors, [])
+
+    def test_absent_card_yields_no_row(self):
+        stats = fp.RunStats()
+        self.assertIsNone(fp.build_card_row(self.DEFINITION, "348", None, {}, stats))
+
+    def test_manapool_miss_is_recorded(self):
+        fp.fetch_manapool_price = lambda s, n, slug: None
+        stats = fp.RunStats()
+        row = fp.build_card_row(self.DEFINITION, "348", self._card(), {}, stats)
+        self.assertIsNone(row["mp_price"])
+        self.assertEqual(stats.manapool_misses, ["The Great Henge"])
+
+    def test_manapool_failure_is_recorded_separately(self):
+        def boom(*_):
+            raise fp.FetchError("HTTP 503")
+        fp.fetch_manapool_price = boom
+        stats = fp.RunStats()
+        row = fp.build_card_row(self.DEFINITION, "348", self._card(), {}, stats)
+        self.assertIsNone(row["mp_price"])
+        self.assertEqual(len(stats.manapool_errors), 1)
+        self.assertEqual(stats.manapool_misses, [])
+
+
+@unittest.skipUnless(os.environ.get("RUN_NETWORK_TESTS") == "1",
+                     "set RUN_NETWORK_TESTS=1 to check derivations against Scryfall")
+class TestDerivationsAgainstScryfall(unittest.TestCase):
+    """The check that made deleting the hardcoded card tables safe: every
+    tracked card's slug and TCGplayer id must still match what Scryfall says."""
+
+    def test_every_tracked_card(self):
+        fp.SETS_FILE = REPO_ROOT / "data" / "sets.json"
+        definitions = fp.load_sets()
+        stats = fp.RunStats()
+        cards = fp.fetch_scryfall_cards(definitions, stats)
+
+        self.assertEqual(stats.scryfall_errors, [], "Scryfall lookups failed")
+        expected = sum(len(fp.card_numbers(d)) for d in definitions)
+        self.assertGreaterEqual(len(cards), 1)
+
+        for (set_code, num), card in cards.items():
+            with self.subTest(card=f"{set_code}/{num}"):
+                self.assertTrue(card.get("name"))
+                self.assertIsNotNone(card.get("tcgplayer_id"),
+                                     f"{card['name']} has no tcgplayer_id")
+                slug = fp.slugify(card["name"])
+                self.assertRegex(slug, r"^[a-z0-9-]+$")
+        print(f"\n  checked {len(cards)} cards ({expected} requested)")
+
+
+if __name__ == "__main__":
+    unittest.main()
