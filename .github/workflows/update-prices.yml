@@ -20,8 +20,6 @@ jobs:
           python-version: '3.11'
 
       - name: Fetch prices
-        env:
-          MOXFIELD_SESSION_COOKIE: ${{ secrets.MOXFIELD_SESSION_COOKIE }}
         run: python scripts/fetch_prices.py
 
       - name: Commit prices.json

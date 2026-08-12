@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LTR Price Tracker</title>
+  <title>MTG Collection Price Tracker</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -130,6 +130,9 @@
       padding: 20px;
     }
     #card-modal.open { display: flex; }
+    /* When opened by hover the overlay must not swallow the cursor, or the
+       mouseout that should dismiss it never reaches the card name underneath. */
+    #card-modal.hover-preview { pointer-events: none; }
     #card-modal .modal-inner {
       background: transparent;
       max-width: 90vw;
@@ -455,14 +458,17 @@ function wireSortHeaders() {
   });
 }
 
-function showCard(tabName, idx) {
+function showCard(tabName, idx, viaHover) {
   const key = TAB_DATA_KEY[tabName];
   const card = state.data[key].find(c => c._idx === idx);
   if (!card || !card.image_url) return;
   document.getElementById('modal-img').src = card.image_url;
   document.getElementById('modal-img').alt = card.display_name;
   document.getElementById('modal-caption').textContent = card.display_name;
-  document.getElementById('card-modal').classList.add('open');
+  const modal = document.getElementById('card-modal');
+  modal.classList.add('open');
+  // A hover preview is transient and click-through; a clicked one is interactive.
+  modal.classList.toggle('hover-preview', !!viaHover);
 }
 
 function closeModal(e, force) {
@@ -518,25 +524,25 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!link) return;
     clearTimeout(hoverTimer);
     hoverTimer = setTimeout(() => {
-      showCard(link.dataset.tab, Number(link.dataset.idx));
+      showCard(link.dataset.tab, Number(link.dataset.idx), true);
     }, 750);
   };
 
   document.addEventListener('mouseover', previewCard);
   document.addEventListener('click', (e) => {
     const link = e.target.closest('.card-link');
-    if (link) showCard(link.dataset.tab, Number(link.dataset.idx));
+    if (link) showCard(link.dataset.tab, Number(link.dataset.idx), false);
   });
 
   document.addEventListener('mouseout', (e) => {
     const link = e.target.closest('.card-link');
     if (!link) return;
     clearTimeout(hoverTimer);
+    // Only auto-dismiss a hover preview — a clicked one stays until dismissed.
     const modal = document.getElementById('card-modal');
+    if (!modal.classList.contains('hover-preview')) return;
     const related = e.relatedTarget;
-    if (!related || (!link.contains(related) && !modal.contains(related))) {
-      closeModal(null, true);
-    }
+    if (!related || !link.contains(related)) closeModal(null, true);
   });
 
   // ESC closes modal

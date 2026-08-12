@@ -1,23 +1,35 @@
 #!/usr/bin/env python3
 import csv
 import json
-import os
 import re
 import subprocess
+import sys
+import time
 import datetime
-import urllib.request
-import urllib.error
 from pathlib import Path
 
-MOXFIELD_BINDER_ID = 'f6LqAFGUPEG7FWnGopkU1Q'
+USER_AGENT = 'Mozilla/5.0'
 
-CONDITION_MAP = {
-    'nearMint': 'NM',
-    'lightlyPlayed': 'LP',
-    'moderatelyPlayed': 'MP',
-    'heavilyPlayed': 'HP',
-    'damaged': 'DMG',
-}
+# Scryfall asks for 50-100ms between requests; ManaPool has no published limit.
+SCRYFALL_DELAY = 0.1
+MANAPOOL_DELAY = 0.1
+
+# Transient statuses worth retrying. Anything else (404, 403) won't change on retry.
+RETRY_STATUSES = {408, 429, 500, 502, 503, 504}
+HTTP_ATTEMPTS = 3
+HTTP_TIMEOUT = 20
+
+# Guard rails: refuse to write prices.json if the run degraded badly. The last
+# clean run had 0 nulls across all 150 cards, so these are generous.
+MAX_FETCH_FAILURE_RATE = 0.10   # network/HTTP errors, per source
+MAX_MANAPOOL_MISS_RATE = 0.50   # pages that loaded but had no parseable price
+
+# ManaPool embeds prices in a script tag whose quoting has changed over time:
+#   escaped JSON   \"marketPrices\":{\"price\": 8217,
+#   plain JSON      "marketPrices":{"price":8217,
+#   JS object       marketPrices:{price:8217,price_foil:9370}
+# Tolerate all three so a quoting change doesn't silently null out every price.
+MANAPOOL_PRICE_RE = re.compile(r'marketPrices\\?"?:\s*\{\s*\\?"?price\\?"?:\s*(\d+)')
 
 # LTC #348-377 — borderless non-foil (Realms & Relics)
 REALMS_CARDS = [
@@ -186,42 +198,79 @@ STELLAR_SIGHTS_II_CARDS = [
 ]
 
 
+class FetchError(Exception):
+    """A network or HTTP failure.
+
+    Deliberately distinct from a card that simply has no price listed — the
+    former means our data is unreliable, the latter is a legitimate null.
+    """
+
+
+def http_get(url, accept, timeout=HTTP_TIMEOUT, attempts=HTTP_ATTEMPTS):
+    """GET a URL via curl, retrying transient failures. Raises FetchError."""
+    cmd = [
+        "curl", "-s", "--compressed",
+        "--max-time", str(timeout),
+        "-A", USER_AGENT,
+        "-H", f"Accept: {accept}",
+        # Append the status code on its own line so we can tell a real response
+        # from an error page.
+        "-w", "\n%{http_code}",
+        url,
+    ]
+
+    last_error = "no attempt made"
+    for attempt in range(1, attempts + 1):
+        result = subprocess.run(cmd, capture_output=True, text=False)
+
+        if result.returncode != 0:
+            # 28 = timeout, 6/7 = DNS/connection failure, etc.
+            last_error = f"curl exited {result.returncode}"
+        else:
+            payload = result.stdout.decode("utf-8", errors="replace")
+            body, _, status = payload.rpartition("\n")
+            status = status.strip()
+            if status == "200":
+                return body
+            last_error = f"HTTP {status}"
+            if not (status.isdigit() and int(status) in RETRY_STATUSES):
+                break
+
+        if attempt < attempts:
+            time.sleep(attempt)  # 1s, then 2s
+
+    raise FetchError(f"{last_error} for {url}")
+
+
 def fetch_scryfall(card):
-    """Returns dict with tcg price and image_url for the card."""
+    """Returns {tcg_price, image_url} for the card. Raises FetchError."""
     url = f"https://api.scryfall.com/cards/{card['set']}/{card['num']}"
-    result = subprocess.run(
-        ["curl", "-s", "-A", "Mozilla/5.0", url],
-        capture_output=True,
-        text=False,
-    )
+    body = http_get(url, accept="application/json")
     try:
-        stdout = result.stdout.decode("utf-8", errors="replace")
-        data = json.loads(stdout)
-        price = data.get("prices", {}).get("usd")
-        images = data.get("image_uris") or {}
-        # Fallback for double-faced cards
-        if not images and data.get("card_faces"):
-            images = data["card_faces"][0].get("image_uris") or {}
-        image_url = images.get("normal") or images.get("large") or images.get("small")
-        return {
-            "tcg_price": float(price) if price else None,
-            "image_url": image_url,
-        }
-    except Exception:
-        return {"tcg_price": None, "image_url": None}
+        data = json.loads(body)
+    except json.JSONDecodeError as e:
+        raise FetchError(f"unparseable JSON from {url}") from e
+
+    price = data.get("prices", {}).get("usd")
+    images = data.get("image_uris") or {}
+    # Fallback for double-faced cards
+    if not images and data.get("card_faces"):
+        images = data["card_faces"][0].get("image_uris") or {}
+    image_url = images.get("normal") or images.get("large") or images.get("small")
+    return {
+        "tcg_price": float(price) if price else None,
+        "image_url": image_url,
+    }
 
 
 def fetch_manapool_price(card):
+    """Returns the NM non-foil price, or None if the page lists no price.
+
+    Raises FetchError if the page itself could not be fetched.
+    """
     url = f"https://manapool.com/card/{card['set']}/{card['num']}/{card['slug']}"
-    result = subprocess.run(
-        ["curl", "-s", "-A", "Mozilla/5.0",
-         "-H", "Accept: text/html,application/xhtml+xml",
-         url],
-        capture_output=True,
-        text=False,
-    )
-    html = result.stdout.decode("utf-8", errors="replace")
-    m = re.search(r'\\"marketPrices\\":\{\\"price\\": (\d+),', html)
+    html = http_get(url, accept="text/html,application/xhtml+xml")
+    m = MANAPOOL_PRICE_RE.search(html)
     if m:
         return int(m.group(1)) / 100.0
     return None
@@ -230,7 +279,9 @@ def fetch_manapool_price(card):
 def fetch_owned():
     """Returns {(set, cn): {condition, foil}} for all cards in the latest Moxfield CSV snapshot."""
     data_dir = Path("data")
-    csv_files = sorted(data_dir.glob("*.csv"), key=lambda p: p.stat().st_mtime)
+    # Sort by filename, not mtime: the export timestamp is already in the name,
+    # and a fresh `git checkout` in CI stamps every file with the same mtime.
+    csv_files = sorted(data_dir.glob("*.csv"))
     if not csv_files:
         print("  No Moxfield CSV snapshot found in data/; binder ownership data will be skipped")
         return {}
@@ -267,14 +318,81 @@ def fetch_owned():
             else:
                 owned[key]["nonfoil"] = True
 
-    print(f"  Moxfield CSV snapshot: found {len(owned)} owned cards across both sets")
+    print(f"  Moxfield CSV snapshot: found {len(owned)} owned cards across the tracked sets")
     return owned
 
 
-def build_card_row(card, owned):
+class RunStats:
+    """Tracks how much of a run actually succeeded, so main() can refuse to
+    publish a prices.json built from failed requests."""
+
+    def __init__(self):
+        self.cards = 0
+        self.scryfall_errors = []
+        self.manapool_errors = []
+        self.manapool_misses = []
+
+    def report(self):
+        for label, errors in (("Scryfall", self.scryfall_errors),
+                              ("ManaPool", self.manapool_errors)):
+            if errors:
+                print(f"\n{len(errors)} {label} request(s) failed:")
+                for name, err in errors[:10]:
+                    print(f"  - {name}: {err}")
+                if len(errors) > 10:
+                    print(f"  ... and {len(errors) - 10} more")
+        if self.manapool_misses:
+            print(f"\n{len(self.manapool_misses)} ManaPool page(s) had no parseable price: "
+                  f"{', '.join(self.manapool_misses[:10])}"
+                  f"{' ...' if len(self.manapool_misses) > 10 else ''}")
+
+    def failures(self):
+        """Returns a list of human-readable reasons the run is untrustworthy."""
+        if not self.cards:
+            return ["no cards were processed"]
+
+        reasons = []
+        for label, errors, limit in (
+            ("Scryfall", self.scryfall_errors, MAX_FETCH_FAILURE_RATE),
+            ("ManaPool", self.manapool_errors, MAX_FETCH_FAILURE_RATE),
+        ):
+            rate = len(errors) / self.cards
+            if rate > limit:
+                reasons.append(
+                    f"{label} failed for {len(errors)}/{self.cards} cards "
+                    f"({rate:.0%} > {limit:.0%} allowed)"
+                )
+
+        miss_rate = len(self.manapool_misses) / self.cards
+        if miss_rate > MAX_MANAPOOL_MISS_RATE:
+            reasons.append(
+                f"ManaPool price could not be parsed for {len(self.manapool_misses)}/{self.cards} "
+                f"cards ({miss_rate:.0%} > {MAX_MANAPOOL_MISS_RATE:.0%} allowed) - "
+                f"their page format may have changed"
+            )
+        return reasons
+
+
+def build_card_row(card, owned, stats):
     print(f"  {card['mtg_name']}...")
-    scryfall = fetch_scryfall(card)
-    mp_price = fetch_manapool_price(card)
+    stats.cards += 1
+
+    try:
+        scryfall = fetch_scryfall(card)
+        time.sleep(SCRYFALL_DELAY)
+    except FetchError as e:
+        stats.scryfall_errors.append((card["mtg_name"], str(e)))
+        scryfall = {"tcg_price": None, "image_url": None}
+
+    try:
+        mp_price = fetch_manapool_price(card)
+        if mp_price is None:
+            stats.manapool_misses.append(card["mtg_name"])
+        time.sleep(MANAPOOL_DELAY)
+    except FetchError as e:
+        stats.manapool_errors.append((card["mtg_name"], str(e)))
+        mp_price = None
+
     key = (card["set"], card["num"])
     owned_entry = owned.get(key)
     display_name = card["mtg_name"]
@@ -293,39 +411,47 @@ def build_card_row(card, owned):
     }
 
 
+SECTIONS = [
+    ("realms_and_relics", "R&R",   "Realms & Relics (LTC #348-377)",   REALMS_CARDS),
+    ("showcase",          "Showcase", "Showcase (LTR #302-331)",       SHOWCASE_CARDS),
+    ("stellar_sights_i",  "SS-I",  "Stellar Sights I (EOS #1-45)",     STELLAR_SIGHTS_I_CARDS),
+    ("stellar_sights_ii", "SS-II", "Stellar Sights II (EOS #46-90)",   STELLAR_SIGHTS_II_CARDS),
+]
+
+
 def main():
-    print("Fetching Moxfield binder...")
+    print("Reading Moxfield CSV snapshot...")
     owned = fetch_owned()
 
-    print("Fetching Realms & Relics prices (LTC #348-377)...")
-    realms = [build_card_row(c, owned) for c in REALMS_CARDS]
-    realms.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
+    stats = RunStats()
+    sections = {}
+    for key, _short, label, cards in SECTIONS:
+        print(f"Fetching {label}...")
+        rows = [build_card_row(c, owned, stats) for c in cards]
+        rows.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
+        sections[key] = rows
 
-    print("Fetching Showcase prices (LTR #302-331)...")
-    showcase = [build_card_row(c, owned) for c in SHOWCASE_CARDS]
-    showcase.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
+    stats.report()
 
-    print("Fetching Stellar Sights I prices (EOS #1-45)...")
-    stellar_i = [build_card_row(c, owned) for c in STELLAR_SIGHTS_I_CARDS]
-    stellar_i.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
-
-    print("Fetching Stellar Sights II prices (EOS #46-90)...")
-    stellar_ii = [build_card_row(c, owned) for c in STELLAR_SIGHTS_II_CARDS]
-    stellar_ii.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
+    reasons = stats.failures()
+    if reasons:
+        print("\nRefusing to write prices.json — this run is not trustworthy:")
+        for reason in reasons:
+            print(f"  * {reason}")
+        print("\nThe existing prices.json has been left untouched.")
+        sys.exit(1)
 
     output = {
         "updated_at": datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "realms_and_relics": realms,
-        "showcase": showcase,
-        "stellar_sights_i": stellar_i,
-        "stellar_sights_ii": stellar_ii,
+        **sections,
     }
     with open("prices.json", "w") as f:
         json.dump(output, f, indent=2)
 
-    all_cards = realms + showcase + stellar_i + stellar_ii
+    all_cards = [row for rows in sections.values() for row in rows]
     owned_count = sum(1 for r in all_cards if r["collected_nonfoil"] or r["collected_foil"])
-    print(f"Done. {len(realms)} R&R + {len(showcase)} Showcase + {len(stellar_i)} SS-I + {len(stellar_ii)} SS-II cards, {owned_count} owned.")
+    counts = " + ".join(f"{len(sections[key])} {short}" for key, short, _, _ in SECTIONS)
+    print(f"\nDone. {counts} cards, {owned_count} owned.")
 
 
 if __name__ == "__main__":
