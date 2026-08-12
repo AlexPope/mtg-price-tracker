@@ -97,6 +97,27 @@ The local server matters: opening `index.html` directly gives a `file://` page,
 and the browser blocks its `fetch()` of `prices.json`, so every price shows as
 unavailable.
 
+## Tests
+
+```sh
+python -m unittest discover -s tests          # offline, well under a second
+RUN_NETWORK_TESTS=1 python -m unittest discover -s tests   # also checks Scryfall
+```
+
+The offline suite covers the derivation rules that replaced the old hardcoded
+card tables (the slug cases, `flavor_name` handling, TCGplayer URL assembly),
+the guard-rail thresholds, `data/sets.json` validation, and the invariants
+between `prices.json` and `history.json` — every priced card has a series, the
+series align with the date axis, and every section has a tab.
+
+The network test is opt-in so the suite stays fast and deterministic. It
+confirms every tracked card still resolves on Scryfall with a `tcgplayer_id`
+and a well-formed slug, which is the check that made deleting the hardcoded
+tables safe. Worth running after adding a set.
+
+The daily workflow runs the offline suite after regenerating the data and
+before committing it, so a regression stops the run rather than publishing.
+
 ## When something breaks
 
 `fetch_prices.py` **refuses to write `prices.json` if a run goes badly** — more

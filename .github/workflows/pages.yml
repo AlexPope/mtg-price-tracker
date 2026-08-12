@@ -21,7 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      # The retry step only runs when the first attempt fails, so on the normal
+      # path its output is empty - fall back to the first attempt's URL.
+      url: ${{ steps.deployment.outputs.page_url || steps.deploy1.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
 
