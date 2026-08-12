@@ -7,7 +7,9 @@
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      max-width: 920px;
+      /* Widened from 920px when the trend column made it six columns: fixed
+         widths plus non-wrapping headers need the extra room. */
+      max-width: 1140px;
       margin: 40px auto;
       padding: 0 20px;
       color: #1a1a1a;
@@ -75,28 +77,48 @@
       border-bottom-color: #1a56db;
     }
     .tab-panel { display: none; padding-top: 20px; }
-    .tab-panel.active { display: block; }
+    /* Non-wrapping headers give the table a minimum width; on a narrow window
+       scroll the panel rather than the whole page. */
+    .tab-panel.active { display: block; overflow-x: auto; }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.92rem;
+      /* Fixed layout so column widths come from the colgroup below rather than
+         from each tab's own content - otherwise the LTC tab (names up to 56
+         chars) and the EOS tabs (24) lay out differently and the table jumps
+         when you switch tabs. */
+      table-layout: fixed;
+      /* Below this the non-wrapping headers no longer fit; the panel scrolls
+         horizontally instead of the headers overflowing their cells. */
+      min-width: 1060px;
     }
+    col.c-name  { width: 30.5%; }
+    col.c-tcg   { width: 11%; }
+    col.c-mp    { width: 10.5%; }
+    col.c-trend { width: 17%; }
+    col.c-nf    { width: 17%; }
+    col.c-foil  { width: 14%; }
     thead th {
       background: #f0f0f0;
       text-align: left;
       padding: 10px 14px;
       font-weight: 600;
       border-bottom: 2px solid #ccc;
+      /* Keep every header on one line. The LTC/LTR tabs carry both the LOTR
+         and MTG name, so their Name column is wide enough to squeeze the
+         later headers into wrapping, which made the header bar taller on
+         some tabs than others. */
+      white-space: nowrap;
     }
-    thead th:nth-child(4),
-    thead th:nth-child(5) { text-align: center; }
+    thead th.col-check { text-align: center; }
     tbody tr:nth-child(even) { background: #fafafa; }
     tbody tr:hover { background: #f0f4ff; }
     td { padding: 9px 14px; border-bottom: 1px solid #e8e8e8; }
     td:first-child { font-weight: 500; }
-    td:nth-child(2), td:nth-child(3) { white-space: nowrap; }
-    td:nth-child(4) { text-align: center; }
+    td.col-price, td.col-trend { white-space: nowrap; }
+    td.col-check { text-align: center; }
     a { color: #1a56db; text-decoration: none; font-weight: 600; }
     a:hover { text-decoration: underline; }
     .na { color: #aaa; font-style: italic; font-weight: 400; }
@@ -168,9 +190,29 @@
       padding: 0;
     }
 
-    td:nth-child(2) a, td:nth-child(3) a { color: #1a1a1a; }
+    td.col-price a { color: #1a1a1a; }
     .best-price { color: #128a3f !important; font-weight: 800 !important; }
     .best-price::after { content: ' \2193'; font-size: 0.85em; }
+
+    /* 30-day trend: sparkline + 7-day delta.
+       Single series, so one recessive hue and no legend - the column header
+       names it. The delta arrow carries direction so it never reads by
+       colour alone. */
+    .trend { display: inline-flex; align-items: center; gap: 9px; }
+    .spark { display: block; flex: none; }
+    .spark-line { fill: none; stroke: #98a2b3; stroke-width: 2;
+                  stroke-linecap: round; stroke-linejoin: round; }
+    .spark-dot { fill: #1a56db; }
+    .delta {
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      min-width: 58px;
+    }
+    .delta.up   { color: #128a3f; }
+    .delta.down { color: #c0392b; }
+    .delta.flat { color: #777; }
+    .delta.na   { color: #bbb; font-weight: 400; }
 
     .summary {
       display: flex;
@@ -219,17 +261,22 @@
   <p class="meta" style="margin-bottom:12px">Tales of Middle-earth Commander · Borderless Non-Foil · #348–377</p>
   <div class="summary" id="summary-realms"></div>
   <table>
+    <colgroup>
+      <col class="c-name"><col class="c-tcg"><col class="c-mp">
+      <col class="c-trend"><col class="c-nf"><col class="c-foil">
+    </colgroup>
     <thead>
       <tr>
         <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
         <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
         <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
       </tr>
     </thead>
     <tbody id="tbody-realms">
-      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
     </tbody>
   </table>
 </div>
@@ -238,17 +285,22 @@
   <p class="meta" style="margin-bottom:12px">Tales of Middle-earth · Showcase Borderless · #302–331</p>
   <div class="summary" id="summary-showcase"></div>
   <table>
+    <colgroup>
+      <col class="c-name"><col class="c-tcg"><col class="c-mp">
+      <col class="c-trend"><col class="c-nf"><col class="c-foil">
+    </colgroup>
     <thead>
       <tr>
         <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
         <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
         <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
       </tr>
     </thead>
     <tbody id="tbody-showcase">
-      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
     </tbody>
   </table>
 </div>
@@ -257,17 +309,22 @@
   <p class="meta" style="margin-bottom:12px">Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45</p>
   <div class="summary" id="summary-stellar1"></div>
   <table>
+    <colgroup>
+      <col class="c-name"><col class="c-tcg"><col class="c-mp">
+      <col class="c-trend"><col class="c-nf"><col class="c-foil">
+    </colgroup>
     <thead>
       <tr>
         <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
         <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
         <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
       </tr>
     </thead>
     <tbody id="tbody-stellar1">
-      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
     </tbody>
   </table>
 </div>
@@ -276,17 +333,22 @@
   <p class="meta" style="margin-bottom:12px">Edge of Eternities: Stellar Sights · Borderless Non-Foil · #46–90</p>
   <div class="summary" id="summary-stellar2"></div>
   <table>
+    <colgroup>
+      <col class="c-name"><col class="c-tcg"><col class="c-mp">
+      <col class="c-trend"><col class="c-nf"><col class="c-foil">
+    </colgroup>
     <thead>
       <tr>
         <th class="sortable" data-col="name">Card Name<span class="sort-ind"></span></th>
         <th class="sortable" data-col="tcg">TCGPlayer<span class="sort-ind"></span></th>
         <th class="sortable" data-col="mp">ManaPool<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
-        <th class="sortable" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
+        <th class="sortable" data-col="trend" title="TCGplayer price: 30-day sparkline, with the change over the last 7 days">30-Day Trend (TCG)<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="nf">Collected Non-Foil<span class="sort-ind"></span></th>
+        <th class="sortable col-check" data-col="foil">Collected Foil<span class="sort-ind"></span></th>
       </tr>
     </thead>
     <tbody id="tbody-stellar2">
-      <tr><td colspan="5" style="color:#999;padding:20px 14px">Loading…</td></tr>
+      <tr><td colspan="6" style="color:#999;padding:20px 14px">Loading…</td></tr>
     </tbody>
   </table>
 </div>
@@ -320,8 +382,20 @@ const TAB_DATA_KEY = {
 };
 const TAB_NAMES = Object.keys(TAB_DATA_KEY);
 
+// Card identity that survives re-sorting and schema changes; mirrors
+// CARD_KEY_RE in scripts/build_history.py.
+const CARD_KEY_RE = /\/card\/([^/]+)\/([^/?]+)/;
+function cardKey(c) {
+  const m = CARD_KEY_RE.exec(c.mp_url || '');
+  return m ? `${m[1]}/${m[2]}` : null;
+}
+
+const TREND_DAYS = 7;   // window for the delta
+const SPARK_DAYS = 30;  // window for the sparkline
+
 const state = {
   data: null,
+  history: null,
   sort: {
     realms:   { col: 'tcg', dir: 'asc' },
     showcase: { col: 'tcg', dir: 'asc' },
@@ -341,6 +415,104 @@ function escapeHTML(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+// Returns the TCG series for a card over the last `days`, plus the matching
+// dates. TCGplayer is the primary series: it is the more complete of the two
+// and the less scrape-fragile. ManaPool is used only if TCG has nothing at
+// all, so `source` is carried through to keep the tooltips honest if it does.
+function trendSeries(card) {
+  if (!state.history) return null;
+  const entry = state.history.cards[cardKey(card)];
+  if (!entry) return null;
+  const dates = state.history.dates;
+  const useTcg = entry.tcg.some(v => v != null);
+  const from = Math.max(0, dates.length - SPARK_DAYS);
+  return {
+    values: (useTcg ? entry.tcg : entry.mp).slice(from),
+    dates: dates.slice(from),
+    source: useTcg ? 'TCGplayer' : 'ManaPool',
+  };
+}
+
+// Percentage change over `days`, measured from the most recent reading back to
+// the latest reading at least that old. Returns null when the card has too
+// little history to say anything honest.
+function trendDelta(series, days) {
+  if (!series) return null;
+  const { values, dates } = series;
+  let last = -1;
+  for (let i = values.length - 1; i >= 0; i--) { if (values[i] != null) { last = i; break; } }
+  if (last < 0) return null;
+
+  const cutoff = new Date(dates[last] + 'T00:00:00Z');
+  cutoff.setUTCDate(cutoff.getUTCDate() - days);
+  let base = -1;
+  for (let i = last - 1; i >= 0; i--) {
+    if (values[i] == null) continue;
+    if (new Date(dates[i] + 'T00:00:00Z') <= cutoff) { base = i; break; }
+  }
+  if (base < 0 || !values[base]) return null;
+  return { pct: (values[last] - values[base]) / values[base] * 100,
+           from: values[base], to: values[last] };
+}
+
+// Sparkline. Gaps are genuine breaks in the path rather than interpolated
+// across, so a missing day never masquerades as a flat one.
+function sparkline(series) {
+  if (!series) return '';
+  const { values, dates } = series;
+  const present = values.filter(v => v != null);
+  if (present.length < 2) return '';
+
+  const W = 74, H = 20, PAD = 3;
+  const min = Math.min(...present), max = Math.max(...present);
+  const span = (max - min) || 1;
+  const x = i => PAD + (values.length === 1 ? 0 : (i / (values.length - 1)) * (W - 2 * PAD));
+  const y = v => H - PAD - ((v - min) / span) * (H - 2 * PAD);
+
+  // Group into runs of consecutive readings, then draw each run as its own
+  // subpath. A run of one becomes a zero-length segment, which the round
+  // linecap renders as a dot - otherwise an isolated reading would vanish.
+  const runs = [];
+  values.forEach((v, i) => {
+    if (v == null) { runs.push(null); return; }
+    const tail = runs[runs.length - 1];
+    if (Array.isArray(tail)) tail.push(i); else runs.push([i]);
+  });
+
+  let d = '', lastIdx = -1;
+  for (const run of runs) {
+    if (!Array.isArray(run)) continue;
+    const pt = i => `${x(i).toFixed(1)},${y(values[i]).toFixed(1)}`;
+    d += 'M' + pt(run[0]);
+    d += run.length === 1 ? 'L' + pt(run[0])
+                          : run.slice(1).map(i => 'L' + pt(i)).join('');
+    lastIdx = run[run.length - 1];
+  }
+
+  const label = `${series.source} · ${dates[0]} to ${dates[dates.length - 1]}: `
+              + `low ${money(min)}, high ${money(max)}`;
+  return `<svg class="spark" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" `
+       + `role="img" aria-label="${escapeHTML(label)}">`
+       + `<title>${escapeHTML(label)}</title>`
+       + `<path class="spark-line" d="${d}"/>`
+       + `<circle class="spark-dot" cx="${x(lastIdx).toFixed(1)}" cy="${y(values[lastIdx]).toFixed(1)}" r="2.2"/>`
+       + `</svg>`;
+}
+
+function deltaCell(delta, source) {
+  if (!delta) return '<span class="delta na" title="Not enough price history yet">—</span>';
+  const rounded = Math.round(delta.pct * 10) / 10;
+  const tip = `${source} · 7 days: ${money(delta.from)} → ${money(delta.to)}`;
+  if (rounded === 0) {
+    return `<span class="delta flat" title="${escapeHTML(tip)}">0.0%</span>`;
+  }
+  const up = rounded > 0;
+  const cls = up ? 'up' : 'down';
+  const arrow = up ? '▲' : '▼';
+  return `<span class="delta ${cls}" title="${escapeHTML(tip)}">`
+       + `${arrow} ${up ? '+' : ''}${rounded.toFixed(1)}%</span>`;
+}
+
 function buildRows(cards, tabName) {
   return cards.map(c => {
     const tcg = c.tcg_price, mp = c.mp_price;
@@ -352,14 +524,19 @@ function buildRows(cards, tabName) {
       ? `<span class="card-link" data-tab="${tabName}" data-idx="${c._idx}">${escapeHTML(c.display_name)}</span>`
       : escapeHTML(c.display_name);
 
+    const series = trendSeries(c);
+    const trend = `<span class="trend">${sparkline(series)}`
+                + `${deltaCell(trendDelta(series, TREND_DAYS), series && series.source)}</span>`;
+
     return `<tr>
       <td>${nameCell}</td>
-      <td><a href="${c.tcg_url}" target="_blank"${tcgCls}>${fmt(tcg)}</a></td>
-      <td>${mp != null
+      <td class="col-price"><a href="${c.tcg_url}" target="_blank"${tcgCls}>${fmt(tcg)}</a></td>
+      <td class="col-price">${mp != null
         ? `<a href="${c.mp_url}" target="_blank" class="${mpCls}">${fmt(mp)}</a>`
         : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
-      <td>${c.collected_nonfoil ? CHECK : ''}</td>
-      <td>${c.collected_foil ? CHECK : ''}</td>
+      <td class="col-trend">${trend}</td>
+      <td class="col-check">${c.collected_nonfoil ? CHECK : ''}</td>
+      <td class="col-check">${c.collected_foil ? CHECK : ''}</td>
     </tr>`;
   }).join('');
 }
@@ -372,6 +549,12 @@ function sortKey(col, c) {
     case 'mp':   return c.mp_price  == null ? Infinity : c.mp_price;
     case 'nf':   return c.collected_nonfoil ? 1 : 0;
     case 'foil': return c.collected_foil    ? 1 : 0;
+    // Cards without enough history sort to the bottom of the default (biggest
+    // movers first) view rather than pretending to be flat at 0%.
+    case 'trend': {
+      const d = trendDelta(trendSeries(c), TREND_DAYS);
+      return d ? d.pct : -Infinity;
+    }
   }
 }
 function sortCards(cards, col, dir) {
@@ -445,7 +628,7 @@ function handleSortClick(tabName, col) {
   } else {
     s.col = col;
     // Sensible default direction per column
-    s.dir = (col === 'nf' || col === 'foil') ? 'desc' : 'asc';
+    s.dir = (col === 'nf' || col === 'foil' || col === 'trend') ? 'desc' : 'asc';
   }
   renderTab(tabName);
 }
@@ -476,9 +659,26 @@ function closeModal(e, force) {
   document.getElementById('card-modal').classList.remove('open');
 }
 
+// History is optional: if it is missing or malformed the tables still render,
+// with the trend column showing that there is nothing to plot yet.
+async function loadHistory() {
+  try {
+    const r = await fetch('history.json?_=' + Date.now());
+    if (!r.ok) return null;
+    const h = await r.json();
+    return (h && Array.isArray(h.dates) && h.cards) ? h : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 async function loadPrices() {
   try {
-    const r = await fetch('prices.json?_=' + Date.now());
+    const [r, history] = await Promise.all([
+      fetch('prices.json?_=' + Date.now()),
+      loadHistory(),
+    ]);
+    state.history = history;
     const data = await r.json();
 
     // Assign stable indexes so sort/render can reference by _idx.
