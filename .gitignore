@@ -5,3 +5,6 @@
 __pycache__/
 *.pyc
 .venv/
+
+# Local run output
+fetch.log
