@@ -1,5 +1,27 @@
 {
-  "updated_at": "2026-08-12T22:33:26Z",
+  "updated_at": "2026-08-12T22:52:55Z",
+  "tabs": [
+    {
+      "key": "realms_and_relics",
+      "label": "LTC - Realms & Relics",
+      "subtitle": "Tales of Middle-earth Commander \u00b7 Borderless Non-Foil \u00b7 #348\u2013377"
+    },
+    {
+      "key": "showcase",
+      "label": "LTR - Showcase",
+      "subtitle": "Tales of Middle-earth \u00b7 Showcase Borderless \u00b7 #302\u2013331"
+    },
+    {
+      "key": "stellar_sights_i",
+      "label": "EOE - Stellar Sights I",
+      "subtitle": "Edge of Eternities: Stellar Sights \u00b7 Borderless Non-Foil \u00b7 #1\u201345"
+    },
+    {
+      "key": "stellar_sights_ii",
+      "label": "EOE - Stellar Sights II",
+      "subtitle": "Edge of Eternities: Stellar Sights \u00b7 Borderless Non-Foil \u00b7 #46\u201390"
+    }
+  ],
   "realms_and_relics": [
     {
       "display_name": "Redhorn Pass (Mouth of Ronom)",
@@ -257,7 +279,7 @@
     {
       "display_name": "Morgul-Knife (Shadowspear)",
       "mtg_name": "Shadowspear",
-      "tcg_price": 71.23,
+      "tcg_price": 71.11,
       "tcg_url": "https://www.tcgplayer.com/product/498464?Condition=Near+Mint&Printing=Normal",
       "mp_price": 67.98,
       "mp_url": "https://manapool.com/card/ltc/353/shadowspear?conditions=NM&finish=nonfoil",
@@ -336,7 +358,7 @@
     {
       "display_name": "Samwise the Stouthearted",
       "mtg_name": "Samwise the Stouthearted",
-      "tcg_price": 0.18,
+      "tcg_price": 0.19,
       "tcg_url": "https://www.tcgplayer.com/product/488266?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.21,
       "mp_url": "https://manapool.com/card/ltr/306/samwise-the-stouthearted?conditions=NM&finish=nonfoil",
@@ -490,7 +512,7 @@
     {
       "display_name": "Frodo, Sauron's Bane",
       "mtg_name": "Frodo, Sauron's Bane",
-      "tcg_price": 0.42,
+      "tcg_price": 0.43,
       "tcg_url": "https://www.tcgplayer.com/product/488264?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.25,
       "mp_url": "https://manapool.com/card/ltr/304/frodo-saurons-bane?conditions=NM&finish=nonfoil",
@@ -578,7 +600,7 @@
     {
       "display_name": "Samwise Gamgee",
       "mtg_name": "Samwise Gamgee",
-      "tcg_price": 0.93,
+      "tcg_price": 0.94,
       "tcg_url": "https://www.tcgplayer.com/product/498379?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.16,
       "mp_url": "https://manapool.com/card/ltr/327/samwise-gamgee?conditions=NM&finish=nonfoil",
@@ -589,7 +611,7 @@
     {
       "display_name": "Saruman of Many Colors",
       "mtg_name": "Saruman of Many Colors",
-      "tcg_price": 1.18,
+      "tcg_price": 1.19,
       "tcg_url": "https://www.tcgplayer.com/product/498453?Condition=Near+Mint&Printing=Normal",
       "mp_price": 1.18,
       "mp_url": "https://manapool.com/card/ltr/328/saruman-of-many-colors?conditions=NM&finish=nonfoil",
@@ -644,7 +666,7 @@
     {
       "display_name": "Witch-king of Angmar",
       "mtg_name": "Witch-king of Angmar",
-      "tcg_price": 12.6,
+      "tcg_price": 12.59,
       "tcg_url": "https://www.tcgplayer.com/product/498426?Condition=Near+Mint&Printing=Normal",
       "mp_price": 12.34,
       "mp_url": "https://manapool.com/card/ltr/311/witch-king-of-angmar?conditions=NM&finish=nonfoil",
@@ -655,7 +677,7 @@
     {
       "display_name": "Sauron, the Dark Lord",
       "mtg_name": "Sauron, the Dark Lord",
-      "tcg_price": 20.55,
+      "tcg_price": 20.75,
       "tcg_url": "https://www.tcgplayer.com/product/498382?Condition=Near+Mint&Printing=Normal",
       "mp_price": 20.84,
       "mp_url": "https://manapool.com/card/ltr/329/sauron-the-dark-lord?conditions=NM&finish=nonfoil",
@@ -673,17 +695,6 @@
       "mp_price": 0.27,
       "mp_url": "https://manapool.com/card/eos/8/contested-war-zone?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/1/6/1617ef81-5815-47e1-9532-2af791bbd5b3.jpg?1783905864",
-      "collected_nonfoil": false,
-      "collected_foil": false
-    },
-    {
-      "display_name": "Lumbering Falls",
-      "mtg_name": "Lumbering Falls",
-      "tcg_price": 0.38,
-      "tcg_url": "https://www.tcgplayer.com/product/643912?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 0.39,
-      "mp_url": "https://manapool.com/card/eos/24/lumbering-falls?conditions=NM&finish=nonfoil",
-      "image_url": "https://cards.scryfall.io/normal/front/d/7/d75fb845-e000-4f5d-9546-1fd610726aa2.jpg?1783905858",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -783,6 +794,17 @@
       "mp_price": 0.4,
       "mp_url": "https://manapool.com/card/eos/29/mystifying-maze?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/2/5/2520c11e-5751-493e-bdae-defe2e05e448.jpg?1783905857",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Lumbering Falls",
+      "mtg_name": "Lumbering Falls",
+      "tcg_price": 0.43,
+      "tcg_url": "https://www.tcgplayer.com/product/643912?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.39,
+      "mp_url": "https://manapool.com/card/eos/24/lumbering-falls?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/d/7/d75fb845-e000-4f5d-9546-1fd610726aa2.jpg?1783905858",
       "collected_nonfoil": false,
       "collected_foil": false
     },
@@ -1031,7 +1053,7 @@
     {
       "display_name": "Swarmyard",
       "mtg_name": "Swarmyard",
-      "tcg_price": 5.7,
+      "tcg_price": 5.6,
       "tcg_url": "https://www.tcgplayer.com/product/643670?Condition=Near+Mint&Printing=Normal",
       "mp_price": 4.78,
       "mp_url": "https://manapool.com/card/eos/42/swarmyard?conditions=NM&finish=nonfoil",
@@ -1130,7 +1152,7 @@
     {
       "display_name": "Mana Confluence",
       "mtg_name": "Mana Confluence",
-      "tcg_price": 35.68,
+      "tcg_price": 35.36,
       "tcg_url": "https://www.tcgplayer.com/product/641801?Condition=Near+Mint&Printing=Normal",
       "mp_price": 35.32,
       "mp_url": "https://manapool.com/card/eos/25/mana-confluence?conditions=NM&finish=nonfoil",
@@ -1165,7 +1187,7 @@
     {
       "display_name": "Needle Spires",
       "mtg_name": "Needle Spires",
-      "tcg_price": 1.11,
+      "tcg_price": 1.13,
       "tcg_url": "https://www.tcgplayer.com/product/643928?Condition=Near+Mint&Printing=Normal",
       "mp_price": 0.83,
       "mp_url": "https://manapool.com/card/eos/75/needle-spires?conditions=NM&finish=nonfoil",
@@ -1649,7 +1671,7 @@
     {
       "display_name": "Ancient Tomb",
       "mtg_name": "Ancient Tomb",
-      "tcg_price": 168.1,
+      "tcg_price": 168.6,
       "tcg_url": "https://www.tcgplayer.com/product/643637?Condition=Near+Mint&Printing=Normal",
       "mp_price": 169.15,
       "mp_url": "https://manapool.com/card/eos/46/ancient-tomb?conditions=NM&finish=nonfoil",
