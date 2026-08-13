@@ -24,6 +24,14 @@
     "to": 248
   },
   {
+    "key": "hob_main",
+    "label": "HOB - Main Set",
+    "subtitle": "The Hobbit · Main Set Non-Foil · #1–193",
+    "set": "hob",
+    "from": 1,
+    "to": 193
+  },
+  {
     "key": "stellar_sights_i",
     "label": "EOE - Stellar Sights I",
     "subtitle": "Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45",
