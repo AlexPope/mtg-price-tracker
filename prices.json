@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-13T01:21:32Z",
+  "updated_at": "2026-08-13T01:33:34Z",
   "tabs": [
     {
       "key": "realms_and_relics",
@@ -10,6 +10,11 @@
       "key": "showcase",
       "label": "LTR - Showcase",
       "subtitle": "Tales of Middle-earth \u00b7 Showcase Borderless \u00b7 #302\u2013331"
+    },
+    {
+      "key": "book_cover",
+      "label": "HOB - Book Cover",
+      "subtitle": "The Hobbit \u00b7 Book Cover Frame Non-Foil \u00b7 #239\u2013248"
     },
     {
       "key": "stellar_sights_i",
@@ -226,7 +231,7 @@
       "mtg_name": "Wasteland",
       "tcg_price": 29.03,
       "tcg_url": "https://www.tcgplayer.com/product/488281?Condition=Near+Mint&Printing=Normal",
-      "mp_price": 27.59,
+      "mp_price": 26.84,
       "mp_url": "https://manapool.com/card/ltc/376/wasteland?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/8/2/829bbc9b-9185-4d9b-8e4e-9f04ece48fff.jpg?1783915831",
       "collected_nonfoil": false,
@@ -682,6 +687,118 @@
       "mp_price": 20.84,
       "mp_url": "https://manapool.com/card/ltr/329/sauron-the-dark-lord?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/b/8/b83261ba-c239-4b6a-88eb-bdfc411916b3.jpg?1783916201",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    }
+  ],
+  "book_cover": [
+    {
+      "display_name": "The Lord of the Eagles",
+      "mtg_name": "The Lord of the Eagles",
+      "tcg_price": 8.56,
+      "tcg_url": "https://www.tcgplayer.com/product/707279?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 3.68,
+      "mp_url": "https://manapool.com/card/hob/240/the-lord-of-the-eagles?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/8/a/8acfaac6-5a63-4fd6-999b-562e989e2ce1.jpg?1784631799",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "The Lonely Mountain",
+      "mtg_name": "The Lonely Mountain",
+      "tcg_price": 17.1,
+      "tcg_url": "https://www.tcgplayer.com/product/707060?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 9.52,
+      "mp_url": "https://manapool.com/card/hob/248/the-lonely-mountain?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/d/9/d9919a30-d60e-438e-b132-22e56b3cdf68.jpg?1784377123",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Thranduil, the Elvenking",
+      "mtg_name": "Thranduil, the Elvenking",
+      "tcg_price": 19.26,
+      "tcg_url": "https://www.tcgplayer.com/product/707069?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 13.38,
+      "mp_url": "https://manapool.com/card/hob/246/thranduil-the-elvenking?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/4/a416ca91-e646-40b4-824c-24aed6b9c683.jpg?1784377112",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Gollum, Riddle Master",
+      "mtg_name": "Gollum, Riddle Master",
+      "tcg_price": 21.0,
+      "tcg_url": "https://www.tcgplayer.com/product/707049?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 18.32,
+      "mp_url": "https://manapool.com/card/hob/241/gollum-riddle-master?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/0/c/0c13e282-bbfb-4601-94ff-803874634371.jpg?1784377100",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Bard, King of Dale",
+      "mtg_name": "Bard, King of Dale",
+      "tcg_price": 21.6,
+      "tcg_url": "https://www.tcgplayer.com/product/707037?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 15.76,
+      "mp_url": "https://manapool.com/card/hob/244/bard-king-of-dale?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/a/4/a4adb258-381e-4e64-9f93-9fcf943be360.jpg?1784377112",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Thorin, Mountain-king",
+      "mtg_name": "Thorin, Mountain-king",
+      "tcg_price": 24.15,
+      "tcg_url": "https://www.tcgplayer.com/product/693040?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 19.61,
+      "mp_url": "https://manapool.com/card/hob/243/thorin-mountain-king?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/2/4/2401d2a5-f65b-4a13-906c-999990589a1e.jpg?1783902779",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Smaug, Wicked Worm",
+      "mtg_name": "Smaug, Wicked Worm",
+      "tcg_price": 25.69,
+      "tcg_url": "https://www.tcgplayer.com/product/709008?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 16.9,
+      "mp_url": "https://manapool.com/card/hob/245/smaug-wicked-worm?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/1/8/189a7d55-c3ec-4402-a3b3-72817f533e87.jpg?1785324584",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Gandalf, Goblins' Bane // Flameshape",
+      "mtg_name": "Gandalf, Goblins' Bane // Flameshape",
+      "tcg_price": 57.27,
+      "tcg_url": "https://www.tcgplayer.com/product/707046?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 37.81,
+      "mp_url": "https://manapool.com/card/hob/242/gandalf-goblins-bane-flameshape?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/e/f/efc66a6b-8ac7-4cb7-82f1-710fb0e86f82.jpg?1784377103",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "The Arkenstone // Seek the Heart",
+      "mtg_name": "The Arkenstone // Seek the Heart",
+      "tcg_price": 65.99,
+      "tcg_url": "https://www.tcgplayer.com/product/693046?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 58.86,
+      "mp_url": "https://manapool.com/card/hob/247/the-arkenstone-seek-the-heart?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/6/c/6c6193e8-453b-49dd-ad65-ee6e363bff93.jpg?1783902779",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Gleaming Splendor",
+      "mtg_name": "Gleaming Splendor",
+      "tcg_price": 76.27,
+      "tcg_url": "https://www.tcgplayer.com/product/709068?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 52.71,
+      "mp_url": "https://manapool.com/card/hob/239/gleaming-splendor?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/4/a/4a4ca473-3000-4e98-9881-03372c4f79a5.jpg?1785497226",
       "collected_nonfoil": false,
       "collected_foil": false
     }
