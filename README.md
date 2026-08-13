@@ -36,8 +36,9 @@ the two JSON files at runtime. GitHub Pages serves the repository as-is.
 | `index.html` | The whole front end |
 | `prices.json` / `history.json` | Generated — do not edit by hand |
 
-Two workflows drive it: `update-prices.yml` runs daily at 12:00 UTC and commits
-the regenerated data, and `pages.yml` redeploys the site afterwards.
+Three workflows drive it: `update-prices.yml` runs daily at 12:00 UTC and
+commits the regenerated data, `pages.yml` redeploys the site afterwards, and
+`ci.yml` runs the test suite on every push and pull request.
 
 ## Adding a set
 
@@ -106,17 +107,20 @@ RUN_NETWORK_TESTS=1 python -m unittest discover -s tests   # also checks Scryfal
 
 The offline suite covers the derivation rules that replaced the old hardcoded
 card tables (the slug cases, `flavor_name` handling, TCGplayer URL assembly),
-the guard-rail thresholds, `data/sets.json` validation, and the invariants
-between `prices.json` and `history.json` — every priced card has a series, the
-series align with the date axis, and every section has a tab.
+the guard-rail thresholds, `data/sets.json` and Moxfield CSV validation, and
+the invariants between `prices.json` and `history.json` — every priced card has
+a series, the series align with the date axis, and every section has a tab.
 
 The network test is opt-in so the suite stays fast and deterministic. It
 confirms every tracked card still resolves on Scryfall with a `tcgplayer_id`
 and a well-formed slug, which is the check that made deleting the hardcoded
 tables safe. Worth running after adding a set.
 
-The daily workflow runs the offline suite after regenerating the data and
-before committing it, so a regression stops the run rather than publishing.
+`ci.yml` runs the offline suite on every push and pull request, against Python
+3.11 (what the daily job pins) and 3.14 (what the scripts are developed
+against). The daily workflow *also* runs it after regenerating the data and
+before committing it — CI checks the code, the daily run checks the freshly
+built data, and both are needed.
 
 ## When something breaks
 
@@ -133,6 +137,21 @@ the intended outcome — it means the guard caught something.
 The likeliest future failure is that same scrape breaking again. The parser
 tolerates the three quoting styles seen so far; a fourth would trip the 50%
 threshold and stop the run rather than publish nulls.
+
+Ownership is guarded the same way, because it can fail the same way: it comes
+from one CSV with no second source to cross-check it against, and every way of
+misreading it — a renamed column, a set code that no longer matches, an empty
+export — zeroes the whole collection at once rather than shaving a few cards
+off it. So there are two checks and no threshold between them:
+
+- the export must still have its `Edition`, `Collector Number` and `Foil`
+  columns, or the run stops immediately, before any network work;
+- if a run matches **no** owned cards when the previous `prices.json` matched
+  some, it refuses to publish. A collection that was already empty is fine —
+  the check only fires on a drop to zero from something.
+
+The consequence worth knowing: genuinely selling the entire collection trips
+the guard once. Delete `data/*.csv` if that is really what happened.
 
 `build_history.py` needs real git history and the workflow checks out with
 `fetch-depth: 0`. It rebuilds the series from scratch every run rather than

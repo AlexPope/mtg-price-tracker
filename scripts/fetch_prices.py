@@ -21,7 +21,8 @@ import time
 import unicodedata
 from pathlib import Path
 
-SETS_FILE = Path("data/sets.json")
+DATA_DIR = Path("data")
+SETS_FILE = DATA_DIR / "sets.json"
 PRICES_FILE = Path("prices.json")
 
 USER_AGENT = 'Mozilla/5.0'
@@ -42,6 +43,10 @@ SCRYFALL_BATCH_SIZE = 75
 # run has 0 nulls across all cards, so these are generous.
 MAX_FETCH_FAILURE_RATE = 0.10   # network/HTTP errors, per source
 MAX_MANAPOOL_MISS_RATE = 0.50   # pages that loaded but had no parseable price
+
+# The Moxfield export columns ownership is derived from. Missing columns mean
+# the export format changed and every card would silently read as un-owned.
+REQUIRED_CSV_COLUMNS = ("Edition", "Collector Number", "Foil")
 
 # ManaPool embeds prices in a script tag whose quoting has changed over time:
 #   escaped JSON   \"marketPrices\":{\"price\": 8217,
@@ -208,12 +213,11 @@ def fetch_manapool_price(set_code, num, slug):
 
 def fetch_owned(definitions):
     """Returns {(set, cn): {nonfoil, foil}} from the latest Moxfield CSV."""
-    data_dir = Path("data")
     # Sort by filename, not mtime: the export timestamp is already in the name,
     # and a fresh `git checkout` in CI stamps every file with the same mtime.
-    csv_files = sorted(data_dir.glob("*.csv"))
+    csv_files = sorted(DATA_DIR.glob("*.csv"))
     if not csv_files:
-        print("  No Moxfield CSV snapshot found in data/; ownership will be skipped")
+        print(f"  No Moxfield CSV snapshot found in {DATA_DIR}/; ownership will be skipped")
         return {}
 
     latest_file = csv_files[-1]
@@ -225,7 +229,17 @@ def fetch_owned(definitions):
 
     owned = {}
     with latest_file.open("r", encoding="utf-8", newline="") as f:
-        for row in csv.DictReader(f):
+        reader = csv.DictReader(f)
+        # Without these columns every row would miss and the whole collection
+        # would read as un-owned - a silent wrong answer rather than an error.
+        missing = [c for c in REQUIRED_CSV_COLUMNS if c not in (reader.fieldnames or ())]
+        if missing:
+            raise SystemExit(
+                f"{latest_file}: Moxfield export is missing {missing}.\n"
+                f"  Columns present: {list(reader.fieldnames or ())}\n"
+                f"  The export format has changed; ownership cannot be read.")
+
+        for row in reader:
             key = ((row.get("Edition") or "").strip().lower(),
                    (row.get("Collector Number") or "").strip())
             if key not in tracked:
@@ -240,6 +254,27 @@ def fetch_owned(definitions):
     return owned
 
 
+def previous_owned_count():
+    """How many cards the last published run marked as collected.
+
+    Ownership comes from a single CSV with no second source to cross-check it
+    against, so the only signal that reading it broke is that it used to work.
+    Returns 0 when there is no previous run to compare against.
+    """
+    try:
+        doc = json.loads(PRICES_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return 0
+    # Mirrors extract_prices in build_history.py: walk the card sections and
+    # tolerate the non-card blocks ("tabs", "updated_at") sitting alongside them.
+    return sum(
+        1
+        for section in doc.values() if isinstance(section, list)
+        for row in section if isinstance(row, dict)
+        and (row.get("collected_nonfoil") or row.get("collected_foil"))
+    )
+
+
 class RunStats:
     """Tracks how much of a run actually succeeded, so main() can refuse to
     publish a prices.json built from failed requests."""
@@ -249,6 +284,8 @@ class RunStats:
         self.scryfall_errors = []
         self.manapool_errors = []
         self.manapool_misses = []
+        self.owned = 0
+        self.previous_owned = 0
 
     def report(self):
         for label, errors in (("Scryfall", self.scryfall_errors),
@@ -287,6 +324,17 @@ class RunStats:
                 f"ManaPool price could not be parsed for {len(self.manapool_misses)}/{self.cards} "
                 f"cards ({miss_rate:.0%} > {MAX_MANAPOOL_MISS_RATE:.0%} allowed) - "
                 f"their page format may have changed"
+            )
+
+        # No threshold here: ownership is all-or-nothing in practice. Every way
+        # of reading it wrongly - a renamed column, a set code that no longer
+        # matches, an empty or missing export - zeroes the whole collection at
+        # once rather than shaving a few cards off it.
+        if self.previous_owned and not self.owned:
+            reasons.append(
+                f"no owned cards matched the Moxfield export, but the previous run "
+                f"matched {self.previous_owned} - the export, the set codes or the "
+                f"collector numbers may have changed"
             )
         return reasons
 
@@ -341,10 +389,16 @@ def main():
     definitions = load_sets()
     print(f"Tracking {len(definitions)} sets from {SETS_FILE}")
 
-    print("Reading Moxfield CSV snapshot...")
-    owned = fetch_owned(definitions)
-
     stats = RunStats()
+
+    print("Reading Moxfield CSV snapshot...")
+    # Read the count off the outgoing prices.json before it is overwritten;
+    # a collection that was populated yesterday and is empty today means the
+    # CSV stopped parsing, not that the cards were sold.
+    stats.previous_owned = previous_owned_count()
+    owned = fetch_owned(definitions)
+    stats.owned = len(owned)
+
     print("Fetching cards from Scryfall...")
     cards = fetch_scryfall_cards(definitions, stats)
 

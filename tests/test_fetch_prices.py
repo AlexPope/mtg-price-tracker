@@ -119,6 +119,116 @@ class TestLoadSets(unittest.TestCase):
         self.assertEqual(fp.card_numbers({"from": 5, "to": 5}), ["5"])
 
 
+class TestFetchOwned(unittest.TestCase):
+    """Ownership is read from a single CSV with nothing to cross-check it
+    against, so an export format change has to fail loudly rather than quietly
+    read as 'nothing collected'."""
+
+    DEFINITIONS = [{"key": "k", "label": "L", "subtitle": "",
+                    "set": "ltc", "from": 348, "to": 350}]
+    HEADER = '"Count","Name","Edition","Condition","Foil","Collector Number"'
+    ROWS = [
+        '"1","A","ltc","Near Mint","","348"',       # nonfoil
+        '"1","A","ltc","Near Mint","foil","348"',   # ...and a foil of the same card
+        '"1","B","ltc","Near Mint","foil","349"',   # foil only
+        '"1","C","ltr","Near Mint","","302"',       # untracked set
+        '"1","D","ltc","Near Mint","","999"',       # outside the tracked range
+    ]
+
+    def setUp(self):
+        self._orig = fp.DATA_DIR
+        fp.DATA_DIR = Path(tempfile.mkdtemp())
+        # fetch_owned logs which snapshot it picked; keep it out of the output.
+        self._quiet = contextlib.redirect_stdout(io.StringIO())
+        self._quiet.__enter__()
+
+    def tearDown(self):
+        self._quiet.__exit__(None, None, None)
+        fp.DATA_DIR = self._orig
+
+    def _write(self, rows, header=HEADER, name="moxfield_haves_2026-07-17-1851Z.csv"):
+        (fp.DATA_DIR / name).write_text("\n".join([header, *rows]), encoding="utf-8")
+
+    def test_reads_both_finishes_and_skips_untracked_cards(self):
+        self._write(self.ROWS)
+        self.assertEqual(fp.fetch_owned(self.DEFINITIONS), {
+            ("ltc", "348"): {"nonfoil": True, "foil": True},
+            ("ltc", "349"): {"nonfoil": False, "foil": True},
+        })
+
+    def test_missing_column_is_fatal(self):
+        """The regression this guards: Moxfield renames a column, every row
+        misses, and the collection silently reads as empty."""
+        for dropped in fp.REQUIRED_CSV_COLUMNS:
+            with self.subTest(dropped=dropped):
+                kept = [c for c in ["Count", "Name", "Edition", "Condition",
+                                    "Foil", "Collector Number"] if c != dropped]
+                self._write(self.ROWS[:1], header=",".join(f'"{c}"' for c in kept))
+                with self.assertRaises(SystemExit) as ctx:
+                    fp.fetch_owned(self.DEFINITIONS)
+                self.assertIn(dropped, str(ctx.exception))
+
+    def test_no_csv_is_not_fatal(self):
+        """A repo with no export yet is a legitimate state; the regression
+        check in RunStats is what catches an export that goes missing."""
+        self.assertEqual(fp.fetch_owned(self.DEFINITIONS), {})
+
+    def test_newest_snapshot_by_filename_wins(self):
+        self._write(['"1","A","ltc","Near Mint","","348"'],
+                    name="moxfield_haves_2026-07-17-1851Z.csv")
+        self._write(['"1","B","ltc","Near Mint","","349"'],
+                    name="moxfield_haves_2026-08-01-0900Z.csv")
+        self.assertEqual(set(fp.fetch_owned(self.DEFINITIONS)), {("ltc", "349")})
+
+
+class TestPreviousOwnedCount(unittest.TestCase):
+    """The baseline the ownership guard rail compares against."""
+
+    def setUp(self):
+        self._orig = fp.PRICES_FILE
+        self.tmp = Path(tempfile.mkdtemp())
+
+    def tearDown(self):
+        fp.PRICES_FILE = self._orig
+
+    def _write(self, doc):
+        f = self.tmp / "prices.json"
+        f.write_text(json.dumps(doc), encoding="utf-8")
+        fp.PRICES_FILE = f
+
+    def test_counts_cards_owned_in_either_finish(self):
+        self._write({
+            "updated_at": "2026-08-12T00:00:00Z",
+            # A list of dicts sitting alongside the card sections, exactly as in
+            # build_history.py's extract_prices - it must not be counted.
+            "tabs": [{"key": "a", "label": "A", "subtitle": ""}],
+            "a": [
+                {"collected_nonfoil": True,  "collected_foil": False},
+                {"collected_nonfoil": False, "collected_foil": True},
+                {"collected_nonfoil": True,  "collected_foil": True},
+                {"collected_nonfoil": False, "collected_foil": False},
+            ],
+        })
+        self.assertEqual(fp.previous_owned_count(), 3)
+
+    def test_missing_file_is_zero(self):
+        """A first run has no baseline, and must not be blocked by its absence."""
+        fp.PRICES_FILE = self.tmp / "does-not-exist.json"
+        self.assertEqual(fp.previous_owned_count(), 0)
+
+    def test_malformed_file_is_zero(self):
+        f = self.tmp / "prices.json"
+        f.write_text("{ not json", encoding="utf-8")
+        fp.PRICES_FILE = f
+        self.assertEqual(fp.previous_owned_count(), 0)
+
+    def test_the_real_prices_file_has_owned_cards(self):
+        """If this ever reads 0 the guard rail is disarmed - it can only fire
+        when the previous run found something."""
+        fp.PRICES_FILE = REPO_ROOT / "prices.json"
+        self.assertGreater(fp.previous_owned_count(), 0)
+
+
 class TestRunStats(unittest.TestCase):
     """The thresholds are what stand between a bad vendor day and a published
     prices.json full of nulls."""
@@ -156,6 +266,30 @@ class TestRunStats(unittest.TestCase):
         reasons = s.failures()
         self.assertEqual(len(reasons), 1)
         self.assertIn("page format", reasons[0])
+
+    def test_ownership_dropping_to_zero_is_a_failure(self):
+        """The ownership equivalent of the ManaPool nulls: the CSV stops
+        parsing and the whole collection reads as un-owned."""
+        s = fp.RunStats()
+        s.cards = 150
+        s.previous_owned, s.owned = 4, 0
+        reasons = s.failures()
+        self.assertEqual(len(reasons), 1)
+        self.assertIn("Moxfield", reasons[0])
+
+    def test_ownership_that_was_already_zero_passes(self):
+        """A collection that was empty before and is empty now is just an
+        empty collection - there is no regression to report."""
+        s = fp.RunStats()
+        s.cards = 150
+        s.previous_owned, s.owned = 0, 0
+        self.assertEqual(s.failures(), [])
+
+    def test_ownership_still_matching_passes(self):
+        s = fp.RunStats()
+        s.cards = 150
+        s.previous_owned, s.owned = 4, 4
+        self.assertEqual(s.failures(), [])
 
 
 class TestScryfallImage(unittest.TestCase):

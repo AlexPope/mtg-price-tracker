@@ -1,0 +1,40 @@
+name: CI
+
+# The daily job also runs the suite, but only against data it just generated,
+# and only at 12:00 UTC. This runs on the code itself, on every change, so a
+# regression surfaces on the pull request rather than in tomorrow's price run.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.11 is what update-prices.yml pins; 3.14 is what the scripts are
+        # developed against. Both, so a version-specific break shows up here
+        # and not in production.
+        python-version: ['3.11', '3.14']
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # No dependencies to install - the scripts are standard library only,
+      # and this job is the thing that keeps that true.
+      - name: Run tests
+        run: python -m unittest discover -s tests --verbose
