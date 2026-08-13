@@ -32,6 +32,14 @@
     "to": 193
   },
   {
+    "key": "full_arts",
+    "label": "HOB - Full Arts",
+    "subtitle": "The Hobbit · Full-Art Basic Lands Non-Foil · #194–198",
+    "set": "hob",
+    "from": 194,
+    "to": 198
+  },
+  {
     "key": "stellar_sights_i",
     "label": "EOE - Stellar Sights I",
     "subtitle": "Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45",

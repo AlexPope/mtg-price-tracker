@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-13T13:01:02Z",
+  "updated_at": "2026-08-13T13:09:51Z",
   "tabs": [
     {
       "key": "realms_and_relics",
@@ -20,6 +20,11 @@
       "key": "hob_main",
       "label": "HOB - Main Set",
       "subtitle": "The Hobbit \u00b7 Main Set Non-Foil \u00b7 #1\u2013193"
+    },
+    {
+      "key": "full_arts",
+      "label": "HOB - Full Arts",
+      "subtitle": "The Hobbit \u00b7 Full-Art Basic Lands Non-Foil \u00b7 #194\u2013198"
     },
     {
       "key": "stellar_sights_i",
@@ -2929,6 +2934,63 @@
       "mp_price": 33.42,
       "mp_url": "https://manapool.com/card/hob/15/gleaming-splendor?conditions=NM&finish=nonfoil",
       "image_url": "https://cards.scryfall.io/normal/front/3/b/3b087bd4-bbb7-4963-bdb6-0a700ff19a04.jpg?1785496942",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    }
+  ],
+  "full_arts": [
+    {
+      "display_name": "Swamp",
+      "mtg_name": "Swamp",
+      "tcg_price": 0.41,
+      "tcg_url": "https://www.tcgplayer.com/product/693011?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.23,
+      "mp_url": "https://manapool.com/card/hob/196/swamp?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/c/5/c5f590a3-9993-4ac4-a93c-1beb44eda17b.jpg?1783902782",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Island",
+      "mtg_name": "Island",
+      "tcg_price": 0.42,
+      "tcg_url": "https://www.tcgplayer.com/product/693010?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.15,
+      "mp_url": "https://manapool.com/card/hob/195/island?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/7/3/739aaaac-c424-4ea7-a084-62a6fc0438b0.jpg?1783902783",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Forest",
+      "mtg_name": "Forest",
+      "tcg_price": 0.45,
+      "tcg_url": "https://www.tcgplayer.com/product/693013?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.19,
+      "mp_url": "https://manapool.com/card/hob/198/forest?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/5/f/5f533364-0f91-4e49-aaeb-83c4c1f6d316.jpg?1783902781",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Plains",
+      "mtg_name": "Plains",
+      "tcg_price": 0.54,
+      "tcg_url": "https://www.tcgplayer.com/product/693009?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.16,
+      "mp_url": "https://manapool.com/card/hob/194/plains?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/2/4/24dc369c-020a-4115-a4bb-d60a44de64e3.jpg?1783902784",
+      "collected_nonfoil": false,
+      "collected_foil": false
+    },
+    {
+      "display_name": "Mountain",
+      "mtg_name": "Mountain",
+      "tcg_price": 0.77,
+      "tcg_url": "https://www.tcgplayer.com/product/693012?Condition=Near+Mint&Printing=Normal",
+      "mp_price": 0.16,
+      "mp_url": "https://manapool.com/card/hob/197/mountain?conditions=NM&finish=nonfoil",
+      "image_url": "https://cards.scryfall.io/normal/front/5/1/51acfb01-4b0b-48fc-9704-a9b4a1e43a23.jpg?1783902782",
       "collected_nonfoil": false,
       "collected_foil": false
     }
