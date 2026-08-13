@@ -4,6 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MTG Collection Price Tracker</title>
+  <script>
+    // Inline and before the stylesheet on purpose: resolving the theme after
+    // first paint flashes the light page at anyone who wants the dark one.
+    // An explicit choice is remembered; without one the OS setting decides,
+    // and keeps deciding (see the change listener at the bottom of the page).
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (e) { /* private mode */ }
+      var dark = stored ? stored === 'dark'
+                        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    })();
+  </script>
   <style>
     /* Reserve the scrollbar gutter on every tab. The short tabs (5 and 10
        cards) fit without a vertical scrollbar, and losing it widened the
@@ -12,6 +25,76 @@
        overlay scrollbars, where the gutter is zero, so this is a no-op there. */
     html { scrollbar-gutter: stable; }
 
+    /* Every colour on the page comes from here, so the dark palette below is
+       the only place that has to know the light one exists. The `dark` class
+       is set on <html> by the inline script in <head> before first paint. */
+    :root {
+      color-scheme: light;
+      --bg: #ffffff;
+      --fg: #1a1a1a;
+      --muted: #666666;
+      --faint: #999999;
+      --fainter: #bbbbbb;
+      --line: #e8e8e8;
+      --line-strong: #cccccc;
+      --accent: #1a56db;
+      --accent-hover: #1447c0;
+      --accent-dim: #6b9aed;
+      --btn-fg: #ffffff;
+      --btn-dim-fg: #ffffff;
+      --th-bg: #f0f0f0;
+      --th-bg-hover: #e8e8e8;
+      --row-alt: #fafafa;
+      --row-hover: #f0f4ff;
+      --pos: #128a3f;
+      --neg: #c0392b;
+      --warn: #b0552a;
+      --spark: #98a2b3;
+      --card-bg: #fafafa;
+      --card-border: #e0e0e0;
+      --owned-bg: #f0faf3;
+      --owned-border: #b8dcc4;
+      --missing-bg: #fdf6f2;
+      --missing-border: #f0d0c0;
+      --input-bg: #ffffff;
+    }
+    /* Not a straight inversion: the greens and blues are lightened as well as
+       the greys, or they fail contrast against a dark ground. */
+    :root.dark {
+      color-scheme: dark;
+      --bg: #14161a;
+      --fg: #e6e8ec;
+      --muted: #9aa3ae;
+      --faint: #79828d;
+      --fainter: #5c646e;
+      --line: #2a2f37;
+      --line-strong: #3a414b;
+      --accent: #7aa2f7;
+      --accent-hover: #9bb8fa;
+      --accent-dim: #3a4d78;
+      --btn-fg: #0f1116;
+      /* The enabled button is a light blue that wants dark text; the disabled
+         one is a muted dark blue that needs the opposite. */
+      --btn-dim-fg: #c3d0e8;
+      --th-bg: #21252c;
+      --th-bg-hover: #2a2f37;
+      --row-alt: #191c21;
+      --row-hover: #202834;
+      --pos: #4ade80;
+      --neg: #f87171;
+      --warn: #e8a06a;
+      --spark: #7d8794;
+      --card-bg: #1b1e24;
+      --card-border: #2f353e;
+      /* Brighter than a proportional darkening of the light borders would
+         give: at that weight they disappeared into the page behind them. */
+      --owned-bg: #16241c;
+      --owned-border: #55a87a;
+      --missing-bg: #241a13;
+      --missing-border: #b07a4a;
+      --input-bg: #1b1e24;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       /* Widened from 920px when the trend column made it six columns: fixed
@@ -19,10 +102,11 @@
       max-width: 1140px;
       margin: 40px auto;
       padding: 0 20px;
-      color: #1a1a1a;
+      color: var(--fg);
+      background: var(--bg);
     }
     h1 { font-size: 1.4rem; margin-bottom: 4px; }
-    p.meta { font-size: 0.85rem; color: #666; margin-top: 0; margin-bottom: 0; }
+    p.meta { font-size: 0.85rem; color: var(--muted); margin-top: 0; margin-bottom: 0; }
 
     .toolbar {
       display: flex;
@@ -33,8 +117,8 @@
     }
     #refresh-btn {
       padding: 8px 18px;
-      background: #1a56db;
-      color: #fff;
+      background: var(--accent);
+      color: var(--btn-fg);
       border: none;
       border-radius: 6px;
       font-size: 0.9rem;
@@ -44,8 +128,8 @@
       align-items: center;
       gap: 8px;
     }
-    #refresh-btn:hover { background: #1447c0; }
-    #refresh-btn:disabled { background: #6b9aed; cursor: not-allowed; }
+    #refresh-btn:hover { background: var(--accent-hover); }
+    #refresh-btn:disabled { background: var(--accent-dim); color: var(--btn-dim-fg); cursor: not-allowed; }
     #refresh-btn .spinner {
       display: none;
       width: 14px; height: 14px;
@@ -56,16 +140,35 @@
     }
     #refresh-btn.loading .spinner { display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #last-updated { font-size: 0.85rem; color: #555; }
-    #status-msg { font-size: 0.82rem; color: #c0392b; }
-    #status-msg.ok { color: #1e8a4a; }
+    #last-updated { font-size: 0.85rem; color: var(--muted); }
+    #status-msg { font-size: 0.82rem; color: var(--neg); }
+    #status-msg.ok { color: var(--pos); }
+
+    /* Pushed to the far end of the toolbar; it is a page-level setting, not
+       part of the refresh/updated pair it would otherwise sit inside. */
+    #theme-btn {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      background: none;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #theme-btn:hover { color: var(--accent); border-color: var(--accent); }
+    #theme-btn .theme-icon { font-size: 0.95rem; line-height: 1; }
 
     /* Tabs */
     .tabs {
       display: flex;
       gap: 0;
       margin: 20px 0 0;
-      border-bottom: 2px solid #ccc;
+      border-bottom: 2px solid var(--line-strong);
     }
     .tab-btn {
       padding: 9px 22px;
@@ -75,13 +178,13 @@
       margin-bottom: -2px;
       font-size: 0.92rem;
       font-weight: 600;
-      color: #666;
+      color: var(--muted);
       cursor: pointer;
     }
-    .tab-btn:hover { color: #1a56db; }
+    .tab-btn:hover { color: var(--accent); }
     .tab-btn.active {
-      color: #1a56db;
-      border-bottom-color: #1a56db;
+      color: var(--accent);
+      border-bottom-color: var(--accent);
     }
     .tab-panel { display: none; padding-top: 20px; }
     /* Non-wrapping headers give the table a minimum width; on a narrow window
@@ -108,11 +211,11 @@
     col.c-nf    { width: 17%; }
     col.c-foil  { width: 14%; }
     thead th {
-      background: #f0f0f0;
+      background: var(--th-bg);
       text-align: left;
       padding: 10px 14px;
       font-weight: 600;
-      border-bottom: 2px solid #ccc;
+      border-bottom: 2px solid var(--line-strong);
       /* Keep every header on one line. The LTC/LTR tabs carry both the LOTR
          and MTG name, so their Name column is wide enough to squeeze the
          later headers into wrapping, which made the header bar taller on
@@ -120,32 +223,32 @@
       white-space: nowrap;
     }
     thead th.col-check { text-align: center; }
-    tbody tr:nth-child(even) { background: #fafafa; }
-    tbody tr:hover { background: #f0f4ff; }
-    td { padding: 9px 14px; border-bottom: 1px solid #e8e8e8; }
+    tbody tr:nth-child(even) { background: var(--row-alt); }
+    tbody tr:hover { background: var(--row-hover); }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--line); }
     td:first-child { font-weight: 500; }
     td.col-price, td.col-trend { white-space: nowrap; }
     td.col-check { text-align: center; }
-    a { color: #1a56db; text-decoration: none; font-weight: 600; }
+    a { color: var(--accent); text-decoration: none; font-weight: 600; }
     a:hover { text-decoration: underline; }
-    .na { color: #aaa; font-style: italic; font-weight: 400; }
+    .na { color: var(--faint); font-style: italic; font-weight: 400; }
 
-    .owned-check { color: #1a8a4a; font-size: 1.1rem; }
+    .owned-check { color: var(--pos); font-size: 1.1rem; }
 
     /* Sortable headers */
     thead th.sortable { cursor: pointer; user-select: none; position: relative; }
-    thead th.sortable:hover { background: #e8e8e8; }
-    thead th .sort-ind { display: inline-block; width: 12px; margin-left: 4px; color: #999; font-size: 0.75em; }
-    thead th.sort-active .sort-ind { color: #1a56db; }
+    thead th.sortable:hover { background: var(--th-bg-hover); }
+    thead th .sort-ind { display: inline-block; width: 12px; margin-left: 4px; color: var(--faint); font-size: 0.75em; }
+    thead th.sort-active .sort-ind { color: var(--accent); }
 
     /* Card name click affordance */
     td .card-link {
-      color: #1a1a1a;
+      color: var(--fg);
       cursor: pointer;
       text-decoration: none;
-      border-bottom: 1px dotted #b0b0b0;
+      border-bottom: 1px dotted var(--faint);
     }
-    td .card-link:hover { color: #1a56db; border-bottom-color: #1a56db; }
+    td .card-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
     /* Card image modal */
     #card-modal {
@@ -197,8 +300,8 @@
       padding: 0;
     }
 
-    td.col-price a { color: #1a1a1a; }
-    .best-price { color: #128a3f !important; font-weight: 800 !important; }
+    td.col-price a { color: var(--fg); }
+    .best-price { color: var(--pos) !important; font-weight: 800 !important; }
     .best-price::after { content: ' \2193'; font-size: 0.85em; }
 
     /* 30-day trend: sparkline + 7-day delta.
@@ -207,19 +310,19 @@
        colour alone. */
     .trend { display: inline-flex; align-items: center; gap: 9px; }
     .spark { display: block; flex: none; }
-    .spark-line { fill: none; stroke: #98a2b3; stroke-width: 2;
+    .spark-line { fill: none; stroke: var(--spark); stroke-width: 2;
                   stroke-linecap: round; stroke-linejoin: round; }
-    .spark-dot { fill: #1a56db; }
+    .spark-dot { fill: var(--accent); }
     .delta {
       font-size: 0.82rem;
       font-weight: 600;
       font-variant-numeric: tabular-nums;
       min-width: 58px;
     }
-    .delta.up   { color: #128a3f; }
-    .delta.down { color: #c0392b; }
-    .delta.flat { color: #777; }
-    .delta.na   { color: #bbb; font-weight: 400; }
+    .delta.up   { color: var(--pos); }
+    .delta.down { color: var(--neg); }
+    .delta.flat { color: var(--muted); }
+    .delta.na   { color: var(--fainter); font-weight: 400; }
 
     .summary {
       display: flex;
@@ -231,16 +334,71 @@
       flex: 1 1 220px;
       padding: 12px 16px;
       border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      background: #fafafa;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
     }
-    .summary-card.owned { border-color: #b8dcc4; background: #f0faf3; }
-    .summary-card.missing { border-color: #f0d0c0; background: #fdf6f2; }
-    .summary-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .summary-card.owned { border-color: var(--owned-border); background: var(--owned-bg); }
+    .summary-card.missing { border-color: var(--missing-border); background: var(--missing-bg); }
+    .summary-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
     .summary-value { font-size: 1.4rem; font-weight: 700; }
-    .summary-card.owned .summary-value { color: #128a3f; }
-    .summary-card.missing .summary-value { color: #b0552a; }
-    .summary-sub { font-size: 0.78rem; color: #777; margin-top: 2px; }
+    .summary-card.owned .summary-value { color: var(--pos); }
+    .summary-card.missing .summary-value { color: var(--warn); }
+    .summary-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+    /* ---- Filter row -------------------------------------------------------
+       One row per tab, holding the name search, the collected/missing
+       segmented control and the "showing N of M" readout. Each tab keeps its
+       own filter state, so switching tabs does not clear what you typed. */
+    .filters {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      flex-wrap: wrap;
+    }
+    .filter-q {
+      flex: 0 1 260px;
+      min-width: 0;
+      min-height: 36px;
+      padding: 7px 11px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: var(--input-bg);
+      color: var(--fg);
+      font-size: 0.88rem;
+      font-family: inherit;
+    }
+    .filter-q:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+    .filter-q::placeholder { color: var(--faint); }
+
+    .own-toggle {
+      display: flex;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .own-toggle button {
+      padding: 8px 14px;
+      background: none;
+      border: none;
+      border-left: 1px solid var(--line-strong);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .own-toggle button:first-child { border-left: none; }
+    .own-toggle button:hover { color: var(--accent); }
+    .own-toggle button.active {
+      background: var(--accent);
+      color: var(--btn-fg);
+    }
+    .filter-count { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .filter-count.filtered { color: var(--accent); font-weight: 600; }
+    /* Overrides the zebra/grid rules that assume a row is a card. */
+    tbody tr.empty-row, tbody tr.empty-row:hover { background: none; }
+    tbody tr.empty-row td { color: var(--faint); padding: 22px 14px; font-style: italic; }
 
     /* Sort control for the stacked layout below; the table header does the
        job everywhere else, so this is hidden until the media query wants it. */
@@ -250,17 +408,18 @@
       gap: 8px;
       margin: 0 0 12px;
       font-size: 0.82rem;
-      color: #666;
+      color: var(--muted);
     }
     .mobile-sort select {
       flex: 1 1 auto;
       min-height: 40px;
       padding: 8px 10px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--line-strong);
       border-radius: 6px;
-      background: #fff;
+      background: var(--input-bg);
       font-size: 0.9rem;
-      color: #1a1a1a;
+      color: var(--fg);
+      font-family: inherit;
     }
 
     .hint-tap { display: none; }
@@ -301,11 +460,20 @@
 
       .mobile-sort { display: flex; }
 
+      /* Search on its own line, then the segmented control and the count
+         sharing the next one. 16px on the input is the threshold below which
+         iOS Safari zooms the page in on focus. */
+      .filters { gap: 8px; margin-bottom: 10px; }
+      .filter-q { flex: 1 1 100%; min-height: 40px; font-size: 16px; }
+      .own-toggle { flex: 1 1 auto; }
+      .own-toggle button { flex: 1; padding: 10px 8px; }
+      .filter-count { flex: 0 0 auto; }
+
       table { display: block; min-width: 0; table-layout: auto; }
       colgroup, thead { display: none; }
       tbody { display: block; }
 
-      tbody tr, tbody tr:nth-child(even), tbody tr:hover { background: #fff; }
+      tbody tr, tbody tr:nth-child(even), tbody tr:hover { background: var(--bg); }
       tbody tr {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto auto;
@@ -317,12 +485,18 @@
           "mp   nf    foil";
         align-items: center;
         gap: 2px 8px;
-        border: 1px solid #e4e4e4;
+        border: 1px solid var(--line);
         border-radius: 8px;
         padding: 10px 12px;
         margin-bottom: 8px;
       }
       td { padding: 0; border-bottom: none; }
+
+      /* The grid above turns every row into a card; the empty state is a
+         message, so it opts back out of all of it. */
+      tbody tr.empty-row { display: block; border: none; padding: 0; margin: 0; }
+      /* Overrides the name-cell rules, which this td matches as a first child. */
+      tbody tr.empty-row td { padding: 18px 2px; margin: 0; font-size: 0.9rem; }
       td:first-child {
         grid-area: name;
         font-weight: 600;
@@ -331,7 +505,7 @@
       }
       /* The dotted underline reads as a defect at this size; the link colour
          carries the affordance instead. */
-      td .card-link { border-bottom: none; color: #1a56db; }
+      td .card-link { border-bottom: none; color: var(--accent); }
 
       td.col-price { font-variant-numeric: tabular-nums; }
       td.col-price:nth-child(2) { grid-area: tcg; }
@@ -340,7 +514,7 @@
         content: attr(data-label);
         display: inline-block;
         min-width: 32px;
-        color: #8a8a8a;
+        color: var(--faint);
         font-size: 0.76rem;
         font-weight: 700;
       }
@@ -353,9 +527,9 @@
       td.col-check {
         text-align: center;
         align-self: start;
-        border: 1px solid #b8dcc4;
-        background: #f0faf3;
-        color: #128a3f;
+        border: 1px solid var(--owned-border);
+        background: var(--owned-bg);
+        color: var(--pos);
         border-radius: 999px;
         padding: 3px 8px;
         white-space: nowrap;
@@ -368,7 +542,7 @@
         font-weight: 700;
         letter-spacing: 0.4px;
       }
-      td.col-check:empty { border-color: #e6e6e6; background: #fafafa; color: #bbb; }
+      td.col-check:empty { border-color: var(--line); background: var(--row-alt); color: var(--fainter); }
       .owned-check { font-size: 0.8rem; margin-left: 3px; }
 
       #card-modal .modal-close { top: 4px; right: 6px; font-size: 2.2rem; padding: 6px 12px; }
@@ -391,6 +565,10 @@
     Scheduled Daily Refresh
   </button>
   <span id="last-updated">Loading...</span>
+  <button id="theme-btn" type="button" aria-pressed="false">
+    <span class="theme-icon" aria-hidden="true">&#9789;</span>
+    <span class="theme-label">Dark</span>
+  </button>
 </div>
 
 <!-- Tabs and panels are built from the "tabs" block in prices.json, so
@@ -446,7 +624,8 @@ const SPARK_DAYS = 30;  // window for the sparkline
 const state = {
   data: null,
   history: null,
-  sort: {},   // keyed by tab, populated once the tabs are known
+  sort: {},     // keyed by tab, populated once the tabs are known
+  filter: {},   // ditto: { q, own } per tab
 };
 
 const COLUMNS = [
@@ -457,6 +636,14 @@ const COLUMNS = [
     title: 'TCGplayer price: 30-day sparkline, with the change over the last 7 days' },
   { col: 'nf',    label: 'Collected Non-Foil', cls: 'col-check' },
   { col: 'foil',  label: 'Collected Foil',     cls: 'col-check' },
+];
+
+// A card counts as collected if either finish is, which is the same rule the
+// summary cards use - so "Missing" here and "cards missing" there always agree.
+const OWN_FILTERS = [
+  { val: 'all',       label: 'All' },
+  { val: 'missing',   label: 'Missing' },
+  { val: 'collected', label: 'Collected' },
 ];
 
 // The stacked mobile layout hides the header row, so sorting needs its own
@@ -488,6 +675,18 @@ function buildScaffold(tabs) {
     <div id="tab-${escapeHTML(t.key)}" class="tab-panel${i === 0 ? ' active' : ''}">
       ${t.subtitle ? `<p class="meta" style="margin-bottom:12px">${escapeHTML(t.subtitle)}</p>` : ''}
       <div class="summary" id="summary-${escapeHTML(t.key)}"></div>
+      <div class="filters">
+        <input type="search" class="filter-q" id="q-${escapeHTML(t.key)}"
+               data-tab="${escapeHTML(t.key)}" autocomplete="off"
+               placeholder="Filter by card name…" aria-label="Filter by card name">
+        <div class="own-toggle" role="group" aria-label="Collected filter"
+             data-tab="${escapeHTML(t.key)}">
+          ${OWN_FILTERS.map((o, j) =>
+            `<button type="button" data-own="${o.val}" aria-pressed="${j === 0}"`
+            + `${j === 0 ? ' class="active"' : ''}>${escapeHTML(o.label)}</button>`).join('')}
+        </div>
+        <span class="filter-count" id="count-${escapeHTML(t.key)}" aria-live="polite"></span>
+      </div>
       <label class="mobile-sort" for="sort-${escapeHTML(t.key)}">Sort
         <select id="sort-${escapeHTML(t.key)}" data-tab="${escapeHTML(t.key)}">
           ${SORT_OPTIONS.map(o =>
@@ -501,13 +700,17 @@ function buildScaffold(tabs) {
         </colgroup>
         <thead><tr>${head}</tr></thead>
         <tbody id="tbody-${escapeHTML(t.key)}">
-          <tr><td colspan="${COLUMNS.length}" style="color:#999;padding:20px 14px">Loading…</td></tr>
+          <tr class="empty-row"><td colspan="${COLUMNS.length}">Loading…</td></tr>
         </tbody>
       </table>
     </div>`).join('');
 
   state.sort = {};
-  for (const t of tabs) state.sort[t.key] = { col: 'tcg', dir: 'asc' };
+  state.filter = {};
+  for (const t of tabs) {
+    state.sort[t.key] = { col: 'tcg', dir: 'asc' };
+    state.filter[t.key] = { q: '', own: 'all' };
+  }
 }
 
 function bestPrice(c) {
@@ -678,6 +881,30 @@ function sortCards(cards, col, dir) {
   });
 }
 
+// Name search plus the collected/missing segmented control. Terms are ANDed so
+// "sam gam" finds Samwise Gamgee. Only display_name is searched: for the cards
+// that carry both a LOTR and an MTG name it already holds both, as
+// "Flavor (Real Name)".
+function filterCards(cards, f) {
+  const terms = f.q.toLowerCase().split(/\s+/).filter(Boolean);
+  return cards.filter(c => {
+    if (f.own !== 'all') {
+      const owned = c.collected_nonfoil || c.collected_foil;
+      if (f.own === 'missing' ? owned : !owned) return false;
+    }
+    if (!terms.length) return true;
+    const name = c.display_name.toLowerCase();
+    return terms.every(t => name.includes(t));
+  });
+}
+
+function emptyRow(f) {
+  const why = f.q
+    ? `No cards match “${escapeHTML(f.q)}”`
+    : 'No cards in this set match that filter';
+  return `<tr class="empty-row"><td colspan="${COLUMNS.length}">${why}</td></tr>`;
+}
+
 function updateHeaderIndicators(tabName) {
   const {col, dir} = state.sort[tabName];
   const arrow = dir === 'asc' ? '▲' : '▼';
@@ -721,10 +948,24 @@ function buildSummary(cards) {
 
 function renderTab(tabName) {
   const cards = state.data[tabName];
+  const f = state.filter[tabName];
   const {col, dir} = state.sort[tabName];
-  const sorted = sortCards(cards, col, dir);
-  document.getElementById('tbody-' + tabName).innerHTML = buildRows(sorted, tabName);
+  const shown = filterCards(cards, f);
+  const sorted = sortCards(shown, col, dir);
+
+  document.getElementById('tbody-' + tabName).innerHTML =
+    sorted.length ? buildRows(sorted, tabName) : emptyRow(f);
+  // The summary describes the set, not the view: filtering to one card should
+  // not claim the set is worth $4. It stays on the unfiltered list.
   document.getElementById('summary-' + tabName).innerHTML = buildSummary(cards);
+
+  const count = document.getElementById('count-' + tabName);
+  const filtered = shown.length !== cards.length;
+  count.textContent = filtered
+    ? `Showing ${shown.length} of ${cards.length}`
+    : `${cards.length} card${cards.length === 1 ? '' : 's'}`;
+  count.classList.toggle('filtered', filtered);
+
   updateHeaderIndicators(tabName);
   syncSortSelect(tabName);
 }
@@ -835,8 +1076,41 @@ function switchTab(name) {
   }
 }
 
+// ---- Theme -----------------------------------------------------------------
+// The class on <html> is the single source of truth; the head script sets it
+// before first paint and everything here only keeps it and the button in step.
+const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+function storedTheme() {
+  try { return localStorage.getItem('theme'); } catch (e) { return null; }
+}
+
+function applyTheme(dark, remember) {
+  document.documentElement.classList.toggle('dark', dark);
+  if (remember) {
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { /* private mode */ }
+  }
+  const btn = document.getElementById('theme-btn');
+  // The button names what it will do, not what is on - so it reads "Light"
+  // while the dark theme is showing.
+  btn.querySelector('.theme-icon').innerHTML = dark ? '&#9788;' : '&#9789;';
+  btn.querySelector('.theme-label').textContent = dark ? 'Light' : 'Dark';
+  btn.setAttribute('aria-pressed', String(dark));
+  btn.title = dark ? 'Switch to the light theme' : 'Switch to the dark theme';
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   loadPrices();   // builds the scaffold, then wires the sort headers
+
+  applyTheme(document.documentElement.classList.contains('dark'), false);
+  document.getElementById('theme-btn').addEventListener('click', () => {
+    applyTheme(!document.documentElement.classList.contains('dark'), true);
+  });
+  // Follow the OS while the choice is still the OS's to make; an explicit
+  // click opts out of this for good.
+  darkQuery.addEventListener('change', (e) => {
+    if (!storedTheme()) applyTheme(e.matches, false);
+  });
 
   // Tab buttons are generated, so listen on the bar rather than each button.
   document.getElementById('tabs').addEventListener('click', (e) => {
@@ -845,12 +1119,36 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   // Same for the per-tab sort selects.
-  document.getElementById('panels').addEventListener('change', (e) => {
+  const panels = document.getElementById('panels');
+  panels.addEventListener('change', (e) => {
     const sel = e.target.closest('.mobile-sort select');
     if (!sel) return;
     const [col, dir] = sel.value.split(':');
     state.sort[sel.dataset.tab] = { col, dir };
     renderTab(sel.dataset.tab);
+  });
+
+  // Filter box. `input` rather than `change` so the table narrows as you type;
+  // the largest set is 193 rows, which re-renders well inside a keystroke.
+  panels.addEventListener('input', (e) => {
+    const box = e.target.closest('.filter-q');
+    if (!box) return;
+    state.filter[box.dataset.tab].q = box.value.trim();
+    renderTab(box.dataset.tab);
+  });
+
+  // Collected/missing segmented control.
+  panels.addEventListener('click', (e) => {
+    const btn = e.target.closest('.own-toggle button');
+    if (!btn) return;
+    const tabName = btn.closest('.own-toggle').dataset.tab;
+    state.filter[tabName].own = btn.dataset.own;
+    btn.parentElement.querySelectorAll('button').forEach(b => {
+      const on = b === btn;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    renderTab(tabName);
   });
 
   // Card image preview via event delegation

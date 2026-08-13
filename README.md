@@ -7,7 +7,10 @@ ManaPool prices against what I actually own.
 
 For each tracked set it shows the complete card list, both vendors' prices with
 the cheaper one highlighted, a 30-day price trend, and whether the card is
-already in my collection. Prices refresh automatically once a day.
+already in my collection. The list can be filtered by card name and narrowed to
+just the missing or just the collected cards, each tab keeping its own filter.
+The page follows the system light/dark setting, with a toggle that overrides it.
+Prices refresh automatically once a day.
 
 All prices are **Near Mint, non-foil**. Foil ownership is shown as a separate
 column because the Moxfield export distinguishes it, but foil *prices* are not
