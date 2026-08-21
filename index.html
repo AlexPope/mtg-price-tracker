@@ -38,13 +38,20 @@
       --line: #e8e8e8;
       --line-strong: #cccccc;
       --accent: #1a56db;
-      --accent-hover: #1447c0;
-      --accent-dim: #6b9aed;
       --btn-fg: #ffffff;
-      --btn-dim-fg: #ffffff;
-      --th-bg: #f0f0f0;
-      --th-bg-hover: #e8e8e8;
+      /* The header band has to separate from both the page and the zebra
+         rows, so it sits a clear step below --row-alt rather than beside it,
+         and carries its own border token: at --line-strong the rule under it
+         read as just another row divider. */
+      --th-bg: #d5dfec;
+      --th-bg-hover: #c7d3e5;
+      --th-border: #93a0b3;
       --row-alt: #fafafa;
+      /* A tint rather than a fill: the chips below are solid accent, and the
+         tab that contains them must not compete with its own contents. The
+         label darkens along with the ground, or it drops below AA on it. */
+      --tab-active-bg: #bed3f7;
+      --tab-active-fg: #1043ae;
       --row-hover: #f0f4ff;
       --pos: #128a3f;
       --neg: #c0392b;
@@ -70,15 +77,19 @@
       --line: #2a2f37;
       --line-strong: #3a414b;
       --accent: #7aa2f7;
-      --accent-hover: #9bb8fa;
-      --accent-dim: #3a4d78;
+      /* The accent is a light blue here, so anything filled with it wants
+         dark text - the chips and the collected toggle both rely on this. */
       --btn-fg: #0f1116;
-      /* The enabled button is a light blue that wants dark text; the disabled
-         one is a muted dark blue that needs the opposite. */
-      --btn-dim-fg: #c3d0e8;
-      --th-bg: #21252c;
-      --th-bg-hover: #2a2f37;
+      /* Lifted well clear of #14161a. The old #21252c was only a few points
+         of luminance off the page behind it, which is why the header row was
+         hard to pick out at a glance. */
+      --th-bg: #2c333d;
+      --th-bg-hover: #363e4a;
+      --th-border: #525c6b;
       --row-alt: #191c21;
+      /* Same relationship inverted: the ground lightens, so the label does too. */
+      --tab-active-bg: #2e4169;
+      --tab-active-fg: #a9c4fb;
       --row-hover: #202834;
       --pos: #4ade80;
       --neg: #f87171;
@@ -115,34 +126,9 @@
       margin: 16px 0 0;
       flex-wrap: wrap;
     }
-    #refresh-btn {
-      padding: 8px 18px;
-      background: var(--accent);
-      color: var(--btn-fg);
-      border: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    #refresh-btn:hover { background: var(--accent-hover); }
-    #refresh-btn:disabled { background: var(--accent-dim); color: var(--btn-dim-fg); cursor: not-allowed; }
-    #refresh-btn .spinner {
-      display: none;
-      width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.4);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    #refresh-btn.loading .spinner { display: inline-block; }
-    @keyframes spin { to { transform: rotate(360deg); } }
     #last-updated { font-size: 0.85rem; color: var(--muted); }
-    #status-msg { font-size: 0.82rem; color: var(--neg); }
-    #status-msg.ok { color: var(--pos); }
+    /* The refresh cadence, in the same line as the timestamp it explains. */
+    #last-updated .schedule { color: var(--faint); }
 
     /* Pushed to the far end of the toolbar; it is a page-level setting, not
        part of the refresh/updated pair it would otherwise sit inside. */
@@ -174,22 +160,85 @@
       padding: 9px 22px;
       background: none;
       border: none;
-      border-bottom: 2px solid transparent;
+      /* 3px against the bar's 2px, so the active indicator overlaps the rule
+         instead of merging into it. */
+      border-bottom: 3px solid transparent;
+      border-radius: 6px 6px 0 0;
       margin-bottom: -2px;
       font-size: 0.92rem;
       font-weight: 600;
       color: var(--muted);
       cursor: pointer;
     }
-    .tab-btn:hover { color: var(--accent); }
+    .tab-btn:hover { color: var(--accent); background: var(--row-hover); }
+    /* Three cues rather than one - tinted ground, thicker accent underline and
+       heavier text. The underline alone was doing all the work, and at 2px in
+       the dark palette that was not enough to say which set you were on. */
     .tab-btn.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
+      color: var(--tab-active-fg);
+      border-bottom-color: var(--tab-active-fg);
+      background: var(--tab-active-bg);
+      font-weight: 700;
     }
     .tab-panel { display: none; padding-top: 20px; }
     /* Non-wrapping headers give the table a minimum width; on a narrow window
        scroll the panel rather than the whole page. */
     .tab-panel.active { display: block; overflow-x: auto; }
+
+    /* ---- Subset chips -----------------------------------------------------
+       The second level of the navigation: one chip per treatment within the
+       set, plus an "All" that unions them. A chip is a scope, not a filter -
+       it decides which cards the panel is about, so the summary follows it
+       while the search box and the collected control do not. It sits between
+       the two for that reason: the summary above is what the chip changes,
+       the filter row below is what narrows whatever the chip selected. */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 22px;
+    }
+    .chip {
+      padding: 5px 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: none;
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .chip:hover { color: var(--accent); border-color: var(--accent); }
+    .chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--btn-fg);
+    }
+    .chip .chip-n {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      opacity: 0.75;
+      margin-left: 5px;
+    }
+    /* A group with a single section has nothing to choose between; the row
+       would be "All · <the only thing>". JS omits it rather than styling it. */
+
+    /* Which treatment a row came from, shown only in the unioned "All" view -
+       under a specific chip every row would carry the same badge. */
+    .treatment {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 1px 7px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+      vertical-align: 1px;
+    }
 
     table {
       width: 100%;
@@ -204,18 +253,20 @@
          horizontally instead of the headers overflowing their cells. */
       min-width: 1060px;
     }
-    col.c-name  { width: 30.5%; }
-    col.c-tcg   { width: 11%; }
-    col.c-mp    { width: 10.5%; }
-    col.c-trend { width: 17%; }
-    col.c-nf    { width: 17%; }
-    col.c-foil  { width: 14%; }
+    col.c-name  { width: 26%; }
+    col.c-num   { width: 6.5%; }
+    col.c-tcg   { width: 10.5%; }
+    col.c-mp    { width: 10%; }
+    col.c-trend { width: 16%; }
+    col.c-nf    { width: 16%; }
+    col.c-foil  { width: 15%; }
     thead th {
       background: var(--th-bg);
       text-align: left;
-      padding: 10px 14px;
-      font-weight: 600;
-      border-bottom: 2px solid var(--line-strong);
+      padding: 11px 14px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      border-bottom: 2px solid var(--th-border);
       /* Keep every header on one line. The LTC/LTR tabs carry both the LOTR
          and MTG name, so their Name column is wide enough to squeeze the
          later headers into wrapping, which made the header bar taller on
@@ -229,6 +280,11 @@
     td:first-child { font-weight: 500; }
     td.col-price, td.col-trend { white-space: nowrap; }
     td.col-check { text-align: center; }
+    td.col-num {
+      color: var(--faint);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
     a { color: var(--accent); text-decoration: none; font-weight: 600; }
     a:hover { text-decoration: underline; }
     .na { color: var(--faint); font-style: italic; font-weight: 400; }
@@ -327,7 +383,9 @@
     .summary {
       display: flex;
       gap: 14px;
-      margin: 4px 0 18px;
+      /* Generous below, so the chip row reads as its own band rather than as
+         something attached to the totals above it. */
+      margin: 4px 0 26px;
       flex-wrap: wrap;
     }
     .summary-card {
@@ -343,7 +401,15 @@
     .summary-value { font-size: 1.4rem; font-weight: 700; }
     .summary-card.owned .summary-value { color: var(--pos); }
     .summary-card.missing .summary-value { color: var(--warn); }
-    .summary-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    /* The count rides along on the label line rather than taking a third row.
+       It opts out of the label's uppercase and tracking: read as one run of
+       small caps the parenthetical competed with the label it qualifies. */
+    .summary-note {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      color: var(--faint);
+    }
 
     /* ---- Filter row -------------------------------------------------------
        One row per tab, holding the name search, the collected/missing
@@ -436,7 +502,7 @@
       .hint-hover { display: none; }
       .hint-tap { display: block; }
 
-      /* A swipeable strip. Without this the seven tabs are wider than the
+      /* A swipeable strip. Without this the set tabs are wider than the
          viewport and the whole page scrolls sideways with them. */
       .tabs {
         flex-wrap: nowrap;
@@ -453,8 +519,20 @@
         scroll-snap-align: start;
       }
 
+      /* Same treatment for the chips, which are the longer of the two rows
+         once a set has four or five treatments. */
+      .chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        margin-bottom: 18px;
+      }
+      .chips::-webkit-scrollbar { display: none; }
+      .chip { flex: none; padding: 7px 13px; scroll-snap-align: start; }
+
       .tab-panel.active { padding-top: 14px; }
-      .summary { gap: 10px; margin-bottom: 14px; }
+      .summary { gap: 10px; margin-bottom: 20px; }
       .summary-card { padding: 10px 14px; }
       .summary-value { font-size: 1.25rem; }
 
@@ -477,10 +555,11 @@
       tbody tr {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto auto;
-        /* The name gets the full width: sharing its row with the collected
-           pills wrapped almost every card onto a second line. */
+        /* The name gets nearly the full width: sharing its row with the
+           collected pills wrapped almost every card onto a second line. The
+           collector number is narrow enough to ride along at the end of it. */
         grid-template-areas:
-          "name name  name"
+          "name name  num"
           "tcg  trend trend"
           "mp   nf    foil";
         align-items: center;
@@ -497,19 +576,30 @@
       tbody tr.empty-row { display: block; border: none; padding: 0; margin: 0; }
       /* Overrides the name-cell rules, which this td matches as a first child. */
       tbody tr.empty-row td { padding: 18px 2px; margin: 0; font-size: 0.9rem; }
-      td:first-child {
+      td.col-name {
         grid-area: name;
         font-weight: 600;
         font-size: 0.97rem;
         margin-bottom: 5px;
       }
+      /* Right-aligned against the name, prefixed so a bare number is not
+         mistaken for a price or a count. */
+      td.col-num {
+        grid-area: num;
+        justify-self: end;
+        align-self: start;
+        font-size: 0.76rem;
+        font-weight: 700;
+      }
+      td.col-num::before { content: '#'; }
       /* The dotted underline reads as a defect at this size; the link colour
          carries the affordance instead. */
       td .card-link { border-bottom: none; color: var(--accent); }
+      .treatment { font-size: 0.65rem; margin-left: 6px; padding: 1px 6px; }
 
       td.col-price { font-variant-numeric: tabular-nums; }
-      td.col-price:nth-child(2) { grid-area: tcg; }
-      td.col-price:nth-child(3) { grid-area: mp; }
+      td.col-tcg { grid-area: tcg; }
+      td.col-mp  { grid-area: mp; }
       td.col-price::before {
         content: attr(data-label);
         display: inline-block;
@@ -534,8 +624,8 @@
         padding: 3px 8px;
         white-space: nowrap;
       }
-      td.col-check:nth-child(5) { grid-area: nf; }
-      td.col-check:nth-child(6) { grid-area: foil; }
+      td.col-nf   { grid-area: nf; }
+      td.col-foil { grid-area: foil; }
       td.col-check::before {
         content: attr(data-label);
         font-size: 0.68rem;
@@ -560,10 +650,6 @@
 <p class="meta hint-tap">Condition: Near Mint &nbsp;·&nbsp; Finish: Non-Foil &nbsp;·&nbsp; Tap a card name to see the art</p>
 
 <div class="toolbar">
-  <button id="refresh-btn" disabled title="Prices are refreshed automatically once per day.">
-    <span class="spinner"></span>
-    Scheduled Daily Refresh
-  </button>
   <span id="last-updated">Loading...</span>
   <button id="theme-btn" type="button" aria-pressed="false">
     <span class="theme-icon" aria-hidden="true">&#9789;</span>
@@ -585,9 +671,21 @@
 </div>
 
 <script>
-const OWNER    = 'AlexPope';
-const REPO     = 'mtg-price-tracker';
-const WORKFLOW = 'update-prices.yml';
+// When update-prices.yml is scheduled. Mirrors `cron: '7 11 * * *'` in
+// .github/workflows/update-prices.yml field for field - change one and change
+// the other. Both fields are carried rather than just the hour, so moving the
+// cron off the hour cannot leave the page quietly rounding to the wrong time.
+const REFRESH_UTC_HOUR = 11;
+const REFRESH_UTC_MINUTE = 7;
+
+// The scheduled time in the reader's own timezone, so it agrees with the
+// timestamp beside it and follows daylight saving without being edited: the
+// cron is fixed in UTC, so the local time it lands on shifts twice a year.
+function refreshSchedule() {
+  const d = new Date();
+  d.setUTCHours(REFRESH_UTC_HOUR, REFRESH_UTC_MINUTE, 0, 0);
+  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
 
 function fmt(price) {
   if (price == null) return '<span class="na">N/A</span>';
@@ -605,18 +703,41 @@ function ownedCell(n) {
   return n ? `<span class="owned-qty" title="${n} in collection">${n}</span>` : '';
 }
 
-// Tabs come from prices.json; a tab's key is also its key into the data and
-// the suffix of its DOM ids.
-let TABS = [];
-const tabKeys = () => TABS.map(t => t.key);
+// The navigation is two levels, both built from prices.json. A GROUP is a
+// primary tab - one Magic set - and its key is the suffix of the panel's DOM
+// ids. A SECTION is one treatment within a group, reached by a chip; its key
+// is also its key into the price data.
+let GROUPS = [];
+let SECTIONS = [];
+const groupKeys = () => GROUPS.map(g => g.key);
+const sectionsOf = g => SECTIONS.filter(s => s.group === g);
+// Section key -> chip label, for the treatment badge on unioned rows.
+let SECTION_LABEL = {};
 
-// Older prices.json files predate the "tabs" block. Fall back to whatever
-// sections are present so the page still renders something useful.
-function deriveTabs(data) {
-  if (Array.isArray(data.tabs) && data.tabs.length) return data.tabs;
-  return Object.keys(data)
-    .filter(k => Array.isArray(data[k]))
-    .map(k => ({ key: k, label: k.replace(/_/g, ' '), subtitle: '' }));
+// Older prices.json files predate one or both blocks, and the page is served
+// independently of the data - a deploy can land before the next price run.
+// Missing "groups" degrades to one group per section, which is exactly the
+// flat tab bar this replaced; missing "tabs" falls back to the raw sections.
+function deriveNav(data) {
+  const sections = (Array.isArray(data.tabs) && data.tabs.length)
+    ? data.tabs
+    : Object.keys(data)
+        .filter(k => Array.isArray(data[k]))
+        .map(k => ({ key: k, label: k.replace(/_/g, ' ') }));
+
+  if (Array.isArray(data.groups) && data.groups.length
+      && sections.every(s => s.group)) {
+    // Only keep groups something actually points at, so a stale group block
+    // cannot render a tab that opens onto nothing.
+    const used = new Set(sections.map(s => s.group));
+    const groups = data.groups.filter(g => used.has(g.key));
+    if (groups.length) return { groups, sections };
+  }
+
+  return {
+    groups: sections.map(s => ({ key: s.key, label: s.label })),
+    sections: sections.map(s => ({ ...s, group: s.key })),
+  };
 }
 
 // Card identity that survives re-sorting and schema changes; mirrors
@@ -627,18 +748,29 @@ function cardKey(c) {
   return m ? `${m[1]}/${m[2]}` : null;
 }
 
+// prices.json carries collector_number, but the page and the data deploy
+// independently, so fall back to the key encoded in mp_url rather than render
+// a blank column against a file written before the field existed.
+function collectorNumber(c) {
+  if (c.collector_number != null) return c.collector_number;
+  const m = CARD_KEY_RE.exec(c.mp_url || '');
+  return m ? m[2] : '';
+}
+
 const TREND_DAYS = 7;   // window for the delta
 const SPARK_DAYS = 30;  // window for the sparkline
 
 const state = {
-  data: null,
+  data: null,     // prices.json as fetched: one array per section key
+  cards: {},      // per group: every section's cards concatenated, in chip order
   history: null,
-  sort: {},     // keyed by tab, populated once the tabs are known
-  filter: {},   // ditto: { q, own } per tab
+  sort: {},       // keyed by group, populated once the groups are known
+  filter: {},     // ditto: { q, own, subset } per group; subset '' means All
 };
 
 const COLUMNS = [
   { col: 'name',  label: 'Card Name' },
+  { col: 'num',   label: '#', cls: 'col-num', title: 'Collector number' },
   { col: 'tcg',   label: 'TCGPlayer' },
   { col: 'mp',    label: 'ManaPool' },
   { col: 'trend', label: '30-Day Trend (TCG)',
@@ -666,62 +798,109 @@ const SORT_OPTIONS = [
   { val: 'trend:desc',label: 'Biggest 7-day gain' },
   { val: 'trend:asc', label: 'Biggest 7-day drop' },
   { val: 'name:asc',  label: 'Card name — A to Z' },
+  { val: 'num:asc',   label: 'Collector number' },
   { val: 'nf:desc',   label: 'Collected first' },
   { val: 'nf:asc',    label: 'Missing first' },
 ];
 
-// Builds the tab bar and one panel per tab. Everything below this point works
-// off the generated DOM, so a new set arrives with no markup change.
-function buildScaffold(tabs) {
+// Builds the set tab bar and one panel per set, each with its own chip row.
+// Everything below this point works off the generated DOM, so a new set or a
+// new treatment arrives with no markup change.
+function buildScaffold(groups) {
   const head = COLUMNS.map(c =>
     `<th class="sortable${c.cls ? ' ' + c.cls : ''}" data-col="${c.col}"`
     + `${c.title ? ` title="${escapeHTML(c.title)}"` : ''}>`
     + `${escapeHTML(c.label)}<span class="sort-ind"></span></th>`).join('');
 
-  document.getElementById('tabs').innerHTML = tabs.map((t, i) =>
-    `<button class="tab-btn${i === 0 ? ' active' : ''}" data-tab="${escapeHTML(t.key)}">`
-    + `${escapeHTML(t.label)}</button>`).join('');
+  document.getElementById('tabs').innerHTML = groups.map((g, i) =>
+    `<button class="tab-btn${i === 0 ? ' active' : ''}" data-tab="${escapeHTML(g.key)}">`
+    + `${escapeHTML(g.label)}</button>`).join('');
 
-  document.getElementById('panels').innerHTML = tabs.map((t, i) => `
-    <div id="tab-${escapeHTML(t.key)}" class="tab-panel${i === 0 ? ' active' : ''}">
-      ${t.subtitle ? `<p class="meta" style="margin-bottom:12px">${escapeHTML(t.subtitle)}</p>` : ''}
-      <div class="summary" id="summary-${escapeHTML(t.key)}"></div>
+  document.getElementById('panels').innerHTML = groups.map((g, i) => {
+    const subs = sectionsOf(g.key);
+    // One treatment means there is nothing to choose between - the row would
+    // read "All · <the only thing>" and both would do the same.
+    const chips = subs.length > 1
+      ? `<div class="chips" role="group" aria-label="Treatment"
+              data-tab="${escapeHTML(g.key)}">
+           <button type="button" class="chip active" data-sub="" aria-pressed="true">All</button>
+           ${subs.map(s =>
+             `<button type="button" class="chip" data-sub="${escapeHTML(s.key)}"`
+             + ` aria-pressed="false">${escapeHTML(s.label)}`
+             + `<span class="chip-n" id="chipn-${escapeHTML(s.key)}"></span></button>`).join('')}
+         </div>`
+      : '';
+
+    return `
+    <div id="tab-${escapeHTML(g.key)}" class="tab-panel${i === 0 ? ' active' : ''}">
+      <div class="summary" id="summary-${escapeHTML(g.key)}"></div>
+      ${chips}
       <div class="filters">
-        <input type="search" class="filter-q" id="q-${escapeHTML(t.key)}"
-               data-tab="${escapeHTML(t.key)}" autocomplete="off"
+        <input type="search" class="filter-q" id="q-${escapeHTML(g.key)}"
+               data-tab="${escapeHTML(g.key)}" autocomplete="off"
                placeholder="Filter by card name…" aria-label="Filter by card name">
         <div class="own-toggle" role="group" aria-label="Collected filter"
-             data-tab="${escapeHTML(t.key)}">
+             data-tab="${escapeHTML(g.key)}">
           ${OWN_FILTERS.map((o, j) =>
             `<button type="button" data-own="${o.val}" aria-pressed="${j === 0}"`
             + `${j === 0 ? ' class="active"' : ''}>${escapeHTML(o.label)}</button>`).join('')}
         </div>
-        <span class="filter-count" id="count-${escapeHTML(t.key)}" aria-live="polite"></span>
+        <span class="filter-count" id="count-${escapeHTML(g.key)}" aria-live="polite"></span>
       </div>
-      <label class="mobile-sort" for="sort-${escapeHTML(t.key)}">Sort
-        <select id="sort-${escapeHTML(t.key)}" data-tab="${escapeHTML(t.key)}">
+      <label class="mobile-sort" for="sort-${escapeHTML(g.key)}">Sort
+        <select id="sort-${escapeHTML(g.key)}" data-tab="${escapeHTML(g.key)}">
           ${SORT_OPTIONS.map(o =>
             `<option value="${o.val}">${escapeHTML(o.label)}</option>`).join('')}
         </select>
       </label>
       <table>
         <colgroup>
-          <col class="c-name"><col class="c-tcg"><col class="c-mp">
+          <col class="c-name"><col class="c-num"><col class="c-tcg"><col class="c-mp">
           <col class="c-trend"><col class="c-nf"><col class="c-foil">
         </colgroup>
         <thead><tr>${head}</tr></thead>
-        <tbody id="tbody-${escapeHTML(t.key)}">
+        <tbody id="tbody-${escapeHTML(g.key)}">
           <tr class="empty-row"><td colspan="${COLUMNS.length}">Loading…</td></tr>
         </tbody>
       </table>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   state.sort = {};
   state.filter = {};
-  for (const t of tabs) {
-    state.sort[t.key] = { col: 'tcg', dir: 'asc' };
-    state.filter[t.key] = { q: '', own: 'all' };
+  for (const g of groups) {
+    state.sort[g.key] = { col: 'tcg', dir: 'asc' };
+    state.filter[g.key] = { q: '', own: 'all', subset: '' };
   }
+}
+
+// Every card in a group, in chip order, tagged with the section it came from
+// and given an index that is unique within the group (the modal looks cards up
+// by it). Sections within a group may overlap - nothing forbids two treatments
+// claiming a collector number - so a card is listed once, under the first
+// section that claims it. That is the same rule card_keys() applies to ranges
+// inside a section, one level up.
+function groupCards(groupKey) {
+  const out = [];
+  const seen = new Set();
+  for (const s of sectionsOf(groupKey)) {
+    for (const c of (state.data[s.key] || [])) {
+      const k = cardKey(c) || `${s.key}:${out.length}`;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push({ ...c, _section: s.key, _idx: out.length });
+    }
+  }
+  return out;
+}
+
+// The cards the panel is currently about: the whole group under "All", one
+// section under a chip. This is a scope rather than a filter, so the summary
+// follows it while the search box and the collected control do not.
+function scopeCards(groupKey) {
+  const sub = state.filter[groupKey].subset;
+  const cards = state.cards[groupKey] || [];
+  return sub ? cards.filter(c => c._section === sub) : cards;
 }
 
 function bestPrice(c) {
@@ -833,32 +1012,40 @@ function deltaCell(delta, source) {
        + `${arrow} ${up ? '+' : ''}${rounded.toFixed(1)}%</span>`;
 }
 
-function buildRows(cards, tabName) {
+function buildRows(cards, tabName, showTreatment) {
   return cards.map(c => {
     const tcg = c.tcg_price, mp = c.mp_price;
     const tcgBest = tcg != null && mp != null && tcg < mp;
     const mpBest  = tcg != null && mp != null && mp < tcg;
     const tcgCls = tcgBest ? ' class="best-price"' : '';
     const mpCls  = mpBest  ? 'best-price' : '';
-    const nameCell = c.image_url
+    const nameCell = (c.image_url
       ? `<span class="card-link" data-tab="${tabName}" data-idx="${c._idx}">${escapeHTML(c.display_name)}</span>`
-      : escapeHTML(c.display_name);
+      : escapeHTML(c.display_name))
+      // Only in the unioned view: under a chip every row would say the same.
+      + (showTreatment
+          ? `<span class="treatment">${escapeHTML(SECTION_LABEL[c._section] || '')}</span>`
+          : '');
 
     const series = trendSeries(c);
     const trend = `<span class="trend">${sparkline(series)}`
                 + `${deltaCell(trendDelta(series, TREND_DAYS), series && series.source)}</span>`;
 
     // data-label feeds the stacked mobile layout, where there is no header
-    // row to read the column off. Inert on desktop.
+    // row to read the column off. Inert on desktop. Each cell also carries a
+    // class naming its column, which is what the mobile grid places by - the
+    // layout used to key off nth-child, and inserting a column silently moved
+    // every cell into the wrong slot.
     return `<tr>
-      <td>${nameCell}</td>
-      <td class="col-price" data-label="TCG"><a href="${c.tcg_url}" target="_blank"${tcgCls}>${fmt(tcg)}</a></td>
-      <td class="col-price" data-label="MP">${mp != null
+      <td class="col-name">${nameCell}</td>
+      <td class="col-num" data-label="#">${escapeHTML(collectorNumber(c))}</td>
+      <td class="col-price col-tcg" data-label="TCG"><a href="${c.tcg_url}" target="_blank"${tcgCls}>${fmt(tcg)}</a></td>
+      <td class="col-price col-mp" data-label="MP">${mp != null
         ? `<a href="${c.mp_url}" target="_blank" class="${mpCls}">${fmt(mp)}</a>`
         : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
       <td class="col-trend">${trend}</td>
-      <td class="col-check" data-label="NF">${ownedCell(copies(c.collected_nonfoil))}</td>
-      <td class="col-check" data-label="Foil">${ownedCell(copies(c.collected_foil))}</td>
+      <td class="col-check col-nf" data-label="NF">${ownedCell(copies(c.collected_nonfoil))}</td>
+      <td class="col-check col-foil" data-label="Foil">${ownedCell(copies(c.collected_foil))}</td>
     </tr>`;
   }).join('');
 }
@@ -867,6 +1054,10 @@ function buildRows(cards, tabName) {
 function sortKey(col, c) {
   switch (col) {
     case 'name': return c.display_name.toLowerCase();
+    // Numeric, or "10" sorts before "9". Collector numbers can carry a letter
+    // suffix, so the parsed number leads and the raw string breaks ties -
+    // keeping 234a next to 234 rather than adrift among the 2s.
+    case 'num':  return parseInt(collectorNumber(c), 10) || 0;
     case 'tcg':  return c.tcg_price == null ? Infinity : c.tcg_price;
     case 'mp':   return c.mp_price  == null ? Infinity : c.mp_price;
     // Sorts by copies held, so the deepest stacks lead the "Collected first" view.
@@ -947,29 +1138,41 @@ function buildSummary(cards) {
   }
   return `
     <div class="summary-card owned">
-      <div class="summary-label">Current Collection Value</div>
+      <div class="summary-label">Current Collection Value
+        <span class="summary-note">(${ownedCount} / ${totalCards} cards collected)</span></div>
       <div class="summary-value">${money(ownedVal)}</div>
-      <div class="summary-sub">${ownedCount} / ${totalCards} cards collected</div>
     </div>
     <div class="summary-card missing">
-      <div class="summary-label">Cost to Complete</div>
+      <div class="summary-label">Cost to Complete
+        <span class="summary-note">(${missCount} card${missCount === 1 ? '' : 's'} missing)</span></div>
       <div class="summary-value">${money(missCost)}</div>
-      <div class="summary-sub">${missCount} card${missCount === 1 ? '' : 's'} missing</div>
     </div>`;
 }
 
 function renderTab(tabName) {
-  const cards = state.data[tabName];
   const f = state.filter[tabName];
   const {col, dir} = state.sort[tabName];
+  const cards = scopeCards(tabName);
   const shown = filterCards(cards, f);
   const sorted = sortCards(shown, col, dir);
+  const subs = sectionsOf(tabName);
+  const showTreatment = !f.subset && subs.length > 1;
 
   document.getElementById('tbody-' + tabName).innerHTML =
-    sorted.length ? buildRows(sorted, tabName) : emptyRow(f);
-  // The summary describes the set, not the view: filtering to one card should
-  // not claim the set is worth $4. It stays on the unfiltered list.
+    sorted.length ? buildRows(sorted, tabName, showTreatment) : emptyRow(f);
+  // The summary describes the scope, not the view: filtering to one card
+  // should not claim the set is worth $4. It follows the chip - which is what
+  // makes "All" worth having, since the set-wide rollup exists nowhere else -
+  // but ignores the search box and the collected control.
   document.getElementById('summary-' + tabName).innerHTML = buildSummary(cards);
+
+  // The chip labels carry their own totals, so the size of each treatment is
+  // readable without visiting it.
+  for (const s of subs) {
+    const n = document.getElementById('chipn-' + s.key);
+    if (n) n.textContent = (state.cards[tabName] || [])
+      .filter(c => c._section === s.key).length;
+  }
 
   const count = document.getElementById('count-' + tabName);
   const filtered = shown.length !== cards.length;
@@ -1014,7 +1217,7 @@ function wireSortHeaders() {
 }
 
 function showCard(tabName, idx, viaHover) {
-  const card = (state.data[tabName] || []).find(c => c._idx === idx);
+  const card = (state.cards[tabName] || []).find(c => c._idx === idx);
   if (!card || !card.image_url) return;
   document.getElementById('modal-img').src = card.image_url;
   document.getElementById('modal-img').alt = card.display_name;
@@ -1030,11 +1233,25 @@ function closeModal(e, force) {
   document.getElementById('card-modal').classList.remove('open');
 }
 
+// Both data files are regenerated once a day and must never be shown stale -
+// yesterday's prices under today's date is the one wrong answer this page can
+// give. That used to be enforced with a `?_=' + Date.now()` cache-buster,
+// which made every URL unique and so re-downloaded ~1.2MB on every single
+// visit, revisits included.
+//
+// `no-cache` is the exact rule that was wanted: always revalidate, never serve
+// from cache blind. GitHub Pages already sends ETag and Last-Modified, so an
+// unchanged file answers 304 with no body - a few hundred bytes instead of the
+// whole thing - and the moment the daily run commits new data the ETag differs
+// and the full file arrives. Note this is not `no-store`: the copy is kept and
+// reused, it is just never trusted without asking.
+const DATA_FETCH = { cache: 'no-cache' };
+
 // History is optional: if it is missing or malformed the tables still render,
 // with the trend column showing that there is nothing to plot yet.
 async function loadHistory() {
   try {
-    const r = await fetch('history.json?_=' + Date.now());
+    const r = await fetch('history.json', DATA_FETCH);
     if (!r.ok) return null;
     const h = await r.json();
     return (h && Array.isArray(h.dates) && h.cards) ? h : null;
@@ -1046,32 +1263,43 @@ async function loadHistory() {
 async function loadPrices() {
   try {
     const [r, history] = await Promise.all([
-      fetch('prices.json?_=' + Date.now()),
+      fetch('prices.json', DATA_FETCH),
       loadHistory(),
     ]);
     state.history = history;
     const data = await r.json();
 
-    TABS = deriveTabs(data);
-    buildScaffold(TABS);
+    const nav = deriveNav(data);
+    GROUPS = nav.groups;
+    SECTIONS = nav.sections;
+    SECTION_LABEL = Object.fromEntries(SECTIONS.map(s => [s.key, s.label]));
+    buildScaffold(GROUPS);
     wireSortHeaders();
 
-    // Assign stable indexes so sort/render can reference by _idx. A tab whose
-    // section is missing renders as empty rather than throwing.
-    for (const key of tabKeys()) {
-      if (Array.isArray(data[key])) data[key].forEach((c, i) => c._idx = i);
-      else data[key] = [];
+    // A section the data does not carry renders as empty rather than throwing:
+    // the page and prices.json deploy independently, so the page can be a set
+    // ahead of the data for a few minutes after a definition change.
+    for (const s of SECTIONS) {
+      if (!Array.isArray(data[s.key])) data[s.key] = [];
     }
     state.data = data;
+    // Flatten once per group rather than per render; _idx is assigned here and
+    // the modal looks cards up by it.
+    state.cards = Object.fromEntries(groupKeys().map(k => [k, groupCards(k)]));
 
-    tabKeys().forEach(renderTab);
+    groupKeys().forEach(renderTab);
+    applyHash();
 
     const ts = new Date(data.updated_at);
-    document.getElementById('last-updated').textContent =
-      'Last updated: ' + ts.toLocaleString('en-US', {
+    // Both times render in the reader's timezone, so the zone is named once on
+    // the timestamp and the schedule inherits it rather than repeating it.
+    document.getElementById('last-updated').innerHTML =
+      'Last updated: ' + escapeHTML(ts.toLocaleString('en-US', {
         month: 'short', day: 'numeric', year: 'numeric',
         hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
-      });
+      }))
+      + ` <span class="schedule">(scheduled daily refresh at `
+      + `${escapeHTML(refreshSchedule())})</span>`;
   } catch (e) {
     document.getElementById('last-updated').textContent = 'Could not load prices.json';
   }
@@ -1083,9 +1311,58 @@ function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
   });
-  for (const key of tabKeys()) {
+  for (const key of groupKeys()) {
     document.getElementById('tab-' + key).classList.toggle('active', key === name);
   }
+}
+
+// Selects a chip within a group. '' is the unioned "All" view.
+function selectSubset(groupKey, subKey) {
+  state.filter[groupKey].subset = subKey;
+  const row = document.querySelector(`.chips[data-tab="${CSS.escape(groupKey)}"]`);
+  if (row) row.querySelectorAll('.chip').forEach(b => {
+    const on = b.dataset.sub === subKey;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
+  renderTab(groupKey);
+}
+
+// ---- Routing ---------------------------------------------------------------
+// The view lives in the hash as #group or #group/section. With this many views
+// a refresh that always dumped you back on the first set gets old fast, and a
+// link to one treatment is worth being able to send. The back button works
+// because switching writes a history entry.
+function currentView() {
+  const g = document.querySelector('.tab-btn.active');
+  const key = g ? g.dataset.tab : (groupKeys()[0] || '');
+  const sub = key && state.filter[key] ? state.filter[key].subset : '';
+  return { group: key, sub };
+}
+
+function updateHash() {
+  const { group, sub } = currentView();
+  if (!group) return;
+  const want = '#' + group + (sub ? '/' + sub : '');
+  if (location.hash !== want) location.hash = want;
+}
+
+// Reads the hash and moves to it. Anything unrecognised - a stale bookmark, a
+// section that has since been renamed - falls back to the first group rather
+// than leaving the page on nothing.
+function applyHash() {
+  if (!GROUPS.length) return;
+  const [rawGroup, rawSub] = decodeURIComponent(location.hash.slice(1)).split('/');
+  const group = groupKeys().includes(rawGroup) ? rawGroup : groupKeys()[0];
+  // A group with one section has no chips, so naming that section in the hash
+  // would select something the page shows no control for - and select exactly
+  // what "All" already shows.
+  const subs = sectionsOf(group);
+  const sub = subs.length > 1 && subs.some(s => s.key === rawSub) ? rawSub : '';
+
+  const now = currentView();
+  if (now.group !== group) switchTab(group);
+  if (now.sub !== sub || now.group !== group) selectSubset(group, sub);
 }
 
 // ---- Theme -----------------------------------------------------------------
@@ -1127,11 +1404,24 @@ window.addEventListener('DOMContentLoaded', () => {
   // Tab buttons are generated, so listen on the bar rather than each button.
   document.getElementById('tabs').addEventListener('click', (e) => {
     const btn = e.target.closest('.tab-btn');
-    if (btn) switchTab(btn.dataset.tab);
+    if (!btn) return;
+    switchTab(btn.dataset.tab);
+    updateHash();
   });
+
+  // Back/forward, and a hash typed or pasted into the address bar.
+  window.addEventListener('hashchange', applyHash);
 
   // Same for the per-tab sort selects.
   const panels = document.getElementById('panels');
+
+  // Subset chips.
+  panels.addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    selectSubset(chip.closest('.chips').dataset.tab, chip.dataset.sub);
+    updateHash();
+  });
   panels.addEventListener('change', (e) => {
     const sel = e.target.closest('.mobile-sort select');
     if (!sel) return;

@@ -10,7 +10,21 @@ the cheaper one highlighted, a 30-day price trend, and how many copies of the
 card are already in my collection. The list can be filtered by card name and
 narrowed to just the missing or just the collected cards, each tab keeping its
 own filter. The page follows the system light/dark setting, with a toggle that
-overrides it. Prices refresh automatically once a day.
+overrides it. Prices refresh automatically once a day, and the header says
+when the next run is due, in the reader's own timezone.
+
+Navigation is two levels. A **tab** is a set as the collection thinks of it —
+`Hobbit — HOB`, `Lord of the Rings — LTR` — and the **chips** under it are that
+set's treatments — for HOB: Main Set, Full Art Lands, Seasonal Lands,
+Borderless Scene, Dragon Hoard Frame, Book Cover. The first chip is
+**All**, which unions them, so "everything in HOB I am still missing, cheapest
+first" is one view rather than four tabs read side by side. The summary cards
+follow the chip, which makes the set-wide cost-to-complete a number the page
+can actually show; the search box and the collected control do not, so
+filtering to one card never claims the set is worth $4.
+
+The current view lives in the URL as `#hob/hob_scene`, so a reload comes back
+to where you were and a single treatment can be linked to directly.
 
 The two collected columns are copy counts taken from the export's `Count`
 column, summed across the rows Moxfield splits a card into (one per condition,
@@ -38,17 +52,24 @@ the two JSON files at runtime. GitHub Pages serves the repository as-is.
 
 | File | Role |
 |---|---|
-| `data/sets.json` | The only file you edit to track a new set |
+| `data/sets.json` | The only file you edit to track a new set or treatment |
 | `data/*.csv` | Moxfield collection exports; the newest by filename wins |
 | `scripts/fetch_prices.py` | Fetches prices, writes `prices.json` |
 | `scripts/build_history.py` | Replays git history, writes `history.json` |
 | `index.html` | The whole front end |
 | `prices.json` / `history.json` | Generated — do not edit by hand |
 
-Three workflows drive it: `update-prices.yml` runs daily at 12:00 UTC — and on
+Three workflows drive it: `update-prices.yml` runs daily at 11:07 UTC — and on
 any push that adds a `data/*.csv` export — then commits the regenerated data,
 `pages.yml` redeploys the site afterwards, and `ci.yml` runs the test suite on
 every push and pull request.
+
+The daily job takes roughly 13 minutes, and almost all of it is one ManaPool
+page fetch per card at about 0.6s each. That scales linearly with the number of
+tracked cards, so it is the cost to watch when adding a set: Scryfall is
+batched 75 at a time and costs seconds, and `build_history.py` replays the
+whole git history in about three. The 6-hour job limit is a long way off, but
+at ~0.6s per card it would arrive somewhere north of 30,000 cards.
 
 That cannot loop: `update-prices.yml` commits only `prices.json` and
 `history.json`, neither of which matches its `data/*.csv` path filter, and a
@@ -57,56 +78,92 @@ push made with `GITHUB_TOKEN` does not start another workflow run regardless.
 page never reads the CSV, so deploying on the export alone would only publish
 the old numbers a few minutes before the real update replaced them.
 
-## Adding a set
+## Adding a set or a treatment
 
-Append an entry to [`data/sets.json`](data/sets.json) and you are done — no
-Python and no HTML to touch:
+[`data/sets.json`](data/sets.json) is the only file to edit — no Python and no
+HTML to touch. It has two lists, mirroring the two levels of the navigation:
 
 ```json
 {
-  "key": "stellar_sights_i",
-  "label": "EOE - Stellar Sights I",
-  "subtitle": "Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45",
-  "set": "eos",
-  "from": 1,
-  "to": 45
+  "groups": [
+    { "key": "eos", "label": "Edge of Eternities — EOS" }
+  ],
+  "sections": [
+    { "key": "stellar_sights_i", "group": "eos", "label": "Stellar Sights I",
+      "set": "eos", "from": 1, "to": 45 }
+  ]
 }
 ```
 
+A **group** is a primary tab:
+
 | Field | Meaning |
 |---|---|
-| `key` | Section name in `prices.json` and the DOM id suffix. Must be unique and should not change once data exists |
+| `key` | Panel DOM id suffix and the URL fragment. Must be unique |
 | `label` | Text on the tab button |
-| `subtitle` | Line shown under the tab |
+
+A **section** is one chip under it:
+
+| Field | Meaning |
+|---|---|
+| `key` | Section name in `prices.json`. Must be unique and should not change once data exists |
+| `group` | The `key` of the group it belongs to. Must resolve |
+| `label` | Text on the chip |
 | `set` | Scryfall set code, lowercase |
 | `from` / `to` | Collector number range, inclusive |
 
 Everything else — card names, LOTR flavor names, TCGplayer product ids, images
 and the ManaPool URL slug — is derived from Scryfall at fetch time.
 
-A set larger than 75 cards is fine; requests are batched automatically. To split
-one set across two tabs (as Stellar Sights is), add two entries with different
-ranges and keys.
+Adding a **treatment** to a set already tracked is one entry in `sections`.
+Adding a **set** is one entry in each list. A section larger than 75 cards is
+fine — LTR's Main Set is 279 — and requests are batched automatically.
 
-A tab that is *not* one contiguous run — the Scene cards are two stretches of
-`hob` plus two of `hoc` — replaces the inline `set`/`from`/`to` with a `ranges`
-list of exactly those three fields. The inline form is the one-range case of
-the same thing, so nothing else changes:
+Grouping is declared rather than inferred from the label, because it is not
+derivable in general: a treatment can span two set codes, and two set codes can
+be separate tabs, so which cards belong where is a decision only the file can
+record. `load_sets` rejects a section whose `group` does not resolve and a
+group with no sections — the first would render nowhere, the second is a tab
+that opens onto nothing.
+
+A section need not cover a whole set, and the numbers it skips are simply not
+tracked: HOC declares five treatments across #1–52 and #93–106, and #53–92 is
+absent from the page entirely.
+
+Ranges are integer runs, so a collector number carrying a letter suffix is not
+covered by one. That keeps doing useful work by accident, because the suffixed
+printings so far are exactly the ones there is no point pricing:
+
+- LTR #1–271 holds 273 cards by Scryfall's reckoning. The two extras are
+  `A-103` and `A-246`, the Alchemy digital-only rebalances of Orcish Bowmasters
+  and The One Ring — no physical printing to price or own.
+- LTR #731–750 holds 40. Half are `731z`–`750z`, the serialized double-rainbow
+  posters, which have no USD price on Scryfall at all.
+
+So a Scryfall search by collector number can legitimately return more cards
+than the matching section tracks. Check the suffixed ones before assuming a
+range is wrong.
+
+A section that is *not* one contiguous run — a treatment split across two
+stretches of numbers, or across two set codes — replaces the inline
+`set`/`from`/`to` with a `ranges` list of exactly those three fields. The
+inline form is the one-range case of the same thing, so nothing else changes.
+Main Set is the live example, being #1–193 plus the #321 bundle promo:
 
 ```json
 {
-  "key": "scene",
-  "label": "HOB - Scene",
-  "subtitle": "The Hobbit · Scene Frame Non-Foil · …",
+  "key": "hob_main", "group": "hob", "label": "Main Set",
   "ranges": [
-    { "set": "hob", "from": 199, "to": 213 },
-    { "set": "hoc", "from": 1, "to": 6 }
+    { "set": "hob", "from": 1, "to": 193 },
+    { "set": "hob", "from": 321, "to": 321 }
   ]
 }
 ```
 
 Ranges are listed in the order given and a card claimed by two of them appears
-once, so overlapping ranges cannot produce a duplicate row.
+once, so overlapping ranges cannot produce a duplicate row. The unioned "All"
+view applies the same rule one level up: where two treatments in a group claim
+the same collector number, the first chip's row is the one shown.
 
 The one derived value with no second source to cross-check is the ManaPool
 slug, so that is the thing to eyeball for an unusual set: it is the card name
@@ -135,7 +192,7 @@ blocks unauthenticated automation, so the export is a manual step.
 Only the standard library and `curl` are needed — no dependencies to install.
 
 ```sh
-python scripts/fetch_prices.py     # ~1.5 min: refreshes prices.json
+python scripts/fetch_prices.py     # ~12 min at 1,157 cards: refreshes prices.json
 python scripts/build_history.py    # replays git history into history.json
 python -m http.server 8765         # then open http://localhost:8765
 ```
@@ -155,7 +212,8 @@ The offline suite covers the derivation rules that replaced the old hardcoded
 card tables (the slug cases, `flavor_name` handling, TCGplayer URL assembly),
 the guard-rail thresholds, `data/sets.json` and Moxfield CSV validation, and
 the invariants between `prices.json` and `history.json` — every priced card has
-a series, the series align with the date axis, and every section has a tab.
+a series, the series align with the date axis, every section has a chip, every
+chip resolves to a group, and no group is left empty.
 
 The network test is opt-in so the suite stays fast and deterministic. It
 confirms every tracked card still resolves on Scryfall with a `tcgplayer_id`

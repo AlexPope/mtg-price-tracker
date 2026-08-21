@@ -56,10 +56,12 @@ class TestExtractPrices(unittest.TestCase):
         self.assertEqual(prices["ltc/349"], (None, 1.5))
         self.assertEqual(prices["ltr/302"], (5.0, 4.0))
 
-    def test_ignores_the_tabs_block(self):
-        """prices.json gained a "tabs" array; it is a list of dicts like the
-        card sections, and must not be mistaken for cards."""
-        doc = self._doc(tabs=[{"key": "realms_and_relics", "label": "LTC", "subtitle": "s"}])
+    def test_ignores_the_navigation_blocks(self):
+        """prices.json carries "tabs" and "groups" arrays; both are lists of
+        dicts like the card sections, and must not be mistaken for cards."""
+        doc = self._doc(
+            tabs=[{"key": "realms_and_relics", "group": "ltc", "label": "LTC"}],
+            groups=[{"key": "ltc", "label": "Lord of the Rings — LTC"}])
         prices = bh.extract_prices(doc)
         self.assertEqual(set(prices), {"ltc/348", "ltc/349"})
 
@@ -85,8 +87,21 @@ class TestRealArtifacts(unittest.TestCase):
         self.history = json.loads((REPO_ROOT / "history.json").read_text(encoding="utf-8"))
 
     def test_every_priced_card_has_history(self):
-        missing = set(bh.extract_prices(self.prices)) - set(self.history["cards"])
+        """Priced, not merely tracked. A card neither vendor lists - hob #321
+        is a bundle promo with no TCGplayer id and no ManaPool listing - is
+        deliberately absent from history, because build() skips series that are
+        null the whole way down. Anything carrying a price must have one."""
+        priced = {key for key, (tcg, mp) in bh.extract_prices(self.prices).items()
+                  if tcg is not None or mp is not None}
+        missing = priced - set(self.history["cards"])
         self.assertEqual(missing, set(), "cards in prices.json with no history series")
+
+    def test_history_holds_no_empty_series(self):
+        """The other half of the rule above: a series that is null on every day
+        is the thing build() skips, so one appearing here means it stopped."""
+        empty = [key for key, s in self.history["cards"].items()
+                 if not any(v is not None for v in s["tcg"] + s["mp"])]
+        self.assertEqual(empty, [], "history series with no data points at all")
 
     def test_history_series_align_with_the_date_axis(self):
         n = len(self.history["dates"])
@@ -101,6 +116,10 @@ class TestRealArtifacts(unittest.TestCase):
         self.assertEqual(dates, sorted(dates))
         self.assertEqual(len(dates), len(set(dates)))
 
+    # The two blocks the front end builds its navigation from. "groups" are the
+    # primary tabs, "tabs" the chips under them.
+    NAV_BLOCKS = ("tabs", "groups")
+
     def test_tabs_block_matches_the_sections(self):
         tabs = self.prices.get("tabs")
         self.assertIsInstance(tabs, list)
@@ -114,8 +133,27 @@ class TestRealArtifacts(unittest.TestCase):
         """A section with no tab would be invisible on the page."""
         tab_keys = {t["key"] for t in self.prices["tabs"]}
         sections = {k for k, v in self.prices.items()
-                    if isinstance(v, list) and k != "tabs"}
+                    if isinstance(v, list) and k not in self.NAV_BLOCKS}
         self.assertEqual(sections, tab_keys)
+
+    def test_every_tab_belongs_to_a_declared_group(self):
+        """A chip whose group is missing renders under no tab at all."""
+        groups = self.prices.get("groups")
+        self.assertIsInstance(groups, list)
+        self.assertTrue(groups)
+        keys = {g["key"] for g in groups}
+        for g in groups:
+            with self.subTest(group=g["key"]):
+                self.assertTrue(g["label"].strip())
+        for tab in self.prices["tabs"]:
+            with self.subTest(tab=tab["key"]):
+                self.assertIn(tab["group"], keys)
+
+    def test_every_group_has_at_least_one_tab(self):
+        """A group with no chips is a tab that opens onto nothing."""
+        used = {t["group"] for t in self.prices["tabs"]}
+        empty = [g["key"] for g in self.prices["groups"] if g["key"] not in used]
+        self.assertEqual(empty, [])
 
 
 if __name__ == "__main__":

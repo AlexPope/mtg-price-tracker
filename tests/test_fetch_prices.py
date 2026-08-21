@@ -80,19 +80,36 @@ class TestLoadSets(unittest.TestCase):
     def tearDown(self):
         fp.SETS_FILE = self._orig
 
-    def _write(self, obj):
+    def _write(self, sections, groups=None):
+        """Writes a sets.json around `sections`.
+
+        Groups default to one per section referenced, so a test about range
+        validation does not have to restate the grouping it does not care about.
+        """
+        if groups is None:
+            keys = dict.fromkeys(s.get("group", "g") for s in sections)
+            groups = [{"key": k, "label": k.upper()} for k in keys]
+            sections = [{"group": "g", **s} for s in sections]
         f = self.tmp / "sets.json"
-        f.write_text(json.dumps(obj), encoding="utf-8")
+        f.write_text(json.dumps({"groups": groups, "sections": sections}),
+                     encoding="utf-8")
         fp.SETS_FILE = f
 
     def test_rejects_missing_field(self):
-        self._write([{"key": "x", "label": "X", "set": "ltr", "from": 1, "to": 2}])
+        """A section with no label would render as a chip with nothing on it."""
+        self._write([{"key": "x", "set": "ltr", "from": 1, "to": 2}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_group_missing_label(self):
+        self._write([{"key": "x", "group": "a", "label": "X",
+                      "set": "ltr", "from": 1, "to": 2}],
+                    groups=[{"key": "a"}])
         with self.assertRaises(SystemExit):
             fp.load_sets()
 
     def test_rejects_inverted_range(self):
-        self._write([{"key": "x", "label": "X", "subtitle": "",
-                      "set": "ltr", "from": 9, "to": 2}])
+        self._write([{"key": "x", "label": "X", "set": "ltr", "from": 9, "to": 2}])
         with self.assertRaises(SystemExit):
             fp.load_sets()
 
@@ -102,33 +119,80 @@ class TestLoadSets(unittest.TestCase):
         for bad in ({"set": "hob", "from": 9, "to": 2},   # inverted
                     {"set": "hob", "from": 1}):           # missing "to"
             with self.subTest(range=bad):
-                self._write([{"key": "x", "label": "X", "subtitle": "",
+                self._write([{"key": "x", "label": "X",
                               "ranges": [{"set": "hob", "from": 1, "to": 2}, bad]}])
                 with self.assertRaises(SystemExit):
                     fp.load_sets()
 
     def test_rejects_empty_ranges_list(self):
-        self._write([{"key": "x", "label": "X", "subtitle": "", "ranges": []}])
+        self._write([{"key": "x", "label": "X", "ranges": []}])
         with self.assertRaises(SystemExit):
             fp.load_sets()
 
     def test_rejects_duplicate_key(self):
-        entry = {"key": "x", "label": "X", "subtitle": "", "set": "ltr", "from": 1, "to": 2}
+        entry = {"key": "x", "label": "X", "set": "ltr", "from": 1, "to": 2}
         self._write([entry, dict(entry)])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_flat_legacy_file(self):
+        """The pre-grouping format was a bare array. Loading one would leave
+        every section ungrouped and the page with no tabs at all."""
+        f = self.tmp / "sets.json"
+        f.write_text(json.dumps([{"key": "x", "label": "X",
+                                  "set": "ltr", "from": 1, "to": 2}]), encoding="utf-8")
+        fp.SETS_FILE = f
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_duplicate_group_key(self):
+        self._write(
+            [{"key": "x", "group": "a", "label": "X", "set": "ltr", "from": 1, "to": 2}],
+            groups=[{"key": "a", "label": "A"}, {"key": "a", "label": "A again"}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_unknown_group(self):
+        """A section pointing at a group that does not exist would render
+        nowhere - no tab carries it and nothing says so."""
+        self._write(
+            [{"key": "x", "group": "nope", "label": "X", "set": "ltr", "from": 1, "to": 2}],
+            groups=[{"key": "a", "label": "A"}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_group_with_no_sections(self):
+        """An empty group is a tab that opens onto nothing."""
+        self._write(
+            [{"key": "x", "group": "a", "label": "X", "set": "ltr", "from": 1, "to": 2}],
+            groups=[{"key": "a", "label": "A"}, {"key": "b", "label": "B"}])
         with self.assertRaises(SystemExit):
             fp.load_sets()
 
     def test_real_sets_file_is_valid(self):
         """Catches a typo in data/sets.json before a run publishes bad data."""
         fp.SETS_FILE = REPO_ROOT / "data" / "sets.json"
-        definitions = fp.load_sets()
+        groups, definitions = fp.load_sets()
+        self.assertGreater(len(groups), 0)
         self.assertGreater(len(definitions), 0)
+        for g in groups:
+            with self.subTest(group=g["key"]):
+                self.assertTrue(g["label"].strip())
         for d in definitions:
             with self.subTest(key=d["key"]):
                 self.assertTrue(d["label"].strip())
                 for set_code, num in fp.card_keys(d):
                     self.assertRegex(set_code, r"^[a-z0-9]+$")
                     self.assertGreaterEqual(int(num), 1)
+
+    def test_real_sets_file_has_no_duplicate_chip_label_in_a_group(self):
+        """Two chips reading the same under one tab are indistinguishable."""
+        fp.SETS_FILE = REPO_ROOT / "data" / "sets.json"
+        groups, definitions = fp.load_sets()
+        for g in groups:
+            labels = [d["label"] for d in definitions if d["group"] == g["key"]]
+            with self.subTest(group=g["key"]):
+                self.assertCountEqual(labels, set(labels))
 
     def test_card_keys_is_inclusive(self):
         self.assertEqual(fp.card_keys({"set": "ltr", "from": 3, "to": 6}),
@@ -155,8 +219,7 @@ class TestFetchOwned(unittest.TestCase):
     against, so an export format change has to fail loudly rather than quietly
     read as 'nothing collected'."""
 
-    DEFINITIONS = [{"key": "k", "label": "L", "subtitle": "",
-                    "set": "ltc", "from": 348, "to": 350}]
+    DEFINITIONS = [{"key": "k", "label": "L", "set": "ltc", "from": 348, "to": 350}]
     HEADER = '"Count","Name","Edition","Condition","Foil","Collector Number"'
     ROWS = [
         '"3","A","ltc","Near Mint","","348"',       # three non-foil copies
@@ -280,9 +343,10 @@ class TestPreviousOwnedCount(unittest.TestCase):
     def test_counts_cards_owned_in_either_finish(self):
         self._write({
             "updated_at": "2026-08-12T00:00:00Z",
-            # A list of dicts sitting alongside the card sections, exactly as in
-            # build_history.py's extract_prices - it must not be counted.
-            "tabs": [{"key": "a", "label": "A", "subtitle": ""}],
+            # Lists of dicts sitting alongside the card sections, exactly as in
+            # build_history.py's extract_prices - neither must be counted.
+            "tabs": [{"key": "a", "group": "g", "label": "A"}],
+            "groups": [{"key": "g", "label": "G"}],
             "a": [
                 {"collected_nonfoil": 3, "collected_foil": 0},
                 {"collected_nonfoil": 0, "collected_foil": 1},
@@ -486,7 +550,7 @@ class TestDerivationsAgainstScryfall(unittest.TestCase):
 
     def test_every_tracked_card(self):
         fp.SETS_FILE = REPO_ROOT / "data" / "sets.json"
-        definitions = fp.load_sets()
+        _groups, definitions = fp.load_sets()
         stats = fp.RunStats()
         cards = fp.fetch_scryfall_cards(definitions, stats)
 
