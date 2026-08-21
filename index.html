@@ -233,7 +233,7 @@
     a:hover { text-decoration: underline; }
     .na { color: var(--faint); font-style: italic; font-weight: 400; }
 
-    .owned-check { color: var(--pos); font-size: 1.1rem; }
+    .owned-qty { color: var(--pos); font-weight: 700; font-variant-numeric: tabular-nums; }
 
     /* Sortable headers */
     thead th.sortable { cursor: pointer; user-select: none; position: relative; }
@@ -543,7 +543,7 @@
         letter-spacing: 0.4px;
       }
       td.col-check:empty { border-color: var(--line); background: var(--row-alt); color: var(--fainter); }
-      .owned-check { font-size: 0.8rem; margin-left: 3px; }
+      .owned-qty { font-size: 0.8rem; margin-left: 3px; }
 
       #card-modal .modal-close { top: 4px; right: 6px; font-size: 2.2rem; padding: 6px 12px; }
     }
@@ -594,7 +594,16 @@ function fmt(price) {
   return '$' + price.toFixed(2);
 }
 
-const CHECK = '<span class="owned-check" title="Collected">&#10003;</span>';
+// Ownership is a copy count. Older prices.json files stored it as a boolean,
+// so coerce rather than print "true" if the page is served ahead of the data.
+const copies = v => typeof v === 'number' ? v : (v ? 1 : 0);
+
+// A card I own none of gets a genuinely empty cell, not a "0": the mobile
+// layout tells collected from missing with :empty, and a zero in every missing
+// row is noise on a page whose whole point is what is still missing.
+function ownedCell(n) {
+  return n ? `<span class="owned-qty" title="${n} in collection">${n}</span>` : '';
+}
 
 // Tabs come from prices.json; a tab's key is also its key into the data and
 // the suffix of its DOM ids.
@@ -634,8 +643,10 @@ const COLUMNS = [
   { col: 'mp',    label: 'ManaPool' },
   { col: 'trend', label: '30-Day Trend (TCG)',
     title: 'TCGplayer price: 30-day sparkline, with the change over the last 7 days' },
-  { col: 'nf',    label: 'Collected Non-Foil', cls: 'col-check' },
-  { col: 'foil',  label: 'Collected Foil',     cls: 'col-check' },
+  { col: 'nf',    label: 'Collected Non-Foil', cls: 'col-check',
+    title: 'Copies of the non-foil printing in my collection; blank means none' },
+  { col: 'foil',  label: 'Collected Foil',     cls: 'col-check',
+    title: 'Copies of the foil printing in my collection; blank means none' },
 ];
 
 // A card counts as collected if either finish is, which is the same rule the
@@ -846,8 +857,8 @@ function buildRows(cards, tabName) {
         ? `<a href="${c.mp_url}" target="_blank" class="${mpCls}">${fmt(mp)}</a>`
         : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
       <td class="col-trend">${trend}</td>
-      <td class="col-check" data-label="NF">${c.collected_nonfoil ? CHECK : ''}</td>
-      <td class="col-check" data-label="Foil">${c.collected_foil ? CHECK : ''}</td>
+      <td class="col-check" data-label="NF">${ownedCell(copies(c.collected_nonfoil))}</td>
+      <td class="col-check" data-label="Foil">${ownedCell(copies(c.collected_foil))}</td>
     </tr>`;
   }).join('');
 }
@@ -858,8 +869,9 @@ function sortKey(col, c) {
     case 'name': return c.display_name.toLowerCase();
     case 'tcg':  return c.tcg_price == null ? Infinity : c.tcg_price;
     case 'mp':   return c.mp_price  == null ? Infinity : c.mp_price;
-    case 'nf':   return c.collected_nonfoil ? 1 : 0;
-    case 'foil': return c.collected_foil    ? 1 : 0;
+    // Sorts by copies held, so the deepest stacks lead the "Collected first" view.
+    case 'nf':   return copies(c.collected_nonfoil);
+    case 'foil': return copies(c.collected_foil);
     // Cards without enough history sort to the bottom of the default (biggest
     // movers first) view rather than pretending to be flat at 0%.
     case 'trend': {
@@ -889,7 +901,7 @@ function filterCards(cards, f) {
   const terms = f.q.toLowerCase().split(/\s+/).filter(Boolean);
   return cards.filter(c => {
     if (f.own !== 'all') {
-      const owned = c.collected_nonfoil || c.collected_foil;
+      const owned = copies(c.collected_nonfoil) > 0 || copies(c.collected_foil) > 0;
       if (f.own === 'missing' ? owned : !owned) return false;
     }
     if (!terms.length) return true;
@@ -924,7 +936,7 @@ function buildSummary(cards) {
   let ownedVal = 0, ownedCount = 0, missCost = 0, missCount = 0, totalCards = cards.length;
   for (const c of cards) {
     const bp = bestPrice(c);
-    const isOwned = c.collected_nonfoil || c.collected_foil;
+    const isOwned = copies(c.collected_nonfoil) > 0 || copies(c.collected_foil) > 0;
     if (isOwned) {
       ownedCount++;
       if (bp != null) ownedVal += bp;

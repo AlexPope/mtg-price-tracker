@@ -6,13 +6,19 @@ ManaPool prices against what I actually own.
 **Live site: https://alexpope.github.io/mtg-price-tracker/**
 
 For each tracked set it shows the complete card list, both vendors' prices with
-the cheaper one highlighted, a 30-day price trend, and whether the card is
-already in my collection. The list can be filtered by card name and narrowed to
-just the missing or just the collected cards, each tab keeping its own filter.
-The page follows the system light/dark setting, with a toggle that overrides it.
-Prices refresh automatically once a day.
+the cheaper one highlighted, a 30-day price trend, and how many copies of the
+card are already in my collection. The list can be filtered by card name and
+narrowed to just the missing or just the collected cards, each tab keeping its
+own filter. The page follows the system light/dark setting, with a toggle that
+overrides it. Prices refresh automatically once a day.
 
-All prices are **Near Mint, non-foil**. Foil ownership is shown as a separate
+The two collected columns are copy counts taken from the export's `Count`
+column, summed across the rows Moxfield splits a card into (one per condition,
+language and printing). A card I own none of shows a **blank** cell rather than
+a `0` — the page is mostly missing cards, and a column of zeroes reads as
+noise.
+
+All prices are **Near Mint, non-foil**. Foil ownership is counted in a separate
 column because the Moxfield export distinguishes it, but foil *prices* are not
 tracked — the non-foil price is the number of interest.
 
@@ -164,14 +170,19 @@ misreading it — a renamed column, a set code that no longer matches, an empty
 export — zeroes the whole collection at once rather than shaving a few cards
 off it. So there are two checks and no threshold between them:
 
-- the export must still have its `Edition`, `Collector Number` and `Foil`
-  columns, or the run stops immediately, before any network work;
+- the export must still have its `Count`, `Edition`, `Collector Number` and
+  `Foil` columns, or the run stops immediately, before any network work;
 - if a run matches **no** owned cards when the previous `prices.json` matched
   some, it refuses to publish. A collection that was already empty is fine —
   the check only fires on a drop to zero from something.
 
 The consequence worth knowing: genuinely selling the entire collection trips
 the guard once. Delete `data/*.csv` if that is really what happened.
+
+The quantity itself is deliberately not guarded the same way, because it cannot
+fail the same way: a row exists because the card is owned, so a `Count` that
+will not parse is read as one copy rather than zero. That errs toward showing a
+card as collected — the one direction that never quietly loses a card.
 
 `build_history.py` needs real git history and the workflow checks out with
 `fetch-depth: 0`. It rebuilds the series from scratch every run rather than

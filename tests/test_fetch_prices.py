@@ -128,7 +128,7 @@ class TestFetchOwned(unittest.TestCase):
                     "set": "ltc", "from": 348, "to": 350}]
     HEADER = '"Count","Name","Edition","Condition","Foil","Collector Number"'
     ROWS = [
-        '"1","A","ltc","Near Mint","","348"',       # nonfoil
+        '"3","A","ltc","Near Mint","","348"',       # three non-foil copies
         '"1","A","ltc","Near Mint","foil","348"',   # ...and a foil of the same card
         '"1","B","ltc","Near Mint","foil","349"',   # foil only
         '"1","C","ltr","Near Mint","","302"',       # untracked set
@@ -152,9 +152,34 @@ class TestFetchOwned(unittest.TestCase):
     def test_reads_both_finishes_and_skips_untracked_cards(self):
         self._write(self.ROWS)
         self.assertEqual(fp.fetch_owned(self.DEFINITIONS), {
-            ("ltc", "348"): {"nonfoil": True, "foil": True},
-            ("ltc", "349"): {"nonfoil": False, "foil": True},
+            ("ltc", "348"): {"nonfoil": 3, "foil": 1},
+            ("ltc", "349"): {"nonfoil": 0, "foil": 1},
         })
+
+    def test_repeated_rows_of_one_card_are_summed(self):
+        """Moxfield writes one row per condition/language/printing, so the same
+        card and finish can appear more than once and every row is copies held."""
+        self._write([
+            '"2","A","ltc","Near Mint","","348"',
+            '"1","A","ltc","Lightly Played","","348"',
+        ])
+        self.assertEqual(fp.fetch_owned(self.DEFINITIONS),
+                         {("ltc", "348"): {"nonfoil": 3, "foil": 0}})
+
+    def test_zero_count_is_not_owned(self):
+        """A zero-count row must not create an entry, or the guard rail would
+        count a card I hold none of as collected."""
+        self._write(['"0","A","ltc","Near Mint","","348"'])
+        self.assertEqual(fp.fetch_owned(self.DEFINITIONS), {})
+
+    def test_unreadable_count_falls_back_to_one_copy(self):
+        """The row exists because the card is owned; guessing zero would
+        silently un-own it, which is exactly what the column check prevents."""
+        for value in ('""', '"   "', '"many"'):
+            with self.subTest(count=value):
+                self._write([f'{value},"A","ltc","Near Mint","","348"'])
+                self.assertEqual(fp.fetch_owned(self.DEFINITIONS),
+                                 {("ltc", "348"): {"nonfoil": 1, "foil": 0}})
 
     def test_missing_column_is_fatal(self):
         """The regression this guards: Moxfield renames a column, every row
@@ -228,13 +253,22 @@ class TestPreviousOwnedCount(unittest.TestCase):
             # build_history.py's extract_prices - it must not be counted.
             "tabs": [{"key": "a", "label": "A", "subtitle": ""}],
             "a": [
-                {"collected_nonfoil": True,  "collected_foil": False},
-                {"collected_nonfoil": False, "collected_foil": True},
-                {"collected_nonfoil": True,  "collected_foil": True},
-                {"collected_nonfoil": False, "collected_foil": False},
+                {"collected_nonfoil": 3, "collected_foil": 0},
+                {"collected_nonfoil": 0, "collected_foil": 1},
+                {"collected_nonfoil": 1, "collected_foil": 2},
+                {"collected_nonfoil": 0, "collected_foil": 0},
             ],
         })
+        # Cards, not copies: this is the baseline for "did the CSV stop parsing",
+        # and a card is either matched or it is not.
         self.assertEqual(fp.previous_owned_count(), 3)
+
+    def test_counts_the_older_boolean_schema_too(self):
+        """Ownership used to be a flag rather than a count. The guard rail
+        compares against the previous run's file, which may still be one."""
+        self._write({"a": [{"collected_nonfoil": True,  "collected_foil": False},
+                           {"collected_nonfoil": False, "collected_foil": False}]})
+        self.assertEqual(fp.previous_owned_count(), 1)
 
     def test_missing_file_is_zero(self):
         """A first run has no baseline, and must not be blocked by its absence."""
@@ -370,7 +404,7 @@ class TestBuildCardRow(unittest.TestCase):
         self.assertEqual(
             row["mp_url"],
             "https://manapool.com/card/ltc/348/the-great-henge?conditions=NM&finish=nonfoil")
-        self.assertFalse(row["collected_nonfoil"] or row["collected_foil"])
+        self.assertEqual((row["collected_nonfoil"], row["collected_foil"]), (0, 0))
 
     def test_flavor_name_becomes_display_name(self):
         row = fp.build_card_row(self.DEFINITION, "348",
@@ -378,11 +412,11 @@ class TestBuildCardRow(unittest.TestCase):
         self.assertEqual(row["display_name"], "The Party Tree (The Great Henge)")
         self.assertEqual(row["mtg_name"], "The Great Henge")
 
-    def test_ownership_is_applied(self):
-        owned = {("ltc", "348"): {"nonfoil": True, "foil": False}}
+    def test_ownership_is_applied_as_a_copy_count(self):
+        owned = {("ltc", "348"): {"nonfoil": 4, "foil": 0}}
         row = fp.build_card_row(self.DEFINITION, "348", self._card(), owned, fp.RunStats())
-        self.assertTrue(row["collected_nonfoil"])
-        self.assertFalse(row["collected_foil"])
+        self.assertEqual(row["collected_nonfoil"], 4)
+        self.assertEqual(row["collected_foil"], 0)
 
     def test_missing_price_is_null_not_an_error(self):
         stats = fp.RunStats()

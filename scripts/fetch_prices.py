@@ -46,7 +46,7 @@ MAX_MANAPOOL_MISS_RATE = 0.50   # pages that loaded but had no parseable price
 
 # The Moxfield export columns ownership is derived from. Missing columns mean
 # the export format changed and every card would silently read as un-owned.
-REQUIRED_CSV_COLUMNS = ("Edition", "Collector Number", "Foil")
+REQUIRED_CSV_COLUMNS = ("Count", "Edition", "Collector Number", "Foil")
 
 # Exports are named moxfield_haves_2026-08-21-1715Z.csv. The date is parsed out
 # of the name rather than trusting a plain filename sort, which is only right
@@ -230,8 +230,21 @@ def csv_timestamp(path):
     return (int(year), int(month), int(day), int(hour or 0), int(minute or 0))
 
 
+def row_copies(value):
+    """How many copies one Moxfield row represents.
+
+    A row exists because the card is owned, so a count that cannot be read is
+    one copy rather than none: guessing zero would quietly un-own a card, which
+    is the failure mode the rest of this module is built to avoid.
+    """
+    try:
+        return max(int((value or "").strip()), 0)
+    except ValueError:
+        return 1
+
+
 def fetch_owned(definitions):
-    """Returns {(set, cn): {nonfoil, foil}} from the newest Moxfield CSV."""
+    """Returns {(set, cn): {nonfoil, foil}} copy counts from the newest Moxfield CSV."""
     # Order by the date in the filename, not mtime: a fresh `git checkout` in
     # CI stamps every file with the same mtime, so mtime says nothing there.
     csv_files = sorted(DATA_DIR.glob("*.csv"))
@@ -273,13 +286,19 @@ def fetch_owned(definitions):
                    (row.get("Collector Number") or "").strip())
             if key not in tracked:
                 continue
-            entry = owned.setdefault(key, {"nonfoil": False, "foil": False})
-            if (row.get("Foil") or "").strip().lower() == "foil":
-                entry["foil"] = True
-            else:
-                entry["nonfoil"] = True
+            copies = row_copies(row.get("Count"))
+            if not copies:
+                continue
+            # Counts are summed, not overwritten: Moxfield writes one row per
+            # condition/language/printing, so the same card can legitimately
+            # appear several times and every row is copies I hold.
+            entry = owned.setdefault(key, {"nonfoil": 0, "foil": 0})
+            finish = "foil" if (row.get("Foil") or "").strip().lower() == "foil" else "nonfoil"
+            entry[finish] += copies
 
-    print(f"  Moxfield CSV snapshot: found {len(owned)} owned cards across the tracked sets")
+    copies = sum(e["nonfoil"] + e["foil"] for e in owned.values())
+    print(f"  Moxfield CSV snapshot: found {len(owned)} owned cards "
+          f"({copies} copies) across the tracked sets")
     return owned
 
 
@@ -400,6 +419,8 @@ def build_card_row(definition, num, card, owned, stats):
                f"?Condition=Near+Mint&Printing=Normal") if tcg_id else \
               (card.get("purchase_uris") or {}).get("tcgplayer", "")
 
+    # collected_* are copy counts, not flags: 0 means un-owned, and the front
+    # end renders it as a blank cell rather than a zero.
     owned_entry = owned.get((set_code, num))
     return {
         "display_name": display_name,
@@ -409,8 +430,8 @@ def build_card_row(definition, num, card, owned, stats):
         "mp_price": mp_price,
         "mp_url": f"https://manapool.com/card/{set_code}/{num}/{slug}?conditions=NM&finish=nonfoil",
         "image_url": scryfall_image(card),
-        "collected_nonfoil": owned_entry["nonfoil"] if owned_entry else False,
-        "collected_foil": owned_entry["foil"] if owned_entry else False,
+        "collected_nonfoil": owned_entry["nonfoil"] if owned_entry else 0,
+        "collected_foil": owned_entry["foil"] if owned_entry else 0,
     }
 
 
@@ -464,8 +485,10 @@ def main():
 
     all_rows = [r for rows in sections.values() for r in rows]
     owned_count = sum(1 for r in all_rows if r["collected_nonfoil"] or r["collected_foil"])
+    copies = sum(r["collected_nonfoil"] + r["collected_foil"] for r in all_rows)
     counts = " + ".join(f"{len(sections[d['key']])} {d['key']}" for d in definitions)
-    print(f"\nDone. {counts} = {len(all_rows)} cards, {owned_count} owned.")
+    print(f"\nDone. {counts} = {len(all_rows)} cards, "
+          f"{owned_count} owned ({copies} copies).")
 
 
 if __name__ == "__main__":
