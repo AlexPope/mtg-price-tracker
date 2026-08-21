@@ -96,6 +96,22 @@ class TestLoadSets(unittest.TestCase):
         with self.assertRaises(SystemExit):
             fp.load_sets()
 
+    def test_rejects_bad_range_inside_ranges_list(self):
+        """A multi-range section gets the same checks as an inline one; without
+        this a typo in "ranges" would sail past and fetch the wrong cards."""
+        for bad in ({"set": "hob", "from": 9, "to": 2},   # inverted
+                    {"set": "hob", "from": 1}):           # missing "to"
+            with self.subTest(range=bad):
+                self._write([{"key": "x", "label": "X", "subtitle": "",
+                              "ranges": [{"set": "hob", "from": 1, "to": 2}, bad]}])
+                with self.assertRaises(SystemExit):
+                    fp.load_sets()
+
+    def test_rejects_empty_ranges_list(self):
+        self._write([{"key": "x", "label": "X", "subtitle": "", "ranges": []}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
     def test_rejects_duplicate_key(self):
         entry = {"key": "x", "label": "X", "subtitle": "", "set": "ltr", "from": 1, "to": 2}
         self._write([entry, dict(entry)])
@@ -109,14 +125,29 @@ class TestLoadSets(unittest.TestCase):
         self.assertGreater(len(definitions), 0)
         for d in definitions:
             with self.subTest(key=d["key"]):
-                self.assertRegex(d["set"], r"^[a-z0-9]+$")
-                self.assertGreaterEqual(d["from"], 1)
-                self.assertLessEqual(d["from"], d["to"])
                 self.assertTrue(d["label"].strip())
+                for set_code, num in fp.card_keys(d):
+                    self.assertRegex(set_code, r"^[a-z0-9]+$")
+                    self.assertGreaterEqual(int(num), 1)
 
-    def test_card_numbers_is_inclusive(self):
-        self.assertEqual(fp.card_numbers({"from": 3, "to": 6}), ["3", "4", "5", "6"])
-        self.assertEqual(fp.card_numbers({"from": 5, "to": 5}), ["5"])
+    def test_card_keys_is_inclusive(self):
+        self.assertEqual(fp.card_keys({"set": "ltr", "from": 3, "to": 6}),
+                         [("ltr", "3"), ("ltr", "4"), ("ltr", "5"), ("ltr", "6")])
+        self.assertEqual(fp.card_keys({"set": "ltr", "from": 5, "to": 5}), [("ltr", "5")])
+
+    def test_card_keys_spans_ranges_and_sets_in_order(self):
+        self.assertEqual(
+            fp.card_keys({"ranges": [{"set": "hob", "from": 199, "to": 200},
+                                     {"set": "hoc", "from": 1, "to": 2}]}),
+            [("hob", "199"), ("hob", "200"), ("hoc", "1"), ("hoc", "2")])
+
+    def test_card_keys_lists_an_overlapped_card_once(self):
+        """Two ranges claiming the same card must not put it in the section
+        twice - it would be fetched, priced and displayed as two rows."""
+        self.assertEqual(
+            fp.card_keys({"ranges": [{"set": "hoc", "from": 1, "to": 3},
+                                     {"set": "hoc", "from": 3, "to": 4}]}),
+            [("hoc", "1"), ("hoc", "2"), ("hoc", "3"), ("hoc", "4")])
 
 
 class TestFetchOwned(unittest.TestCase):
@@ -372,7 +403,7 @@ class TestScryfallImage(unittest.TestCase):
 class TestBuildCardRow(unittest.TestCase):
     """Row assembly, with the network stubbed out."""
 
-    DEFINITION = {"key": "k", "label": "L", "subtitle": "", "set": "ltc", "from": 348, "to": 348}
+    SET = "ltc"
 
     def setUp(self):
         self._orig = fp.fetch_manapool_price
@@ -395,7 +426,7 @@ class TestBuildCardRow(unittest.TestCase):
         return card
 
     def test_plain_card(self):
-        row = fp.build_card_row(self.DEFINITION, "348", self._card(), {}, fp.RunStats())
+        row = fp.build_card_row(self.SET, "348", self._card(), {}, fp.RunStats())
         self.assertEqual(row["display_name"], "The Great Henge")
         self.assertEqual(row["mtg_name"], "The Great Henge")
         self.assertEqual(row["tcg_price"], 90.22)
@@ -407,32 +438,32 @@ class TestBuildCardRow(unittest.TestCase):
         self.assertEqual((row["collected_nonfoil"], row["collected_foil"]), (0, 0))
 
     def test_flavor_name_becomes_display_name(self):
-        row = fp.build_card_row(self.DEFINITION, "348",
+        row = fp.build_card_row(self.SET, "348",
                                 self._card(flavor_name="The Party Tree"), {}, fp.RunStats())
         self.assertEqual(row["display_name"], "The Party Tree (The Great Henge)")
         self.assertEqual(row["mtg_name"], "The Great Henge")
 
     def test_ownership_is_applied_as_a_copy_count(self):
         owned = {("ltc", "348"): {"nonfoil": 4, "foil": 0}}
-        row = fp.build_card_row(self.DEFINITION, "348", self._card(), owned, fp.RunStats())
+        row = fp.build_card_row(self.SET, "348", self._card(), owned, fp.RunStats())
         self.assertEqual(row["collected_nonfoil"], 4)
         self.assertEqual(row["collected_foil"], 0)
 
     def test_missing_price_is_null_not_an_error(self):
         stats = fp.RunStats()
-        row = fp.build_card_row(self.DEFINITION, "348",
+        row = fp.build_card_row(self.SET, "348",
                                 self._card(prices={}), {}, stats)
         self.assertIsNone(row["tcg_price"])
         self.assertEqual(stats.scryfall_errors, [])
 
     def test_absent_card_yields_no_row(self):
         stats = fp.RunStats()
-        self.assertIsNone(fp.build_card_row(self.DEFINITION, "348", None, {}, stats))
+        self.assertIsNone(fp.build_card_row(self.SET, "348", None, {}, stats))
 
     def test_manapool_miss_is_recorded(self):
         fp.fetch_manapool_price = lambda s, n, slug: None
         stats = fp.RunStats()
-        row = fp.build_card_row(self.DEFINITION, "348", self._card(), {}, stats)
+        row = fp.build_card_row(self.SET, "348", self._card(), {}, stats)
         self.assertIsNone(row["mp_price"])
         self.assertEqual(stats.manapool_misses, ["The Great Henge"])
 
@@ -441,7 +472,7 @@ class TestBuildCardRow(unittest.TestCase):
             raise fp.FetchError("HTTP 503")
         fp.fetch_manapool_price = boom
         stats = fp.RunStats()
-        row = fp.build_card_row(self.DEFINITION, "348", self._card(), {}, stats)
+        row = fp.build_card_row(self.SET, "348", self._card(), {}, stats)
         self.assertIsNone(row["mp_price"])
         self.assertEqual(len(stats.manapool_errors), 1)
         self.assertEqual(stats.manapool_misses, [])
@@ -460,7 +491,7 @@ class TestDerivationsAgainstScryfall(unittest.TestCase):
         cards = fp.fetch_scryfall_cards(definitions, stats)
 
         self.assertEqual(stats.scryfall_errors, [], "Scryfall lookups failed")
-        expected = sum(len(fp.card_numbers(d)) for d in definitions)
+        expected = sum(len(fp.card_keys(d)) for d in definitions)
         self.assertGreaterEqual(len(cards), 1)
 
         for (set_code, num), card in cards.items():

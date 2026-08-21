@@ -44,6 +44,10 @@ SCRYFALL_BATCH_SIZE = 75
 MAX_FETCH_FAILURE_RATE = 0.10   # network/HTTP errors, per source
 MAX_MANAPOOL_MISS_RATE = 0.50   # pages that loaded but had no parseable price
 
+# What one collector-number range is made of, whether it is written inline on a
+# section or as an entry in that section's "ranges" list.
+RANGE_FIELDS = ("set", "from", "to")
+
 # The Moxfield export columns ownership is derived from. Missing columns mean
 # the export format changed and every card would silently read as un-owned.
 REQUIRED_CSV_COLUMNS = ("Count", "Edition", "Collector Number", "Foil")
@@ -140,22 +144,47 @@ def slugify(name):
 
 def load_sets():
     definitions = json.loads(SETS_FILE.read_text(encoding="utf-8"))
-    required = {"key", "label", "subtitle", "set", "from", "to"}
     seen = set()
     for d in definitions:
-        missing = required - set(d)
+        missing = {"key", "label", "subtitle"} - set(d)
         if missing:
             raise SystemExit(f"{SETS_FILE}: entry {d.get('key', '?')} is missing {sorted(missing)}")
-        if d["from"] > d["to"]:
-            raise SystemExit(f"{SETS_FILE}: {d['key']} has from > to")
         if d["key"] in seen:
             raise SystemExit(f"{SETS_FILE}: duplicate key {d['key']}")
         seen.add(d["key"])
+
+        blocks = d["ranges"] if "ranges" in d else [d]
+        if not blocks:
+            raise SystemExit(f"{SETS_FILE}: {d['key']} has an empty ranges list")
+        for b in blocks:
+            missing = set(RANGE_FIELDS) - set(b)
+            if missing:
+                raise SystemExit(f"{SETS_FILE}: entry {d['key']} is missing {sorted(missing)}")
+            if b["from"] > b["to"]:
+                raise SystemExit(f"{SETS_FILE}: {d['key']} has from > to")
     return definitions
 
 
-def card_numbers(definition):
-    return [str(n) for n in range(definition["from"], definition["to"] + 1)]
+def card_keys(definition):
+    """Every (set code, collector number) a section covers, in declared order.
+
+    A section is usually one contiguous run of numbers in one set, written
+    inline as set/from/to. A section that spans several runs - or several sets,
+    as the Scene cards span hob and hoc - carries a "ranges" list instead, and
+    the inline form is just the single-range case of the same thing.
+
+    Ranges are allowed to overlap; a card is listed once however many ranges
+    claim it, so an overlap can't put the same row in a section twice.
+    """
+    blocks = definition["ranges"] if "ranges" in definition else [definition]
+    keys, seen = [], set()
+    for b in blocks:
+        for n in range(b["from"], b["to"] + 1):
+            key = (b["set"], str(n))
+            if key not in seen:
+                seen.add(key)
+                keys.append(key)
+    return keys
 
 
 def fetch_scryfall_cards(definitions, stats):
@@ -166,7 +195,7 @@ def fetch_scryfall_cards(definitions, stats):
     """
     wanted = []
     for d in definitions:
-        wanted += [(d["set"], num) for num in card_numbers(d)]
+        wanted += card_keys(d)
     # The same card can appear in two sections; only ask for it once.
     unique = sorted(set(wanted))
 
@@ -267,7 +296,7 @@ def fetch_owned(definitions):
 
     tracked = set()
     for d in definitions:
-        tracked |= {(d["set"], num) for num in card_numbers(d)}
+        tracked |= set(card_keys(d))
 
     owned = {}
     with latest_file.open("r", encoding="utf-8", newline="") as f:
@@ -387,9 +416,8 @@ class RunStats:
         return reasons
 
 
-def build_card_row(definition, num, card, owned, stats):
+def build_card_row(set_code, num, card, owned, stats):
     """Assemble one output row. `card` is the Scryfall record, or None."""
-    set_code = definition["set"]
     stats.cards += 1
 
     if card is None:
@@ -456,8 +484,8 @@ def main():
     for d in definitions:
         print(f"Fetching ManaPool prices for {d['label']}...")
         rows = []
-        for num in card_numbers(d):
-            row = build_card_row(d, num, cards.get((d["set"], num)), owned, stats)
+        for set_code, num in card_keys(d):
+            row = build_card_row(set_code, num, cards.get((set_code, num)), owned, stats)
             if row:
                 rows.append(row)
         rows.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))

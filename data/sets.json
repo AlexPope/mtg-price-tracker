@@ -26,18 +26,21 @@
   {
     "key": "hob_main",
     "label": "HOB - Main Set",
-    "subtitle": "The Hobbit · Main Set Non-Foil · #1–193",
+    "subtitle": "The Hobbit · Main Set & Full-Art Lands Non-Foil · #1–198",
     "set": "hob",
     "from": 1,
-    "to": 193
+    "to": 198
   },
   {
-    "key": "full_arts",
-    "label": "HOB - Full Arts",
-    "subtitle": "The Hobbit · Full-Art Basic Lands Non-Foil · #194–198",
-    "set": "hob",
-    "from": 194,
-    "to": 198
+    "key": "scene",
+    "label": "HOB - Scene",
+    "subtitle": "The Hobbit · Scene Frame Non-Foil · HOB #199–213, #313–316 · HOC #1–6, #7–12",
+    "ranges": [
+      { "set": "hob", "from": 199, "to": 213 },
+      { "set": "hob", "from": 313, "to": 316 },
+      { "set": "hoc", "from": 1, "to": 6 },
+      { "set": "hoc", "from": 7, "to": 12 }
+    ]
   },
   {
     "key": "stellar_sights_i",

@@ -88,6 +88,26 @@ A set larger than 75 cards is fine; requests are batched automatically. To split
 one set across two tabs (as Stellar Sights is), add two entries with different
 ranges and keys.
 
+A tab that is *not* one contiguous run — the Scene cards are two stretches of
+`hob` plus two of `hoc` — replaces the inline `set`/`from`/`to` with a `ranges`
+list of exactly those three fields. The inline form is the one-range case of
+the same thing, so nothing else changes:
+
+```json
+{
+  "key": "scene",
+  "label": "HOB - Scene",
+  "subtitle": "The Hobbit · Scene Frame Non-Foil · …",
+  "ranges": [
+    { "set": "hob", "from": 199, "to": 213 },
+    { "set": "hoc", "from": 1, "to": 6 }
+  ]
+}
+```
+
+Ranges are listed in the order given and a card claimed by two of them appears
+once, so overlapping ranges cannot produce a duplicate row.
+
 The one derived value with no second source to cross-check is the ManaPool
 slug, so that is the thing to eyeball for an unusual set: it is the card name
 lowercased, with diacritics stripped and apostrophes removed
