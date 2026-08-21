@@ -4,6 +4,14 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 12 * * *'  # daily at noon UTC
+  # Dropping a new Moxfield export in data/ republishes the site without
+  # waiting for the next daily run. This cannot loop: the job commits only
+  # prices.json and history.json, which do not match the path filter (and a
+  # GITHUB_TOKEN push does not start another workflow run either way).
+  push:
+    branches: [main]
+    paths:
+      - 'data/*.csv'
 
 permissions:
   contents: write

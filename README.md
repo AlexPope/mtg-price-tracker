@@ -39,9 +39,17 @@ the two JSON files at runtime. GitHub Pages serves the repository as-is.
 | `index.html` | The whole front end |
 | `prices.json` / `history.json` | Generated — do not edit by hand |
 
-Three workflows drive it: `update-prices.yml` runs daily at 12:00 UTC and
-commits the regenerated data, `pages.yml` redeploys the site afterwards, and
-`ci.yml` runs the test suite on every push and pull request.
+Three workflows drive it: `update-prices.yml` runs daily at 12:00 UTC — and on
+any push that adds a `data/*.csv` export — then commits the regenerated data,
+`pages.yml` redeploys the site afterwards, and `ci.yml` runs the test suite on
+every push and pull request.
+
+That cannot loop: `update-prices.yml` commits only `prices.json` and
+`history.json`, neither of which matches its `data/*.csv` path filter, and a
+push made with `GITHUB_TOKEN` does not start another workflow run regardless.
+`pages.yml` ignores `data/*.csv` on push for the opposite reason — the served
+page never reads the CSV, so deploying on the export alone would only publish
+the old numbers a few minutes before the real update replaced them.
 
 ## Adding a set
 
@@ -81,8 +89,17 @@ lowercased, with diacritics stripped and apostrophes removed
 
 ## Updating what I own
 
-Export the collection from Moxfield as CSV and drop it in `data/`. The newest
-file *by filename* wins, so keep the timestamped export name.
+Export the collection from Moxfield as CSV, drop it in `data/`, and push. The
+`Update Prices` workflow triggers on any push touching `data/*.csv`, so the
+site republishes within a few minutes instead of waiting for the next daily
+run. Nothing else to do — no local Python, no manual workflow dispatch.
+
+The newest export wins, and *newest* means the date parsed out of the filename,
+not the order the names happen to sort in. **Keep the timestamped export name**
+(`moxfield_haves_2026-08-21-1715Z.csv`): a file whose name carries no date
+stops the run rather than being ignored or trusted, because either would risk
+quietly publishing a stale collection. Old exports can stay in `data/`
+indefinitely; only the newest is read.
 
 There is no automated Moxfield sync: `api2.moxfield.com` is not a public API and
 blocks unauthenticated automation, so the export is a manual step.

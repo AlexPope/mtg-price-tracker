@@ -180,6 +180,31 @@ class TestFetchOwned(unittest.TestCase):
                     name="moxfield_haves_2026-08-01-0900Z.csv")
         self.assertEqual(set(fp.fetch_owned(self.DEFINITIONS)), {("ltc", "349")})
 
+    def test_newest_wins_regardless_of_prefix(self):
+        """The regression a plain filename sort has: 'collection-*' sorts
+        before 'moxfield_haves_*', so the older export would win on name."""
+        self._write(['"1","A","ltc","Near Mint","","348"'],
+                    name="moxfield_haves_2026-07-17-1851Z.csv")
+        self._write(['"1","B","ltc","Near Mint","","349"'],
+                    name="collection-2026-09-01.csv")
+        self.assertEqual(set(fp.fetch_owned(self.DEFINITIONS)), {("ltc", "349")})
+
+    def test_same_day_exports_order_by_time(self):
+        self._write(['"1","A","ltc","Near Mint","","348"'],
+                    name="moxfield_haves_2026-08-21-0900Z.csv")
+        self._write(['"1","B","ltc","Near Mint","","349"'],
+                    name="moxfield_haves_2026-08-21-1715Z.csv")
+        self.assertEqual(set(fp.fetch_owned(self.DEFINITIONS)), {("ltc", "349")})
+
+    def test_undated_snapshot_is_fatal(self):
+        """An export with no date in its name cannot be ordered against the
+        others, so the run stops rather than guess which is current."""
+        self._write(self.ROWS, name="moxfield_haves_2026-07-17-1851Z.csv")
+        self._write(self.ROWS, name="moxfield_export.csv")
+        with self.assertRaises(SystemExit) as ctx:
+            fp.fetch_owned(self.DEFINITIONS)
+        self.assertIn("moxfield_export.csv", str(ctx.exception))
+
 
 class TestPreviousOwnedCount(unittest.TestCase):
     """The baseline the ownership guard rail compares against."""

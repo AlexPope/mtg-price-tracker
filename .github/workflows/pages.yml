@@ -3,6 +3,12 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    # The served page reads prices.json and history.json, never the CSV, so a
+    # new export on its own changes nothing to deploy. Update Prices picks it
+    # up and the workflow_run trigger below deploys the regenerated data -
+    # deploying here too would just publish the old numbers first.
+    paths-ignore:
+      - 'data/*.csv'
   workflow_run:
     workflows: [Update Prices]
     types: [completed]

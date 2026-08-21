@@ -48,6 +48,12 @@ MAX_MANAPOOL_MISS_RATE = 0.50   # pages that loaded but had no parseable price
 # the export format changed and every card would silently read as un-owned.
 REQUIRED_CSV_COLUMNS = ("Edition", "Collector Number", "Foil")
 
+# Exports are named moxfield_haves_2026-08-21-1715Z.csv. The date is parsed out
+# of the name rather than trusting a plain filename sort, which is only right
+# while every file shares one prefix: "collection-2026-09-01.csv" sorts before
+# "moxfield_haves_2026-07-17-1851Z.csv", so the older export would quietly win.
+CSV_DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})(?:-(\d{2})(\d{2}))?")
+
 # ManaPool embeds prices in a script tag whose quoting has changed over time:
 #   escaped JSON   \"marketPrices\":{\"price\": 8217,
 #   plain JSON      "marketPrices":{"price":8217,
@@ -211,16 +217,39 @@ def fetch_manapool_price(set_code, num, slug):
     return int(m.group(1)) / 100.0 if m else None
 
 
+def csv_timestamp(path):
+    """The export timestamp encoded in a snapshot's filename, or None.
+
+    Time of day is optional so a same-day re-export still orders correctly
+    when it is present, and a date-only name is still usable when it is not.
+    """
+    m = CSV_DATE_RE.search(path.name)
+    if not m:
+        return None
+    year, month, day, hour, minute = m.groups()
+    return (int(year), int(month), int(day), int(hour or 0), int(minute or 0))
+
+
 def fetch_owned(definitions):
-    """Returns {(set, cn): {nonfoil, foil}} from the latest Moxfield CSV."""
-    # Sort by filename, not mtime: the export timestamp is already in the name,
-    # and a fresh `git checkout` in CI stamps every file with the same mtime.
+    """Returns {(set, cn): {nonfoil, foil}} from the newest Moxfield CSV."""
+    # Order by the date in the filename, not mtime: a fresh `git checkout` in
+    # CI stamps every file with the same mtime, so mtime says nothing there.
     csv_files = sorted(DATA_DIR.glob("*.csv"))
     if not csv_files:
         print(f"  No Moxfield CSV snapshot found in {DATA_DIR}/; ownership will be skipped")
         return {}
 
-    latest_file = csv_files[-1]
+    # A snapshot whose age cannot be read is not silently ignored or silently
+    # trusted - either would risk publishing an out-of-date collection.
+    undated = [p.name for p in csv_files if csv_timestamp(p) is None]
+    if undated:
+        raise SystemExit(
+            f"{DATA_DIR}: cannot tell how recent these exports are: {undated}.\n"
+            f"  A snapshot must carry its date, as in "
+            f"moxfield_haves_2026-08-21-1715Z.csv.")
+
+    # Filename breaks a tie so the pick stays deterministic either way.
+    latest_file = max(csv_files, key=lambda p: (csv_timestamp(p), p.name))
     print(f"  Using latest Moxfield CSV snapshot: {latest_file.name}")
 
     tracked = set()
