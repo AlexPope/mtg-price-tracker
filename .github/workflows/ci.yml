@@ -1,7 +1,7 @@
 name: CI
 
 # The daily job also runs the suite, but only against data it just generated,
-# and only at 12:00 UTC. This runs on the code itself, on every change, so a
+# and only at 11:07 UTC. This runs on the code itself, on every change, so a
 # regression surfaces on the pull request rather than in tomorrow's price run.
 on:
   push:

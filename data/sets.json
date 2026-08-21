@@ -1,61 +1,254 @@
-[
-  {
-    "key": "realms_and_relics",
-    "label": "LTC - Realms & Relics",
-    "subtitle": "Tales of Middle-earth Commander · Borderless Non-Foil · #348–377",
-    "set": "ltc",
-    "from": 348,
-    "to": 377
-  },
-  {
-    "key": "showcase",
-    "label": "LTR - Showcase",
-    "subtitle": "Tales of Middle-earth · Showcase Borderless · #302–331",
-    "set": "ltr",
-    "from": 302,
-    "to": 331
-  },
-  {
-    "key": "book_cover",
-    "label": "HOB - Book Cover",
-    "subtitle": "The Hobbit · Book Cover Frame Non-Foil · #239–248",
-    "set": "hob",
-    "from": 239,
-    "to": 248
-  },
-  {
-    "key": "hob_main",
-    "label": "HOB - Main Set",
-    "subtitle": "The Hobbit · Main Set & Full-Art Lands Non-Foil · #1–198",
-    "set": "hob",
-    "from": 1,
-    "to": 198
-  },
-  {
-    "key": "scene",
-    "label": "HOB - Scene",
-    "subtitle": "The Hobbit · Scene Frame Non-Foil · HOB #199–213, #313–316 · HOC #1–6, #7–12",
-    "ranges": [
-      { "set": "hob", "from": 199, "to": 213 },
-      { "set": "hob", "from": 313, "to": 316 },
-      { "set": "hoc", "from": 1, "to": 6 },
-      { "set": "hoc", "from": 7, "to": 12 }
-    ]
-  },
-  {
-    "key": "stellar_sights_i",
-    "label": "EOE - Stellar Sights I",
-    "subtitle": "Edge of Eternities: Stellar Sights · Borderless Non-Foil · #1–45",
-    "set": "eos",
-    "from": 1,
-    "to": 45
-  },
-  {
-    "key": "stellar_sights_ii",
-    "label": "EOE - Stellar Sights II",
-    "subtitle": "Edge of Eternities: Stellar Sights · Borderless Non-Foil · #46–90",
-    "set": "eos",
-    "from": 46,
-    "to": 90
-  }
-]
+{
+  "groups": [
+    {
+      "key": "hob",
+      "label": "Hobbit — HOB"
+    },
+    {
+      "key": "hoc",
+      "label": "Hobbit — HOC"
+    },
+    {
+      "key": "ltr",
+      "label": "Lord of the Rings — LTR"
+    },
+    {
+      "key": "ltc",
+      "label": "Lord of the Rings — LTC"
+    },
+    {
+      "key": "eos",
+      "label": "Edge of Eternities — EOS"
+    }
+  ],
+  "sections": [
+    {
+      "key": "hob_main",
+      "group": "hob",
+      "label": "Main Set",
+      "ranges": [
+        { "set": "hob", "from": 1, "to": 193 },
+        { "set": "hob", "from": 321, "to": 321 }
+      ]
+    },
+    {
+      "key": "hob_full_arts",
+      "group": "hob",
+      "label": "Full Art Lands",
+      "set": "hob",
+      "from": 194,
+      "to": 198
+    },
+    {
+      "key": "hob_seasonal_lands",
+      "group": "hob",
+      "label": "Seasonal Lands",
+      "set": "hob",
+      "from": 313,
+      "to": 316
+    },
+    {
+      "key": "hob_scene",
+      "group": "hob",
+      "label": "Borderless Scene",
+      "set": "hob",
+      "from": 199,
+      "to": 213
+    },
+    {
+      "key": "hob_dragon_hoard",
+      "group": "hob",
+      "label": "Dragon Hoard Frame",
+      "set": "hob",
+      "from": 214,
+      "to": 238
+    },
+    {
+      "key": "book_cover",
+      "group": "hob",
+      "label": "Book Cover",
+      "set": "hob",
+      "from": 239,
+      "to": 248
+    },
+    {
+      "key": "hoc_crack_the_plates",
+      "group": "hoc",
+      "label": "Crack the Plates",
+      "set": "hoc",
+      "from": 1,
+      "to": 6
+    },
+    {
+      "key": "hoc_treasures_of_smaug",
+      "group": "hoc",
+      "label": "Treasures of Smaug",
+      "set": "hoc",
+      "from": 7,
+      "to": 12
+    },
+    {
+      "key": "hoc_classic_artist",
+      "group": "hoc",
+      "label": "Classic Artist",
+      "set": "hoc",
+      "from": 13,
+      "to": 52
+    },
+    {
+      "key": "hoc_dwarvish",
+      "group": "hoc",
+      "label": "Dwarvish",
+      "set": "hoc",
+      "from": 93,
+      "to": 97
+    },
+    {
+      "key": "hoc_five_armies",
+      "group": "hoc",
+      "label": "Five Armies",
+      "set": "hoc",
+      "from": 98,
+      "to": 106
+    },
+    {
+      "key": "ltr_main",
+      "group": "ltr",
+      "label": "Main Set",
+      "ranges": [
+        { "set": "ltr", "from": 1, "to": 271 },
+        { "set": "ltr", "from": 332, "to": 339 }
+      ]
+    },
+    {
+      "key": "ltr_full_arts",
+      "group": "ltr",
+      "label": "Full Art Lands",
+      "set": "ltr",
+      "from": 272,
+      "to": 281
+    },
+    {
+      "key": "showcase",
+      "group": "ltr",
+      "label": "Showcase",
+      "set": "ltr",
+      "from": 302,
+      "to": 331
+    },
+    {
+      "key": "ltr_jumpstart",
+      "group": "ltr",
+      "label": "Jumpstart",
+      "ranges": [
+        { "set": "ltr", "from": 282, "to": 286 },
+        { "set": "ltr", "from": 824, "to": 828 }
+      ]
+    },
+    {
+      "key": "ltr_starter",
+      "group": "ltr",
+      "label": "Starter",
+      "set": "ltr",
+      "from": 287,
+      "to": 298
+    },
+    {
+      "key": "ltr_promo",
+      "group": "ltr",
+      "label": "Promo",
+      "ranges": [
+        { "set": "ltr", "from": 299, "to": 301 },
+        { "set": "ltr", "from": 398, "to": 398 }
+      ]
+    },
+    {
+      "key": "ltr_borderless",
+      "group": "ltr",
+      "label": "Borderless Lands",
+      "set": "ltr",
+      "from": 340,
+      "to": 345
+    },
+    {
+      "key": "ltr_scene",
+      "group": "ltr",
+      "label": "Scene Cards",
+      "set": "ltr",
+      "from": 399,
+      "to": 451
+    },
+    {
+      "key": "ltr_poster",
+      "group": "ltr",
+      "label": "Poster",
+      "set": "ltr",
+      "from": 731,
+      "to": 750
+    },
+    {
+      "key": "realms_and_relics",
+      "group": "ltc",
+      "label": "Realms & Relics",
+      "set": "ltc",
+      "from": 348,
+      "to": 377
+    },
+    {
+      "key": "ltc_commanders",
+      "group": "ltc",
+      "label": "Commanders",
+      "set": "ltc",
+      "from": 1,
+      "to": 8
+    },
+    {
+      "key": "ltc_new_cards",
+      "group": "ltc",
+      "label": "New Cards",
+      "set": "ltc",
+      "from": 9,
+      "to": 80
+    },
+    {
+      "key": "ltc_reprints",
+      "group": "ltc",
+      "label": "Reprints",
+      "set": "ltc",
+      "from": 161,
+      "to": 347
+    },
+    {
+      "key": "ltc_sol_rings",
+      "group": "ltc",
+      "label": "Special Sol Rings",
+      "set": "ltc",
+      "from": 408,
+      "to": 410
+    },
+    {
+      "key": "ltc_scene_boxes",
+      "group": "ltc",
+      "label": "Scene Boxes",
+      "set": "ltc",
+      "from": 491,
+      "to": 514
+    },
+    {
+      "key": "stellar_sights_i",
+      "group": "eos",
+      "label": "Stellar Sights I",
+      "set": "eos",
+      "from": 1,
+      "to": 45
+    },
+    {
+      "key": "stellar_sights_ii",
+      "group": "eos",
+      "label": "Stellar Sights II",
+      "set": "eos",
+      "from": 46,
+      "to": 90
+    }
+  ]
+}

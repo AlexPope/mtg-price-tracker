@@ -143,15 +143,45 @@ def slugify(name):
 
 
 def load_sets():
-    definitions = json.loads(SETS_FILE.read_text(encoding="utf-8"))
+    """Parse data/sets.json into (groups, sections).
+
+    A group is a primary tab - one Magic set as the collection thinks of it -
+    and a section is one treatment within it, reached by a chip under the tab.
+    The two levels are declared separately rather than inferred from the label,
+    because membership is not always derivable: the HOB and HOC scene runs are
+    the same treatment in two set codes, and one section can span set codes on
+    its own (see card_keys).
+    """
+    doc = json.loads(SETS_FILE.read_text(encoding="utf-8"))
+    if not isinstance(doc, dict) or "groups" not in doc or "sections" not in doc:
+        raise SystemExit(
+            f"{SETS_FILE}: expected an object with 'groups' and 'sections' lists.")
+
+    groups = doc["groups"]
+    seen_groups = set()
+    for g in groups:
+        missing = {"key", "label"} - set(g)
+        if missing:
+            raise SystemExit(f"{SETS_FILE}: group {g.get('key', '?')} is missing {sorted(missing)}")
+        if g["key"] in seen_groups:
+            raise SystemExit(f"{SETS_FILE}: duplicate group key {g['key']}")
+        seen_groups.add(g["key"])
+
+    definitions = doc["sections"]
     seen = set()
     for d in definitions:
-        missing = {"key", "label", "subtitle"} - set(d)
+        missing = {"key", "group", "label"} - set(d)
         if missing:
             raise SystemExit(f"{SETS_FILE}: entry {d.get('key', '?')} is missing {sorted(missing)}")
         if d["key"] in seen:
             raise SystemExit(f"{SETS_FILE}: duplicate key {d['key']}")
         seen.add(d["key"])
+        # A section pointing at a group that does not exist would otherwise
+        # vanish from the page entirely - no tab renders it, and nothing says so.
+        if d["group"] not in seen_groups:
+            raise SystemExit(
+                f"{SETS_FILE}: {d['key']} belongs to unknown group {d['group']!r}; "
+                f"known groups are {sorted(seen_groups)}")
 
         blocks = d["ranges"] if "ranges" in d else [d]
         if not blocks:
@@ -162,7 +192,15 @@ def load_sets():
                 raise SystemExit(f"{SETS_FILE}: entry {d['key']} is missing {sorted(missing)}")
             if b["from"] > b["to"]:
                 raise SystemExit(f"{SETS_FILE}: {d['key']} has from > to")
-    return definitions
+
+    # An empty group is a tab that opens onto nothing, which reads as a broken
+    # page rather than as a set still being filled in.
+    used = {d["group"] for d in definitions}
+    empty = sorted(seen_groups - used)
+    if empty:
+        raise SystemExit(f"{SETS_FILE}: group(s) {empty} have no sections")
+
+    return groups, definitions
 
 
 def card_keys(definition):
@@ -453,6 +491,11 @@ def build_card_row(set_code, num, card, owned, stats):
     return {
         "display_name": display_name,
         "mtg_name": name,
+        # Carried explicitly rather than left to be parsed back out of mp_url:
+        # the front end shows it as a column, and a view that has to reverse a
+        # URL to render a cell is one format change away from showing nothing.
+        "set": set_code,
+        "collector_number": num,
         "tcg_price": tcg_price,
         "tcg_url": tcg_url,
         "mp_price": mp_price,
@@ -464,8 +507,9 @@ def build_card_row(set_code, num, card, owned, stats):
 
 
 def main():
-    definitions = load_sets()
-    print(f"Tracking {len(definitions)} sets from {SETS_FILE}")
+    groups, definitions = load_sets()
+    print(f"Tracking {len(definitions)} sections across {len(groups)} sets "
+          f"from {SETS_FILE}")
 
     stats = RunStats()
 
@@ -503,9 +547,11 @@ def main():
 
     output = {
         "updated_at": datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        # The front end builds its tabs from this, so adding a set needs no
-        # HTML change.
-        "tabs": [{"key": d["key"], "label": d["label"], "subtitle": d["subtitle"]}
+        # The front end builds its whole navigation from these two blocks, so
+        # adding a set or a treatment needs no HTML change. "groups" are the
+        # primary tabs; each entry in "tabs" is one chip under its group.
+        "groups": [{"key": g["key"], "label": g["label"]} for g in groups],
+        "tabs": [{"key": d["key"], "group": d["group"], "label": d["label"]}
                  for d in definitions],
         **sections,
     }

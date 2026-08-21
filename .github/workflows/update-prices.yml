@@ -3,7 +3,15 @@ name: Update Prices
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 12 * * *'  # daily at noon UTC
+    # 07:07 America/New_York while EDT is in effect. GitHub cron is UTC only
+    # and does not follow daylight saving, so this becomes 06:07 local in
+    # winter. index.html renders the time in the reader's own timezone from
+    # REFRESH_UTC_HOUR/MINUTE, so the page stays honest about which one it is.
+    #
+    # The odd minute is deliberate. Jobs scheduled on the hour land in GitHub's
+    # busiest queue and are routinely delayed well past it; a few minutes off
+    # the hour starts closer to on time.
+    - cron: '7 11 * * *'  # daily at 11:07 UTC
   # Dropping a new Moxfield export in data/ republishes the site without
   # waiting for the next daily run. This cannot loop: the job commits only
   # prices.json and history.json, which do not match the path filter (and a
