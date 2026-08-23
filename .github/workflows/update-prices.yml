@@ -14,8 +14,8 @@ on:
     - cron: '7 11 * * *'  # daily at 11:07 UTC
   # Dropping a new Moxfield export in data/ republishes the site without
   # waiting for the next daily run. This cannot loop: the job commits only
-  # prices.json and history.json, which do not match the path filter (and a
-  # GITHUB_TOKEN push does not start another workflow run either way).
+  # prices.json, which does not match the path filter (and a GITHUB_TOKEN
+  # push does not start another workflow run either way).
   push:
     branches: [main]
     paths:
@@ -29,10 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          # build_history.py replays every past revision of prices.json, so the
-          # default shallow clone is not enough.
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -42,19 +38,16 @@ jobs:
       - name: Fetch prices
         run: python scripts/fetch_prices.py
 
-      - name: Build price history
-        run: python scripts/build_history.py
-
-      # Runs against the freshly generated files, so a regression stops the run
+      # Runs against the freshly generated file, so a regression stops the run
       # before anything is committed.
       - name: Run tests
         run: python -m unittest discover -s tests
 
-      - name: Commit prices.json and history.json
+      - name: Commit prices.json
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add prices.json history.json
+          git add prices.json
           git diff --cached --quiet || git commit -m "chore: update prices $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin main
           git push

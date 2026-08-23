@@ -6,8 +6,9 @@ ManaPool prices against what I actually own.
 **Live site: https://alexpope.github.io/mtg-price-tracker/**
 
 For each tracked set it shows the complete card list, the rarity, both vendors'
-prices with the cheaper one highlighted, a 30-day price trend, and how many
-copies of the card are already in my collection. The list can be filtered by card name and
+current prices side by side, and how many copies of the card are already in my
+collection. Only the current price is tracked — there is no price history and
+no trend. The list can be filtered by card name and
 narrowed to just the missing or just the collected cards, each tab keeping its
 own filter. The page follows the system light/dark setting, with a toggle that
 overrides it. Prices refresh automatically once a day, and the header says
@@ -48,24 +49,22 @@ tracked — the non-foil price is the number of interest.
 
 ```
 data/sets.json  ──┐
-                  ├─→ scripts/fetch_prices.py ──→ prices.json  ──┐
-Scryfall (batch) ─┤                                             ├─→ index.html
-ManaPool (scrape)─┘                                             │
-                                                                │
-git history of prices.json → scripts/build_history.py → history.json
+                  │
+Scryfall (batch) ─┼─→ scripts/fetch_prices.py ──→ prices.json ──→ index.html
+                  │
+ManaPool (scrape)─┘
 ```
 
 Nothing is built or bundled — `index.html` is a single static page that fetches
-the two JSON files at runtime. GitHub Pages serves the repository as-is.
+`prices.json` at runtime. GitHub Pages serves the repository as-is.
 
 | File | Role |
 |---|---|
 | `data/sets.json` | The only file you edit to track a new set or treatment |
 | `data/*.csv` | Moxfield collection exports; the newest by filename wins |
 | `scripts/fetch_prices.py` | Fetches prices, writes `prices.json` |
-| `scripts/build_history.py` | Replays git history, writes `history.json` |
 | `index.html` | The whole front end |
-| `prices.json` / `history.json` | Generated — do not edit by hand |
+| `prices.json` | Generated — do not edit by hand |
 
 Three workflows drive it: `update-prices.yml` runs daily at 11:07 UTC — and on
 any push that adds a `data/*.csv` export — then commits the regenerated data,
@@ -75,13 +74,12 @@ every push and pull request.
 The daily job takes roughly 13 minutes, and almost all of it is one ManaPool
 page fetch per card at about 0.6s each. That scales linearly with the number of
 tracked cards, so it is the cost to watch when adding a set: Scryfall is
-batched 75 at a time and costs seconds, and `build_history.py` replays the
-whole git history in about three. The 6-hour job limit is a long way off, but
-at ~0.6s per card it would arrive somewhere north of 30,000 cards.
+batched 75 at a time and costs seconds. The 6-hour job limit is a long way off,
+but at ~0.6s per card it would arrive somewhere north of 30,000 cards.
 
-That cannot loop: `update-prices.yml` commits only `prices.json` and
-`history.json`, neither of which matches its `data/*.csv` path filter, and a
-push made with `GITHUB_TOKEN` does not start another workflow run regardless.
+That cannot loop: `update-prices.yml` commits only `prices.json`, which does
+not match its `data/*.csv` path filter, and a push made with `GITHUB_TOKEN`
+does not start another workflow run regardless.
 `pages.yml` ignores `data/*.csv` on push for the opposite reason — the served
 page never reads the CSV, so deploying on the export alone would only publish
 the old numbers a few minutes before the real update replaced them.
@@ -201,7 +199,6 @@ Only the standard library and `curl` are needed — no dependencies to install.
 
 ```sh
 python scripts/fetch_prices.py     # ~12 min at 1,157 cards: refreshes prices.json
-python scripts/build_history.py    # replays git history into history.json
 python -m http.server 8765         # then open http://localhost:8765
 ```
 
@@ -219,8 +216,8 @@ RUN_NETWORK_TESTS=1 python -m unittest discover -s tests   # also checks Scryfal
 The offline suite covers the derivation rules that replaced the old hardcoded
 card tables (the slug cases, `flavor_name` handling, TCGplayer URL assembly),
 the guard-rail thresholds, `data/sets.json` and Moxfield CSV validation, and
-the invariants between `prices.json` and `history.json` — every priced card has
-a series, the series align with the date axis, every section has a chip, every
+the invariants the front end relies on `prices.json` to hold — every card
+carries a rarity the page has a letter for, every section has a chip, every
 chip resolves to a group, and no group is left empty.
 
 The network test is opt-in so the suite stays fast and deterministic. It
@@ -269,7 +266,3 @@ The quantity itself is deliberately not guarded the same way, because it cannot
 fail the same way: a row exists because the card is owned, so a `Count` that
 will not parse is read as one copy rather than zero. That errs toward showing a
 card as collected — the one direction that never quietly loses a card.
-
-`build_history.py` needs real git history and the workflow checks out with
-`fetch-depth: 0`. It rebuilds the series from scratch every run rather than
-appending, so a bad run cannot corrupt it.

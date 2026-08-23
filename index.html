@@ -54,9 +54,7 @@
       --tab-active-fg: #1043ae;
       --row-hover: #f0f4ff;
       --pos: #128a3f;
-      --neg: #c0392b;
       --warn: #b0552a;
-      --spark: #98a2b3;
       --card-bg: #fafafa;
       --card-border: #e0e0e0;
       --owned-bg: #f0faf3;
@@ -103,9 +101,7 @@
       --tab-active-fg: #a9c4fb;
       --row-hover: #202834;
       --pos: #4ade80;
-      --neg: #f87171;
       --warn: #e8a06a;
-      --spark: #7d8794;
       --card-bg: #1b1e24;
       --card-border: #2f353e;
       /* Brighter than a proportional darkening of the light borders would
@@ -126,11 +122,11 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      /* Widened from 920px when the trend column made it six columns, and
-         again for rarity: fixed widths plus non-wrapping headers need the
-         extra room, and the table's min-width has to stay inside this or the
-         panel scrolls sideways on a full-size desktop window. */
-      max-width: 1200px;
+      /* Sized to the table rather than guessed: fixed widths plus non-wrapping
+         headers need the room, and the table's min-width has to stay inside
+         this (less the 20px padding either side) or the panel scrolls sideways
+         on a full-size desktop window. */
+      max-width: 1040px;
       margin: 40px auto;
       padding: 0 20px;
       color: var(--fg);
@@ -271,19 +267,18 @@
       table-layout: fixed;
       /* Below this the non-wrapping headers no longer fit; the panel scrolls
          horizontally instead of the headers overflowing their cells. */
-      min-width: 1145px;
+      min-width: 976px;
     }
-    /* Rebased when rarity was inserted rather than re-guessed: 1145px is the
-       old 1060 plus the width of the new header, and these percentages of it
-       leave every other column the pixel width it had before. */
-    col.c-name   { width: 24.1%; }
-    col.c-rarity { width: 7.4%; }
-    col.c-num    { width: 6%; }
-    col.c-tcg    { width: 9.7%; }
-    col.c-mp     { width: 9.3%; }
-    col.c-trend  { width: 14.8%; }
-    col.c-nf     { width: 14.8%; }
-    col.c-foil   { width: 13.9%; }
+    /* Rebased when the trend column was removed rather than re-guessed: 976px
+       is the old 1145 less that column's width, and these percentages of it
+       leave every remaining column the pixel width it had before. */
+    col.c-name   { width: 28.3%; }
+    col.c-rarity { width: 8.7%; }
+    col.c-num    { width: 7%; }
+    col.c-tcg    { width: 11.4%; }
+    col.c-mp     { width: 10.9%; }
+    col.c-nf     { width: 17.4%; }
+    col.c-foil   { width: 16.3%; }
     thead th {
       background: var(--th-bg);
       text-align: left;
@@ -302,7 +297,7 @@
     tbody tr:hover { background: var(--row-hover); }
     td { padding: 9px 14px; border-bottom: 1px solid var(--line); }
     td:first-child { font-weight: 500; }
-    td.col-price, td.col-trend { white-space: nowrap; }
+    td.col-price { white-space: nowrap; }
     td.col-check { text-align: center; }
     td.col-num {
       color: var(--faint);
@@ -395,29 +390,9 @@
       padding: 0;
     }
 
+    /* Both vendors read alike: the two prices sit side by side and the
+       comparison is the reader's to make. */
     td.col-price a { color: var(--fg); }
-    .best-price { color: var(--pos) !important; font-weight: 800 !important; }
-    .best-price::after { content: ' \2193'; font-size: 0.85em; }
-
-    /* 30-day trend: sparkline + 7-day delta.
-       Single series, so one recessive hue and no legend - the column header
-       names it. The delta arrow carries direction so it never reads by
-       colour alone. */
-    .trend { display: inline-flex; align-items: center; gap: 9px; }
-    .spark { display: block; flex: none; }
-    .spark-line { fill: none; stroke: var(--spark); stroke-width: 2;
-                  stroke-linecap: round; stroke-linejoin: round; }
-    .spark-dot { fill: var(--accent); }
-    .delta {
-      font-size: 0.82rem;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-      min-width: 58px;
-    }
-    .delta.up   { color: var(--pos); }
-    .delta.down { color: var(--neg); }
-    .delta.flat { color: var(--muted); }
-    .delta.na   { color: var(--fainter); font-weight: 400; }
 
     .summary {
       display: flex;
@@ -598,9 +573,13 @@
            collected pills wrapped almost every card onto a second line. The
            rarity letter and the collector number are both narrow enough to
            ride along at the end of it. */
+        /* The collected pills span both price rows rather than sitting on one
+           of them: with the trend column gone the right-hand half of the first
+           price row would otherwise be empty, and the pills centred against
+           the two prices is what the card had before. */
         grid-template-areas:
           "name rarity num"
-          "tcg  trend  trend"
+          "tcg  nf     foil"
           "mp   nf     foil";
         align-items: center;
         gap: 2px 8px;
@@ -656,14 +635,11 @@
         font-weight: 700;
       }
 
-      td.col-trend { grid-area: trend; justify-self: end; }
-      .delta { min-width: 52px; text-align: right; }
-
       /* Collected state reads as a pill. An uncollected cell is genuinely
          empty, so :empty tells the two apart without changing the markup. */
       td.col-check {
         text-align: center;
-        align-self: start;
+        align-self: center;
         border: 1px solid var(--owned-border);
         background: var(--owned-bg);
         color: var(--pos);
@@ -787,8 +763,11 @@ function deriveNav(data) {
   };
 }
 
-// Card identity that survives re-sorting and schema changes; mirrors
-// CARD_KEY_RE in scripts/build_history.py.
+// Card identity that survives re-sorting and schema changes: rows are
+// re-sorted by price on every run and sections have been renamed, so neither
+// position nor section is stable. mp_url is present in every revision ever
+// committed and encodes set + collector number.
+//   https://manapool.com/card/ltc/370/mouth-of-ronom?conditions=NM -> ltc/370
 const CARD_KEY_RE = /\/card\/([^/]+)\/([^/?]+)/;
 function cardKey(c) {
   const m = CARD_KEY_RE.exec(c.mp_url || '');
@@ -834,13 +813,9 @@ function rarityCell(c) {
        + ` title="${escapeHTML(r.label)}">${escapeHTML(r.letter)}</span>`;
 }
 
-const TREND_DAYS = 7;   // window for the delta
-const SPARK_DAYS = 30;  // window for the sparkline
-
 const state = {
   data: null,     // prices.json as fetched: one array per section key
   cards: {},      // per group: every section's cards concatenated, in chip order
-  history: null,
   sort: {},       // keyed by group, populated once the groups are known
   filter: {},     // ditto: { q, own, subset } per group; subset '' means All
 };
@@ -852,8 +827,6 @@ const COLUMNS = [
   { col: 'num',    label: '#', cls: 'col-num', title: 'Collector number' },
   { col: 'tcg',    label: 'TCGPlayer' },
   { col: 'mp',     label: 'ManaPool' },
-  { col: 'trend',  label: '30-Day Trend (TCG)',
-    title: 'TCGplayer price: 30-day sparkline, with the change over the last 7 days' },
   { col: 'nf',     label: 'Collected Non-Foil', cls: 'col-check',
     title: 'Copies of the non-foil printing in my collection; blank means none' },
   { col: 'foil',   label: 'Collected Foil',     cls: 'col-check',
@@ -874,8 +847,6 @@ const OWN_FILTERS = [
 const SORT_OPTIONS = [
   { val: 'tcg:asc',   label: 'Price — low to high' },
   { val: 'tcg:desc',  label: 'Price — high to low' },
-  { val: 'trend:desc',label: 'Biggest 7-day gain' },
-  { val: 'trend:asc', label: 'Biggest 7-day drop' },
   { val: 'name:asc',  label: 'Card name — A to Z' },
   { val: 'rarity:desc', label: 'Rarity — mythic first' },
   { val: 'num:asc',   label: 'Collector number' },
@@ -937,7 +908,7 @@ function buildScaffold(groups) {
         <colgroup>
           <col class="c-name"><col class="c-rarity"><col class="c-num">
           <col class="c-tcg"><col class="c-mp">
-          <col class="c-trend"><col class="c-nf"><col class="c-foil">
+          <col class="c-nf"><col class="c-foil">
         </colgroup>
         <thead><tr>${head}</tr></thead>
         <tbody id="tbody-${escapeHTML(g.key)}">
@@ -995,111 +966,9 @@ function escapeHTML(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-// Returns the TCG series for a card over the last `days`, plus the matching
-// dates. TCGplayer is the primary series: it is the more complete of the two
-// and the less scrape-fragile. ManaPool is used only if TCG has nothing at
-// all, so `source` is carried through to keep the tooltips honest if it does.
-function trendSeries(card) {
-  if (!state.history) return null;
-  const entry = state.history.cards[cardKey(card)];
-  if (!entry) return null;
-  const dates = state.history.dates;
-  const useTcg = entry.tcg.some(v => v != null);
-  const from = Math.max(0, dates.length - SPARK_DAYS);
-  return {
-    values: (useTcg ? entry.tcg : entry.mp).slice(from),
-    dates: dates.slice(from),
-    source: useTcg ? 'TCGplayer' : 'ManaPool',
-  };
-}
-
-// Percentage change over `days`, measured from the most recent reading back to
-// the latest reading at least that old. Returns null when the card has too
-// little history to say anything honest.
-function trendDelta(series, days) {
-  if (!series) return null;
-  const { values, dates } = series;
-  let last = -1;
-  for (let i = values.length - 1; i >= 0; i--) { if (values[i] != null) { last = i; break; } }
-  if (last < 0) return null;
-
-  const cutoff = new Date(dates[last] + 'T00:00:00Z');
-  cutoff.setUTCDate(cutoff.getUTCDate() - days);
-  let base = -1;
-  for (let i = last - 1; i >= 0; i--) {
-    if (values[i] == null) continue;
-    if (new Date(dates[i] + 'T00:00:00Z') <= cutoff) { base = i; break; }
-  }
-  if (base < 0 || !values[base]) return null;
-  return { pct: (values[last] - values[base]) / values[base] * 100,
-           from: values[base], to: values[last] };
-}
-
-// Sparkline. Gaps are genuine breaks in the path rather than interpolated
-// across, so a missing day never masquerades as a flat one.
-function sparkline(series) {
-  if (!series) return '';
-  const { values, dates } = series;
-  const present = values.filter(v => v != null);
-  if (present.length < 2) return '';
-
-  const W = 74, H = 20, PAD = 3;
-  const min = Math.min(...present), max = Math.max(...present);
-  const span = (max - min) || 1;
-  const x = i => PAD + (values.length === 1 ? 0 : (i / (values.length - 1)) * (W - 2 * PAD));
-  const y = v => H - PAD - ((v - min) / span) * (H - 2 * PAD);
-
-  // Group into runs of consecutive readings, then draw each run as its own
-  // subpath. A run of one becomes a zero-length segment, which the round
-  // linecap renders as a dot - otherwise an isolated reading would vanish.
-  const runs = [];
-  values.forEach((v, i) => {
-    if (v == null) { runs.push(null); return; }
-    const tail = runs[runs.length - 1];
-    if (Array.isArray(tail)) tail.push(i); else runs.push([i]);
-  });
-
-  let d = '', lastIdx = -1;
-  for (const run of runs) {
-    if (!Array.isArray(run)) continue;
-    const pt = i => `${x(i).toFixed(1)},${y(values[i]).toFixed(1)}`;
-    d += 'M' + pt(run[0]);
-    d += run.length === 1 ? 'L' + pt(run[0])
-                          : run.slice(1).map(i => 'L' + pt(i)).join('');
-    lastIdx = run[run.length - 1];
-  }
-
-  const label = `${series.source} · ${dates[0]} to ${dates[dates.length - 1]}: `
-              + `low ${money(min)}, high ${money(max)}`;
-  return `<svg class="spark" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" `
-       + `role="img" aria-label="${escapeHTML(label)}">`
-       + `<title>${escapeHTML(label)}</title>`
-       + `<path class="spark-line" d="${d}"/>`
-       + `<circle class="spark-dot" cx="${x(lastIdx).toFixed(1)}" cy="${y(values[lastIdx]).toFixed(1)}" r="2.2"/>`
-       + `</svg>`;
-}
-
-function deltaCell(delta, source) {
-  if (!delta) return '<span class="delta na" title="Not enough price history yet">—</span>';
-  const rounded = Math.round(delta.pct * 10) / 10;
-  const tip = `${source} · 7 days: ${money(delta.from)} → ${money(delta.to)}`;
-  if (rounded === 0) {
-    return `<span class="delta flat" title="${escapeHTML(tip)}">0.0%</span>`;
-  }
-  const up = rounded > 0;
-  const cls = up ? 'up' : 'down';
-  const arrow = up ? '▲' : '▼';
-  return `<span class="delta ${cls}" title="${escapeHTML(tip)}">`
-       + `${arrow} ${up ? '+' : ''}${rounded.toFixed(1)}%</span>`;
-}
-
 function buildRows(cards, tabName, showTreatment) {
   return cards.map(c => {
     const tcg = c.tcg_price, mp = c.mp_price;
-    const tcgBest = tcg != null && mp != null && tcg < mp;
-    const mpBest  = tcg != null && mp != null && mp < tcg;
-    const tcgCls = tcgBest ? ' class="best-price"' : '';
-    const mpCls  = mpBest  ? 'best-price' : '';
     const nameCell = (c.image_url
       ? `<span class="card-link" data-tab="${tabName}" data-idx="${c._idx}">${escapeHTML(c.display_name)}</span>`
       : escapeHTML(c.display_name))
@@ -1107,10 +976,6 @@ function buildRows(cards, tabName, showTreatment) {
       + (showTreatment
           ? `<span class="treatment">${escapeHTML(SECTION_LABEL[c._section] || '')}</span>`
           : '');
-
-    const series = trendSeries(c);
-    const trend = `<span class="trend">${sparkline(series)}`
-                + `${deltaCell(trendDelta(series, TREND_DAYS), series && series.source)}</span>`;
 
     // data-label feeds the stacked mobile layout, where there is no header
     // row to read the column off. Inert on desktop. Each cell also carries a
@@ -1121,11 +986,10 @@ function buildRows(cards, tabName, showTreatment) {
       <td class="col-name">${nameCell}</td>
       <td class="col-rarity">${rarityCell(c)}</td>
       <td class="col-num" data-label="#">${escapeHTML(collectorNumber(c))}</td>
-      <td class="col-price col-tcg" data-label="TCG"><a href="${c.tcg_url}" target="_blank"${tcgCls}>${fmt(tcg)}</a></td>
+      <td class="col-price col-tcg" data-label="TCG"><a href="${c.tcg_url}" target="_blank">${fmt(tcg)}</a></td>
       <td class="col-price col-mp" data-label="MP">${mp != null
-        ? `<a href="${c.mp_url}" target="_blank" class="${mpCls}">${fmt(mp)}</a>`
+        ? `<a href="${c.mp_url}" target="_blank">${fmt(mp)}</a>`
         : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
-      <td class="col-trend">${trend}</td>
       <td class="col-check col-nf" data-label="NF">${ownedCell(copies(c.collected_nonfoil))}</td>
       <td class="col-check col-foil" data-label="Foil">${ownedCell(copies(c.collected_foil))}</td>
     </tr>`;
@@ -1148,12 +1012,6 @@ function sortKey(col, c) {
     // Sorts by copies held, so the deepest stacks lead the "Collected first" view.
     case 'nf':   return copies(c.collected_nonfoil);
     case 'foil': return copies(c.collected_foil);
-    // Cards without enough history sort to the bottom of the default (biggest
-    // movers first) view rather than pretending to be flat at 0%.
-    case 'trend': {
-      const d = trendDelta(trendSeries(c), TREND_DAYS);
-      return d ? d.pct : -Infinity;
-    }
   }
 }
 function sortCards(cards, col, dir) {
@@ -1289,8 +1147,7 @@ function handleSortClick(tabName, col) {
     s.col = col;
     // Sensible default direction per column
     // Rarity joins these: the interesting end of that column is the mythics.
-    s.dir = (col === 'nf' || col === 'foil' || col === 'trend'
-             || col === 'rarity') ? 'desc' : 'asc';
+    s.dir = (col === 'nf' || col === 'foil' || col === 'rarity') ? 'desc' : 'asc';
   }
   renderTab(tabName);
 }
@@ -1320,11 +1177,11 @@ function closeModal(e, force) {
   document.getElementById('card-modal').classList.remove('open');
 }
 
-// Both data files are regenerated once a day and must never be shown stale -
+// prices.json is regenerated once a day and must never be shown stale -
 // yesterday's prices under today's date is the one wrong answer this page can
 // give. That used to be enforced with a `?_=' + Date.now()` cache-buster,
-// which made every URL unique and so re-downloaded ~1.2MB on every single
-// visit, revisits included.
+// which made every URL unique and so re-downloaded the whole file on every
+// single visit, revisits included.
 //
 // `no-cache` is the exact rule that was wanted: always revalidate, never serve
 // from cache blind. GitHub Pages already sends ETag and Last-Modified, so an
@@ -1334,26 +1191,9 @@ function closeModal(e, force) {
 // reused, it is just never trusted without asking.
 const DATA_FETCH = { cache: 'no-cache' };
 
-// History is optional: if it is missing or malformed the tables still render,
-// with the trend column showing that there is nothing to plot yet.
-async function loadHistory() {
-  try {
-    const r = await fetch('history.json', DATA_FETCH);
-    if (!r.ok) return null;
-    const h = await r.json();
-    return (h && Array.isArray(h.dates) && h.cards) ? h : null;
-  } catch (e) {
-    return null;
-  }
-}
-
 async function loadPrices() {
   try {
-    const [r, history] = await Promise.all([
-      fetch('prices.json', DATA_FETCH),
-      loadHistory(),
-    ]);
-    state.history = history;
+    const r = await fetch('prices.json', DATA_FETCH);
     const data = await r.json();
 
     const nav = deriveNav(data);

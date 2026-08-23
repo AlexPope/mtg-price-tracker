@@ -380,8 +380,8 @@ def previous_owned_count():
         doc = json.loads(PRICES_FILE.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return 0
-    # Mirrors extract_prices in build_history.py: walk the card sections and
-    # tolerate the non-card blocks ("tabs", "updated_at") sitting alongside them.
+    # Walk the card sections, tolerating the non-card blocks ("tabs",
+    # "groups", "updated_at") sitting alongside them.
     return sum(
         1
         for section in doc.values() if isinstance(section, list)

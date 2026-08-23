@@ -343,8 +343,8 @@ class TestPreviousOwnedCount(unittest.TestCase):
     def test_counts_cards_owned_in_either_finish(self):
         self._write({
             "updated_at": "2026-08-12T00:00:00Z",
-            # Lists of dicts sitting alongside the card sections, exactly as in
-            # build_history.py's extract_prices - neither must be counted.
+            # Lists of dicts sitting alongside the card sections - neither is
+            # a card, so neither must be counted.
             "tabs": [{"key": "a", "group": "g", "label": "A"}],
             "groups": [{"key": "g", "label": "G"}],
             "a": [
