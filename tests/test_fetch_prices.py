@@ -484,7 +484,7 @@ class TestBuildCardRow(unittest.TestCase):
         fp.time.sleep = self._sleep
 
     def _card(self, **over):
-        card = {"name": "The Great Henge", "tcgplayer_id": 488284,
+        card = {"name": "The Great Henge", "tcgplayer_id": 488284, "rarity": "mythic",
                 "prices": {"usd": "90.22"}, "image_uris": {"normal": "img"}}
         card.update(over)
         return card
@@ -493,6 +493,7 @@ class TestBuildCardRow(unittest.TestCase):
         row = fp.build_card_row(self.SET, "348", self._card(), {}, fp.RunStats())
         self.assertEqual(row["display_name"], "The Great Henge")
         self.assertEqual(row["mtg_name"], "The Great Henge")
+        self.assertEqual(row["rarity"], "mythic")
         self.assertEqual(row["tcg_price"], 90.22)
         self.assertEqual(row["mp_price"], 82.17)
         self.assertIn("/product/488284", row["tcg_url"])
@@ -512,6 +513,25 @@ class TestBuildCardRow(unittest.TestCase):
         row = fp.build_card_row(self.SET, "348", self._card(), owned, fp.RunStats())
         self.assertEqual(row["collected_nonfoil"], 4)
         self.assertEqual(row["collected_foil"], 0)
+
+    def test_rarity_is_carried_as_scryfalls_word(self):
+        """The page turns it into a letter; the file keeps the word, so a
+        rarity the page has no letter for is still readable in the data."""
+        for word in ("common", "uncommon", "rare", "mythic", "special"):
+            with self.subTest(rarity=word):
+                row = fp.build_card_row(self.SET, "348", self._card(rarity=word),
+                                        {}, fp.RunStats())
+                self.assertEqual(row["rarity"], word)
+
+    def test_missing_rarity_is_null_not_an_error(self):
+        """Scryfall has always sent one, but a row without it is a blank cell
+        rather than a failed run - the field is display, not identity."""
+        card = self._card()
+        del card["rarity"]
+        stats = fp.RunStats()
+        row = fp.build_card_row(self.SET, "348", card, {}, stats)
+        self.assertIsNone(row["rarity"])
+        self.assertEqual(stats.scryfall_errors, [])
 
     def test_missing_price_is_null_not_an_error(self):
         stats = fp.RunStats()

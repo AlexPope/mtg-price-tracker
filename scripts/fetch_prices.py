@@ -496,6 +496,11 @@ def build_card_row(set_code, num, card, owned, stats):
         # URL to render a cell is one format change away from showing nothing.
         "set": set_code,
         "collector_number": num,
+        # Scryfall's word ("common", "mythic", "special"...) rather than the
+        # single letter the page shows: the letter is a rendering choice, and
+        # storing it would make a new rarity arrive here as an unmappable "S"
+        # instead of something the front end can label in full.
+        "rarity": card.get("rarity"),
         "tcg_price": tcg_price,
         "tcg_url": tcg_url,
         "mp_price": mp_price,

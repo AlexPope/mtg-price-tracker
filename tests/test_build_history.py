@@ -120,6 +120,21 @@ class TestRealArtifacts(unittest.TestCase):
     # primary tabs, "tabs" the chips under them.
     NAV_BLOCKS = ("tabs", "groups")
 
+    # The rarities index.html has a letter and a colour for; see RARITY there.
+    # A card outside this set still renders, as its own initial, but the letter
+    # is a guess and the colour is the default - worth being told about.
+    KNOWN_RARITIES = {"common", "uncommon", "rare", "special", "mythic", "bonus"}
+
+    def test_every_card_has_a_rarity_the_page_can_render(self):
+        unknown = {}
+        for key, value in self.prices.items():
+            if not isinstance(value, list) or key in self.NAV_BLOCKS:
+                continue
+            for row in value:
+                if row.get("rarity") not in self.KNOWN_RARITIES:
+                    unknown[row.get("mtg_name")] = row.get("rarity")
+        self.assertEqual(unknown, {}, "rarities index.html has no letter for")
+
     def test_tabs_block_matches_the_sections(self):
         tabs = self.prices.get("tabs")
         self.assertIsInstance(tabs, list)

@@ -5,9 +5,9 @@ ManaPool prices against what I actually own.
 
 **Live site: https://alexpope.github.io/mtg-price-tracker/**
 
-For each tracked set it shows the complete card list, both vendors' prices with
-the cheaper one highlighted, a 30-day price trend, and how many copies of the
-card are already in my collection. The list can be filtered by card name and
+For each tracked set it shows the complete card list, the rarity, both vendors'
+prices with the cheaper one highlighted, a 30-day price trend, and how many
+copies of the card are already in my collection. The list can be filtered by card name and
 narrowed to just the missing or just the collected cards, each tab keeping its
 own filter. The page follows the system light/dark setting, with a toggle that
 overrides it. Prices refresh automatically once a day, and the header says
@@ -25,6 +25,14 @@ filtering to one card never claims the set is worth $4.
 
 The current view lives in the URL as `#hob/hob_scene`, so a reload comes back
 to where you were and a single treatment can be linked to directly.
+
+Rarity is one letter — `C`, `U`, `R`, `M`, plus `S` and `B` should a special
+or bonus printing ever be tracked — in the colour that rarity's set symbol is
+printed in, with the full word in a tooltip. Sorting that column ranks the
+letters common-to-mythic rather than alphabetically, which would otherwise
+leave the mythics stranded in the middle. `prices.json` stores Scryfall's word,
+not the letter: a rarity the page has no letter for is then still legible in
+the data, and `test_every_card_has_a_rarity_the_page_can_render` says so.
 
 The two collected columns are copy counts taken from the export's `Count`
 column, summed across the rows Moxfield splits a card into (one per condition,
@@ -112,8 +120,8 @@ A **section** is one chip under it:
 | `set` | Scryfall set code, lowercase |
 | `from` / `to` | Collector number range, inclusive |
 
-Everything else — card names, LOTR flavor names, TCGplayer product ids, images
-and the ManaPool URL slug — is derived from Scryfall at fetch time.
+Everything else — card names, LOTR flavor names, rarities, TCGplayer product
+ids, images and the ManaPool URL slug — is derived from Scryfall at fetch time.
 
 Adding a **treatment** to a set already tracked is one entry in `sections`.
 Adding a **set** is one entry in each list. A section larger than 75 cards is

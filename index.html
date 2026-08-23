@@ -64,6 +64,17 @@
       --missing-bg: #fdf6f2;
       --missing-border: #f0d0c0;
       --input-bg: #ffffff;
+      /* The rarity letters, in the colours the physical set symbols use. They
+         are a shorthand a Magic player already reads, so the colour carries
+         the meaning a one-letter column cannot spell out - but the letter
+         itself is never the only signal, and each cell names its rarity in a
+         tooltip. Darkened from the print colours to clear AA on white: gold
+         and orange at their true value are unreadable here. */
+      --rarity-common: #4a4f57;
+      --rarity-uncommon: #5d7183;
+      --rarity-rare: #8a6a10;
+      --rarity-mythic: #c0410d;
+      --rarity-special: #7b3fa0;
     }
     /* Not a straight inversion: the greens and blues are lightened as well as
        the greys, or they fail contrast against a dark ground. */
@@ -104,13 +115,22 @@
       --missing-bg: #241a13;
       --missing-border: #b07a4a;
       --input-bg: #1b1e24;
+      /* Lightened rather than inverted, same as the greens above: the print
+         colours are mixed for white paper and go muddy on this ground. */
+      --rarity-common: #a4adb8;
+      --rarity-uncommon: #9fb8cc;
+      --rarity-rare: #d9b74a;
+      --rarity-mythic: #f5854f;
+      --rarity-special: #c39bec;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      /* Widened from 920px when the trend column made it six columns: fixed
-         widths plus non-wrapping headers need the extra room. */
-      max-width: 1140px;
+      /* Widened from 920px when the trend column made it six columns, and
+         again for rarity: fixed widths plus non-wrapping headers need the
+         extra room, and the table's min-width has to stay inside this or the
+         panel scrolls sideways on a full-size desktop window. */
+      max-width: 1200px;
       margin: 40px auto;
       padding: 0 20px;
       color: var(--fg);
@@ -251,15 +271,19 @@
       table-layout: fixed;
       /* Below this the non-wrapping headers no longer fit; the panel scrolls
          horizontally instead of the headers overflowing their cells. */
-      min-width: 1060px;
+      min-width: 1145px;
     }
-    col.c-name  { width: 26%; }
-    col.c-num   { width: 6.5%; }
-    col.c-tcg   { width: 10.5%; }
-    col.c-mp    { width: 10%; }
-    col.c-trend { width: 16%; }
-    col.c-nf    { width: 16%; }
-    col.c-foil  { width: 15%; }
+    /* Rebased when rarity was inserted rather than re-guessed: 1145px is the
+       old 1060 plus the width of the new header, and these percentages of it
+       leave every other column the pixel width it had before. */
+    col.c-name   { width: 24.1%; }
+    col.c-rarity { width: 7.4%; }
+    col.c-num    { width: 6%; }
+    col.c-tcg    { width: 9.7%; }
+    col.c-mp     { width: 9.3%; }
+    col.c-trend  { width: 14.8%; }
+    col.c-nf     { width: 14.8%; }
+    col.c-foil   { width: 13.9%; }
     thead th {
       background: var(--th-bg);
       text-align: left;
@@ -273,7 +297,7 @@
          some tabs than others. */
       white-space: nowrap;
     }
-    thead th.col-check { text-align: center; }
+    thead th.col-check, thead th.col-rarity { text-align: center; }
     tbody tr:nth-child(even) { background: var(--row-alt); }
     tbody tr:hover { background: var(--row-hover); }
     td { padding: 9px 14px; border-bottom: 1px solid var(--line); }
@@ -285,6 +309,21 @@
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
+    /* One letter, centred, in the rarity's own colour. A card whose rarity the
+       data does not carry gets an empty cell rather than a placeholder - the
+       same rule the collected columns follow. */
+    td.col-rarity { text-align: center; }
+    /* No letter-spacing: on a single character it is all trailing, and the
+       centred cell would sit half a pixel to the right of the header. */
+    .rarity {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--rarity-common);
+    }
+    .rarity.r-uncommon { color: var(--rarity-uncommon); }
+    .rarity.r-rare     { color: var(--rarity-rare); }
+    .rarity.r-mythic   { color: var(--rarity-mythic); }
+    .rarity.r-special, .rarity.r-bonus { color: var(--rarity-special); }
     a { color: var(--accent); text-decoration: none; font-weight: 600; }
     a:hover { text-decoration: underline; }
     .na { color: var(--faint); font-style: italic; font-weight: 400; }
@@ -557,11 +596,12 @@
         grid-template-columns: minmax(0, 1fr) auto auto;
         /* The name gets nearly the full width: sharing its row with the
            collected pills wrapped almost every card onto a second line. The
-           collector number is narrow enough to ride along at the end of it. */
+           rarity letter and the collector number are both narrow enough to
+           ride along at the end of it. */
         grid-template-areas:
-          "name name  num"
-          "tcg  trend trend"
-          "mp   nf    foil";
+          "name rarity num"
+          "tcg  trend  trend"
+          "mp   nf     foil";
         align-items: center;
         gap: 2px 8px;
         border: 1px solid var(--line);
@@ -592,6 +632,13 @@
         font-weight: 700;
       }
       td.col-num::before { content: '#'; }
+      /* Between the name and the number, reading as "Sauron  M 12" - the same
+         order as the desktop row, so the two layouts scan alike. */
+      td.col-rarity {
+        grid-area: rarity;
+        justify-self: end;
+        align-self: start;
+      }
       /* The dotted underline reads as a defect at this size; the link colour
          carries the affordance instead. */
       td .card-link { border-bottom: none; color: var(--accent); }
@@ -757,6 +804,36 @@ function collectorNumber(c) {
   return m ? m[2] : '';
 }
 
+// Rarity, in the order the letters rank: a "Rarity" sort should put the
+// mythics together at one end, which alphabetising the words does not. The
+// key is Scryfall's own word, and anything it starts printing that is not
+// listed here still renders - as its own initial, in the default colour,
+// sorting below the commons - rather than blanking the column.
+const RARITY = {
+  common:   { letter: 'C', label: 'Common',        rank: 0 },
+  uncommon: { letter: 'U', label: 'Uncommon',      rank: 1 },
+  rare:     { letter: 'R', label: 'Rare',          rank: 2 },
+  special:  { letter: 'S', label: 'Special',       rank: 3 },
+  mythic:   { letter: 'M', label: 'Mythic Rare',   rank: 4 },
+  bonus:    { letter: 'B', label: 'Bonus',         rank: 5 },
+};
+
+// The page and the data deploy independently, so this column can be live
+// against a prices.json written before "rarity" was in it. That reads as an
+// empty cell, the same way an unowned card does, rather than as a broken one.
+function rarityOf(c) {
+  const word = String(c.rarity || '').toLowerCase();
+  if (!word) return null;
+  return RARITY[word] || { letter: word[0].toUpperCase(), label: word, rank: -1 };
+}
+
+function rarityCell(c) {
+  const r = rarityOf(c);
+  if (!r) return '';
+  return `<span class="rarity r-${escapeHTML(String(c.rarity).toLowerCase())}"`
+       + ` title="${escapeHTML(r.label)}">${escapeHTML(r.letter)}</span>`;
+}
+
 const TREND_DAYS = 7;   // window for the delta
 const SPARK_DAYS = 30;  // window for the sparkline
 
@@ -769,15 +846,17 @@ const state = {
 };
 
 const COLUMNS = [
-  { col: 'name',  label: 'Card Name' },
-  { col: 'num',   label: '#', cls: 'col-num', title: 'Collector number' },
-  { col: 'tcg',   label: 'TCGPlayer' },
-  { col: 'mp',    label: 'ManaPool' },
-  { col: 'trend', label: '30-Day Trend (TCG)',
+  { col: 'name',   label: 'Card Name' },
+  { col: 'rarity', label: 'Rarity', cls: 'col-rarity',
+    title: 'C common · U uncommon · R rare · M mythic rare · S special' },
+  { col: 'num',    label: '#', cls: 'col-num', title: 'Collector number' },
+  { col: 'tcg',    label: 'TCGPlayer' },
+  { col: 'mp',     label: 'ManaPool' },
+  { col: 'trend',  label: '30-Day Trend (TCG)',
     title: 'TCGplayer price: 30-day sparkline, with the change over the last 7 days' },
-  { col: 'nf',    label: 'Collected Non-Foil', cls: 'col-check',
+  { col: 'nf',     label: 'Collected Non-Foil', cls: 'col-check',
     title: 'Copies of the non-foil printing in my collection; blank means none' },
-  { col: 'foil',  label: 'Collected Foil',     cls: 'col-check',
+  { col: 'foil',   label: 'Collected Foil',     cls: 'col-check',
     title: 'Copies of the foil printing in my collection; blank means none' },
 ];
 
@@ -798,6 +877,7 @@ const SORT_OPTIONS = [
   { val: 'trend:desc',label: 'Biggest 7-day gain' },
   { val: 'trend:asc', label: 'Biggest 7-day drop' },
   { val: 'name:asc',  label: 'Card name — A to Z' },
+  { val: 'rarity:desc', label: 'Rarity — mythic first' },
   { val: 'num:asc',   label: 'Collector number' },
   { val: 'nf:desc',   label: 'Collected first' },
   { val: 'nf:asc',    label: 'Missing first' },
@@ -855,7 +935,8 @@ function buildScaffold(groups) {
       </label>
       <table>
         <colgroup>
-          <col class="c-name"><col class="c-num"><col class="c-tcg"><col class="c-mp">
+          <col class="c-name"><col class="c-rarity"><col class="c-num">
+          <col class="c-tcg"><col class="c-mp">
           <col class="c-trend"><col class="c-nf"><col class="c-foil">
         </colgroup>
         <thead><tr>${head}</tr></thead>
@@ -1038,6 +1119,7 @@ function buildRows(cards, tabName, showTreatment) {
     // every cell into the wrong slot.
     return `<tr>
       <td class="col-name">${nameCell}</td>
+      <td class="col-rarity">${rarityCell(c)}</td>
       <td class="col-num" data-label="#">${escapeHTML(collectorNumber(c))}</td>
       <td class="col-price col-tcg" data-label="TCG"><a href="${c.tcg_url}" target="_blank"${tcgCls}>${fmt(tcg)}</a></td>
       <td class="col-price col-mp" data-label="MP">${mp != null
@@ -1058,6 +1140,9 @@ function sortKey(col, c) {
     // suffix, so the parsed number leads and the raw string breaks ties -
     // keeping 234a next to 234 rather than adrift among the 2s.
     case 'num':  return parseInt(collectorNumber(c), 10) || 0;
+    // By rank, not by letter: alphabetically M leads R leads U, which puts the
+    // rarest cards in the middle of the column they were sorted by.
+    case 'rarity': { const r = rarityOf(c); return r ? r.rank : -2; }
     case 'tcg':  return c.tcg_price == null ? Infinity : c.tcg_price;
     case 'mp':   return c.mp_price  == null ? Infinity : c.mp_price;
     // Sorts by copies held, so the deepest stacks lead the "Collected first" view.
@@ -1203,7 +1288,9 @@ function handleSortClick(tabName, col) {
   } else {
     s.col = col;
     // Sensible default direction per column
-    s.dir = (col === 'nf' || col === 'foil' || col === 'trend') ? 'desc' : 'asc';
+    // Rarity joins these: the interesting end of that column is the mythics.
+    s.dir = (col === 'nf' || col === 'foil' || col === 'trend'
+             || col === 'rarity') ? 'desc' : 'asc';
   }
   renderTab(tabName);
 }
