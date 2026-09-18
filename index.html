@@ -126,7 +126,7 @@
          headers need the room, and the table's min-width has to stay inside
          this (less the 20px padding either side) or the panel scrolls sideways
          on a full-size desktop window. */
-      max-width: 1040px;
+      max-width: 1120px;
       margin: 40px auto;
       padding: 0 20px;
       color: var(--fg);
@@ -267,18 +267,19 @@
       table-layout: fixed;
       /* Below this the non-wrapping headers no longer fit; the panel scrolls
          horizontally instead of the headers overflowing their cells. */
-      min-width: 976px;
+      min-width: 1066px;
     }
-    /* Rebased when the trend column was removed rather than re-guessed: 976px
-       is the old 1145 less that column's width, and these percentages of it
-       leave every remaining column the pixel width it had before. */
-    col.c-name   { width: 28.3%; }
-    col.c-rarity { width: 8.7%; }
-    col.c-num    { width: 7%; }
-    col.c-tcg    { width: 11.4%; }
-    col.c-mp     { width: 10.9%; }
-    col.c-nf     { width: 17.4%; }
-    col.c-foil   { width: 16.3%; }
+    /* Rebased again when Quantity was inserted: 1066px is the previous 976
+       plus that header's width, and these percentages of it leave every other
+       column the pixel width it had before. */
+    col.c-name   { width: 26.0%; }
+    col.c-rarity { width: 8.0%; }
+    col.c-num    { width: 6.4%; }
+    col.c-tcg    { width: 10.4%; }
+    col.c-mp     { width: 10.0%; }
+    col.c-qty    { width: 8.4%; }
+    col.c-nf     { width: 15.9%; }
+    col.c-foil   { width: 14.9%; }
     thead th {
       background: var(--th-bg);
       text-align: left;
@@ -292,7 +293,7 @@
          some tabs than others. */
       white-space: nowrap;
     }
-    thead th.col-check, thead th.col-rarity { text-align: center; }
+    thead th.col-check, thead th.col-rarity, thead th.col-qty { text-align: center; }
     tbody tr:nth-child(even) { background: var(--row-alt); }
     tbody tr:hover { background: var(--row-hover); }
     td { padding: 9px 14px; border-bottom: 1px solid var(--line); }
@@ -324,6 +325,14 @@
     .na { color: var(--faint); font-style: italic; font-weight: 400; }
 
     .owned-qty { color: var(--pos); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* The target count. Muted once it is met, so scanning the column shows
+       what is left to do rather than a wall of equally loud numbers - but the
+       number itself is the same either way, and the tooltip on a short cell
+       says how many are outstanding, so the colour is never the only signal. */
+    td.col-qty { text-align: center; }
+    .qty { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .qty.met { color: var(--faint); font-weight: 500; }
 
     /* Sortable headers */
     thead th.sortable { cursor: pointer; user-select: none; position: relative; }
@@ -573,13 +582,9 @@
            collected pills wrapped almost every card onto a second line. The
            rarity letter and the collector number are both narrow enough to
            ride along at the end of it. */
-        /* The collected pills span both price rows rather than sitting on one
-           of them: with the trend column gone the right-hand half of the first
-           price row would otherwise be empty, and the pills centred against
-           the two prices is what the card had before. */
         grid-template-areas:
           "name rarity num"
-          "tcg  nf     foil"
+          "tcg  qty    qty"
           "mp   nf     foil";
         align-items: center;
         gap: 2px 8px;
@@ -637,9 +642,22 @@
 
       /* Collected state reads as a pill. An uncollected cell is genuinely
          empty, so :empty tells the two apart without changing the markup. */
+      /* Right-aligned over the collected pills below it, so "want" sits
+         directly above "have". The label is spelled out because there is no
+         header row here to say what the bare number means. */
+      td.col-qty { grid-area: qty; justify-self: end; }
+      td.col-qty::before {
+        content: attr(data-label);
+        margin-right: 5px;
+        color: var(--faint);
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+      }
+
       td.col-check {
         text-align: center;
-        align-self: center;
+        align-self: start;
         border: 1px solid var(--owned-border);
         background: var(--owned-bg);
         color: var(--pos);
@@ -718,6 +736,38 @@ function fmt(price) {
 // Ownership is a copy count. Older prices.json files stored it as a boolean,
 // so coerce rather than print "true" if the page is served ahead of the data.
 const copies = v => typeof v === 'number' ? v : (v ? 1 : 0);
+
+// How many copies of a card I am trying to collect. Resolved in
+// fetch_prices.py, where Scryfall's type line is available to tell a basic
+// land from any other common, and carried on the row. A prices.json written
+// before targets existed has no field here, and one of everything is exactly
+// what the page counted then - so the fallback is the old behaviour, not a
+// guess.
+const target = c => {
+  const n = c.target;
+  return typeof n === 'number' && n > 0 ? n : 1;
+};
+
+// Copies in hand that count toward the target: the non-foil ones. A foil is a
+// different thing to own and not what the target is asking for, so holding two
+// non-foil and one foil of a card counts as two.
+//
+// Unless the card has no non-foil printing - six tracked cards do not, and for
+// those the foil is the only copy there is, so it counts or they could never
+// be completed. Both finishes are summed in that case rather than just the
+// foil column: every copy of such a card is a foil however the export happened
+// to label it. `foil_only` is resolved in fetch_prices.py from Scryfall's
+// `finishes`; a row written before that field existed reads as false, which
+// counts non-foil only - the rule that is right for all but those six.
+const held = c => c.foil_only
+  ? copies(c.collected_nonfoil) + copies(c.collected_foil)
+  : copies(c.collected_nonfoil);
+
+// What is still to buy, and what the held copies are worth. Held is capped at
+// the target so the two summary cards sum to the target's full cost: over-
+// owning a card cannot inflate the collection past what it set out to be.
+const shortfall = c => Math.max(0, target(c) - held(c));
+const counted = c => Math.min(held(c), target(c));
 
 // A card I own none of gets a genuinely empty cell, not a "0": the mobile
 // layout tells collected from missing with :empty, and a zero in every missing
@@ -827,14 +877,19 @@ const COLUMNS = [
   { col: 'num',    label: '#', cls: 'col-num', title: 'Collector number' },
   { col: 'tcg',    label: 'TCGPlayer' },
   { col: 'mp',     label: 'ManaPool' },
+  // Sits immediately before the two collected columns, so "how many I want"
+  // reads directly against "how many I have".
+  { col: 'qty',    label: 'Quantity', cls: 'col-qty',
+    title: 'Copies of this card I am collecting, set per treatment in data/sets.json' },
   { col: 'nf',     label: 'Collected Non-Foil', cls: 'col-check',
     title: 'Copies of the non-foil printing in my collection; blank means none' },
   { col: 'foil',   label: 'Collected Foil',     cls: 'col-check',
     title: 'Copies of the foil printing in my collection; blank means none' },
 ];
 
-// A card counts as collected if either finish is, which is the same rule the
-// summary cards use - so "Missing" here and "cards missing" there always agree.
+// "Collected" means the target is met, not merely that a copy is in hand -
+// the same rule the summary counts by, so the two can never disagree. Copies
+// of either finish count toward it.
 const OWN_FILTERS = [
   { val: 'all',       label: 'All' },
   { val: 'missing',   label: 'Missing' },
@@ -847,6 +902,7 @@ const OWN_FILTERS = [
 const SORT_OPTIONS = [
   { val: 'tcg:asc',   label: 'Price — low to high' },
   { val: 'tcg:desc',  label: 'Price — high to low' },
+  { val: 'qty:desc',  label: 'Most still to collect' },
   { val: 'name:asc',  label: 'Card name — A to Z' },
   { val: 'rarity:desc', label: 'Rarity — mythic first' },
   { val: 'num:asc',   label: 'Collector number' },
@@ -908,7 +964,7 @@ function buildScaffold(groups) {
         <colgroup>
           <col class="c-name"><col class="c-rarity"><col class="c-num">
           <col class="c-tcg"><col class="c-mp">
-          <col class="c-nf"><col class="c-foil">
+          <col class="c-qty"><col class="c-nf"><col class="c-foil">
         </colgroup>
         <thead><tr>${head}</tr></thead>
         <tbody id="tbody-${escapeHTML(g.key)}">
@@ -969,6 +1025,7 @@ function escapeHTML(s) {
 function buildRows(cards, tabName, showTreatment) {
   return cards.map(c => {
     const tcg = c.tcg_price, mp = c.mp_price;
+    const short = shortfall(c);
     const nameCell = (c.image_url
       ? `<span class="card-link" data-tab="${tabName}" data-idx="${c._idx}">${escapeHTML(c.display_name)}</span>`
       : escapeHTML(c.display_name))
@@ -990,6 +1047,8 @@ function buildRows(cards, tabName, showTreatment) {
       <td class="col-price col-mp" data-label="MP">${mp != null
         ? `<a href="${c.mp_url}" target="_blank">${fmt(mp)}</a>`
         : `<a href="${c.mp_url}" target="_blank" class="na">N/A</a>`}</td>
+      <td class="col-qty" data-label="WANT"${short ? ` title="${short} still to collect"` : ''
+        }><span class="qty${short ? '' : ' met'}">${target(c)}</span></td>
       <td class="col-check col-nf" data-label="NF">${ownedCell(copies(c.collected_nonfoil))}</td>
       <td class="col-check col-foil" data-label="Foil">${ownedCell(copies(c.collected_foil))}</td>
     </tr>`;
@@ -1012,6 +1071,10 @@ function sortKey(col, c) {
     // Sorts by copies held, so the deepest stacks lead the "Collected first" view.
     case 'nf':   return copies(c.collected_nonfoil);
     case 'foil': return copies(c.collected_foil);
+    // By what is still to buy, not by the target itself: sorting this column
+    // is a question about what is left to do, and a card already complete has
+    // nothing left whatever its target was.
+    case 'qty':  return shortfall(c);
   }
 }
 function sortCards(cards, col, dir) {
@@ -1035,8 +1098,12 @@ function filterCards(cards, f) {
   const terms = f.q.toLowerCase().split(/\s+/).filter(Boolean);
   return cards.filter(c => {
     if (f.own !== 'all') {
-      const owned = copies(c.collected_nonfoil) > 0 || copies(c.collected_foil) > 0;
-      if (f.own === 'missing' ? owned : !owned) return false;
+      // Against the target, not against zero: with quantities declared, a
+      // common I hold one of is still a card to go shopping for. This is the
+      // same test the summary counts by, so "Missing" here and "cards still
+      // to buy" there can never disagree.
+      const done = shortfall(c) === 0;
+      if (f.own === 'missing' ? done : !done) return false;
     }
     if (!terms.length) return true;
     const name = c.display_name.toLowerCase();
@@ -1066,28 +1133,36 @@ function money(n) {
   return '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
+// Both cards are counted in copies, not in distinct cards: the target is a
+// number of copies, so a playset of a common four deep is four times the card.
+// Held copies are capped at the target, which is what makes the two values sum
+// to the cost of the whole target - owning a fifth copy of a four-of cannot
+// push the collection past what it was trying to be.
 function buildSummary(cards) {
-  let ownedVal = 0, ownedCount = 0, missCost = 0, missCount = 0, totalCards = cards.length;
+  let ownedVal = 0, missCost = 0;
+  let doneCards = 0, shortCards = 0, haveCopies = 0, wantCopies = 0;
   for (const c of cards) {
     const bp = bestPrice(c);
-    const isOwned = copies(c.collected_nonfoil) > 0 || copies(c.collected_foil) > 0;
-    if (isOwned) {
-      ownedCount++;
-      if (bp != null) ownedVal += bp;
-    } else {
-      missCount++;
-      if (bp != null) missCost += bp;
+    const have = counted(c), short = shortfall(c);
+    haveCopies += have;
+    wantCopies += target(c);
+    if (short) shortCards++; else doneCards++;
+    if (bp != null) {
+      ownedVal += bp * have;
+      missCost += bp * short;
     }
   }
   return `
     <div class="summary-card owned">
       <div class="summary-label">Current Collection Value
-        <span class="summary-note">(${ownedCount} / ${totalCards} cards collected)</span></div>
+        <span class="summary-note">(${haveCopies} / ${wantCopies} copies &middot;
+          ${doneCards} / ${cards.length} cards complete)</span></div>
       <div class="summary-value">${money(ownedVal)}</div>
     </div>
     <div class="summary-card missing">
       <div class="summary-label">Cost to Complete
-        <span class="summary-note">(${missCount} card${missCount === 1 ? '' : 's'} missing)</span></div>
+        <span class="summary-note">(${wantCopies - haveCopies} cop${wantCopies - haveCopies === 1 ? 'y' : 'ies'} still to buy
+          across ${shortCards} card${shortCards === 1 ? '' : 's'})</span></div>
       <div class="summary-value">${money(missCost)}</div>
     </div>`;
 }
@@ -1147,7 +1222,10 @@ function handleSortClick(tabName, col) {
     s.col = col;
     // Sensible default direction per column
     // Rarity joins these: the interesting end of that column is the mythics.
-    s.dir = (col === 'nf' || col === 'foil' || col === 'rarity') ? 'desc' : 'asc';
+    // Quantity joins these: the interesting end of that column is the cards
+    // with the most still to buy.
+    s.dir = (col === 'nf' || col === 'foil' || col === 'rarity'
+             || col === 'qty') ? 'desc' : 'asc';
   }
   renderTab(tabName);
 }

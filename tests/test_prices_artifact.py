@@ -38,6 +38,60 @@ class TestPricesArtifact(unittest.TestCase):
                     unknown[row.get("mtg_name")] = row.get("rarity")
         self.assertEqual(unknown, {}, "rarities index.html has no letter for")
 
+    def test_every_card_has_a_positive_integer_target(self):
+        """The page multiplies prices by this, so a null or a zero would
+        silently drop the card out of both summary figures."""
+        bad = {}
+        for key, value in self.prices.items():
+            if not isinstance(value, list) or key in self.NAV_BLOCKS:
+                continue
+            for row in value:
+                t = row.get("target")
+                if not isinstance(t, int) or isinstance(t, bool) or t < 1:
+                    bad[f"{key}/{row.get('collector_number')}"] = t
+        self.assertEqual(bad, {}, "cards with a missing or unusable target")
+
+    def test_every_card_says_whether_it_is_foil_only(self):
+        """The page branches on this to decide which copies count toward the
+        target, so a missing field would quietly count the wrong column."""
+        bad = {}
+        for key, value in self.prices.items():
+            if not isinstance(value, list) or key in self.NAV_BLOCKS:
+                continue
+            for row in value:
+                if not isinstance(row.get("foil_only"), bool):
+                    bad[f"{key}/{row.get('collector_number')}"] = row.get("foil_only")
+        self.assertEqual(bad, {}, "cards with no usable foil_only flag")
+
+    def test_foil_only_cards_are_linked_as_foil(self):
+        """Pricing and linking these non-foil would send you to a listing that
+        does not exist - there is no non-foil printing to buy."""
+        for key, value in self.prices.items():
+            if not isinstance(value, list) or key in self.NAV_BLOCKS:
+                continue
+            for row in value:
+                if not row.get("foil_only"):
+                    continue
+                with self.subTest(card=row.get("mtg_name")):
+                    self.assertIn("finish=foil", row["mp_url"])
+                    if row["tcg_url"].startswith("https://www.tcgplayer.com/product/"):
+                        self.assertIn("Printing=Foil", row["tcg_url"])
+
+    def test_the_declared_targets_reach_the_rows(self):
+        """A target declared in sets.json but never written to a row would
+        leave the page quietly counting one of everything."""
+        sets = json.loads((REPO_ROOT / "data" / "sets.json").read_text(encoding="utf-8"))
+        for section in sets["sections"]:
+            declared = section.get("targets")
+            if not declared:
+                continue
+            rows = self.prices.get(section["key"], [])
+            with self.subTest(section=section["key"]):
+                self.assertTrue(rows, "declared targets but no rows")
+                self.assertTrue(
+                    any(r["target"] in declared.values() for r in rows),
+                    f"no row in {section['key']} carries any declared target")
+
     def test_tabs_block_matches_the_sections(self):
         tabs = self.prices.get("tabs")
         self.assertIsInstance(tabs, list)

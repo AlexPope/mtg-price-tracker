@@ -26,6 +26,7 @@
       "key": "hob_main",
       "group": "hob",
       "label": "Main Set",
+      "targets": { "common": 4, "uncommon": 2, "rare": 1, "mythic": 1, "basic_land": 30 },
       "ranges": [
         { "set": "hob", "from": 1, "to": 193 },
         { "set": "hob", "from": 321, "to": 321 }
@@ -35,6 +36,7 @@
       "key": "hob_full_arts",
       "group": "hob",
       "label": "Full Art Lands",
+      "targets": { "basic_land": 30 },
       "set": "hob",
       "from": 194,
       "to": 198
@@ -43,6 +45,7 @@
       "key": "hob_seasonal_lands",
       "group": "hob",
       "label": "Seasonal Lands",
+      "targets": { "basic_land": 30 },
       "set": "hob",
       "from": 313,
       "to": 316
@@ -115,6 +118,7 @@
       "key": "ltr_main",
       "group": "ltr",
       "label": "Main Set",
+      "targets": { "common": 4, "uncommon": 2, "rare": 1, "mythic": 1, "basic_land": 30 },
       "ranges": [
         { "set": "ltr", "from": 1, "to": 271 },
         { "set": "ltr", "from": 332, "to": 339 }
@@ -124,6 +128,7 @@
       "key": "ltr_full_arts",
       "group": "ltr",
       "label": "Full Art Lands",
+      "targets": { "basic_land": 30 },
       "set": "ltr",
       "from": 272,
       "to": 281
@@ -140,6 +145,7 @@
       "key": "ltr_jumpstart",
       "group": "ltr",
       "label": "Jumpstart",
+      "targets": { "common": 4, "uncommon": 2, "rare": 1, "mythic": 1 },
       "ranges": [
         { "set": "ltr", "from": 282, "to": 286 },
         { "set": "ltr", "from": 824, "to": 828 }
@@ -149,6 +155,7 @@
       "key": "ltr_starter",
       "group": "ltr",
       "label": "Starter",
+      "targets": { "common": 4, "uncommon": 2, "rare": 1, "mythic": 1 },
       "set": "ltr",
       "from": 287,
       "to": 298
