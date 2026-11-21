@@ -62,6 +62,11 @@ TARGET_KEYS = {"common", "uncommon", "rare", "special", "mythic", "bonus", "basi
 # the export format changed and every card would silently read as un-owned.
 REQUIRED_CSV_COLUMNS = ("Count", "Edition", "Collector Number", "Foil")
 
+# What the export's Foil column says for a copy that is not plain non-foil.
+# Etched is a foil finish, and like any foil it does not satisfy a non-foil
+# target - reading it as non-foil would mark a card collected that is not.
+FOIL_VALUES = {"foil", "etched"}
+
 # Exports are named moxfield_haves_2026-08-21-1715Z.csv. The date is parsed out
 # of the name rather than trusting a plain filename sort, which is only right
 # while every file shares one prefix: "collection-2026-09-01.csv" sorts before
@@ -412,7 +417,10 @@ def fetch_owned(definitions):
         tracked |= set(card_keys(d))
 
     owned = {}
-    with latest_file.open("r", encoding="utf-8", newline="") as f:
+    # utf-8-sig, not utf-8: Moxfield writes no byte-order mark, but a file
+    # opened and re-saved in Excel gains one, and it glues itself to the first
+    # header - "﻿Count" - so the column check below would stop the run.
+    with latest_file.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         # Without these columns every row would miss and the whole collection
         # would read as un-owned - a silent wrong answer rather than an error.
@@ -435,7 +443,8 @@ def fetch_owned(definitions):
             # condition/language/printing, so the same card can legitimately
             # appear several times and every row is copies I hold.
             entry = owned.setdefault(key, {"nonfoil": 0, "foil": 0})
-            finish = "foil" if (row.get("Foil") or "").strip().lower() == "foil" else "nonfoil"
+            finish = ("foil" if (row.get("Foil") or "").strip().lower() in FOIL_VALUES
+                      else "nonfoil")
             entry[finish] += copies
 
     copies = sum(e["nonfoil"] + e["foil"] for e in owned.values())

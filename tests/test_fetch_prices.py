@@ -387,6 +387,21 @@ class TestFetchOwned(unittest.TestCase):
         self.assertEqual(fp.fetch_owned(self.DEFINITIONS),
                          {("ltc", "348"): {"nonfoil": 3, "foil": 0}})
 
+    def test_etched_counts_as_foil(self):
+        """Etched is a foil finish; counting it as non-foil would satisfy a
+        target that asks for the non-foil printing."""
+        self._write(['"2","A","ltc","Near Mint","etched","348"'])
+        self.assertEqual(fp.fetch_owned(self.DEFINITIONS),
+                         {("ltc", "348"): {"nonfoil": 0, "foil": 2}})
+
+    def test_byte_order_mark_is_tolerated(self):
+        """An export re-saved in Excel gains a BOM that would otherwise glue
+        itself to the Count header and trip the missing-column check."""
+        (fp.DATA_DIR / "moxfield_haves_2026-07-17-1851Z.csv").write_text(
+            "﻿" + "\n".join([self.HEADER, self.ROWS[0]]), encoding="utf-8")
+        self.assertEqual(fp.fetch_owned(self.DEFINITIONS),
+                         {("ltc", "348"): {"nonfoil": 3, "foil": 0}})
+
     def test_zero_count_is_not_owned(self):
         """A zero-count row must not create an entry, or the guard rail would
         count a card I hold none of as collected."""
