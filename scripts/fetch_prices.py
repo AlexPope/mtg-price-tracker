@@ -48,6 +48,16 @@ MAX_MANAPOOL_MISS_RATE = 0.50   # pages that loaded but had no parseable price
 # section or as an entry in that section's "ranges" list.
 RANGE_FIELDS = ("set", "from", "to")
 
+# How many copies of a card a section is trying to collect, keyed by Scryfall's
+# rarity word plus "basic_land". A section that declares no "targets" wants one
+# of everything, which is what the page counted before targets existed.
+DEFAULT_TARGET = 1
+
+# "basic_land" is not a rarity - every basic is `common` - so it is a separate
+# key that outranks the rarity one. Without that precedence a Plains in a
+# section wanting 4 commons would be read as 4 rather than as a land.
+TARGET_KEYS = {"common", "uncommon", "rare", "special", "mythic", "bonus", "basic_land"}
+
 # The Moxfield export columns ownership is derived from. Missing columns mean
 # the export format changed and every card would silently read as un-owned.
 REQUIRED_CSV_COLUMNS = ("Count", "Edition", "Collector Number", "Foil")
@@ -64,6 +74,12 @@ CSV_DATE_RE = re.compile(r"(\d{4})-(\d{2})-(\d{2})(?:-(\d{2})(\d{2}))?")
 #   JS object       marketPrices:{price:8217,price_foil:9370}
 # Tolerate all three so a quoting change doesn't silently null out every price.
 MANAPOOL_PRICE_RE = re.compile(r'marketPrices\\?"?:\s*\{\s*\\?"?price\\?"?:\s*(\d+)')
+
+# The foil price sits beside it in the same object, and is the only price a
+# card with no non-foil printing has:
+#   marketPrices:{price:8217,price_foil:9370}
+MANAPOOL_FOIL_PRICE_RE = re.compile(
+    r'marketPrices\\?"?:\s*\{[^}]*?\\?"?price_foil\\?"?:\s*(\d+)')
 
 
 class FetchError(Exception):
@@ -183,6 +199,23 @@ def load_sets():
                 f"{SETS_FILE}: {d['key']} belongs to unknown group {d['group']!r}; "
                 f"known groups are {sorted(seen_groups)}")
 
+        # A typo'd target key would otherwise be silently ignored and the cards
+        # it was meant to cover would quietly fall back to one copy each -
+        # wrong in a direction nothing else on the page would reveal.
+        targets = d.get("targets", {})
+        if not isinstance(targets, dict):
+            raise SystemExit(f"{SETS_FILE}: {d['key']} has a non-object 'targets'")
+        unknown = sorted(set(targets) - TARGET_KEYS)
+        if unknown:
+            raise SystemExit(
+                f"{SETS_FILE}: {d['key']} has unknown target(s) {unknown}; "
+                f"known keys are {sorted(TARGET_KEYS)}")
+        for key, n in targets.items():
+            if not isinstance(n, int) or isinstance(n, bool) or n < 1:
+                raise SystemExit(
+                    f"{SETS_FILE}: {d['key']} target {key!r} must be a positive "
+                    f"integer, got {n!r}")
+
         blocks = d["ranges"] if "ranges" in d else [d]
         if not blocks:
             raise SystemExit(f"{SETS_FILE}: {d['key']} has an empty ranges list")
@@ -265,6 +298,47 @@ def fetch_scryfall_cards(definitions, stats):
     return found
 
 
+def is_basic_land(card):
+    """Whether Scryfall types this card as a basic land.
+
+    Read off the supertype, the half of the type line before the em dash:
+    "Basic Land - Plains" and "Basic Snow Land - Plains" both qualify, while
+    "Legendary Land" (Barad-dur, Mount Doom) does not. Matching the name
+    against a list of the five basics would get today's cards right and a
+    snow-covered or renamed printing wrong.
+    """
+    supertype = (card.get("type_line") or "").split("—")[0].lower()
+    return "basic" in supertype and "land" in supertype
+
+
+def card_target(definition, card):
+    """How many copies of this card the section is trying to collect.
+
+    Basic lands outrank rarity, because a basic is `common` and a section that
+    wants four of each common still only wants the lands at the land number.
+    """
+    targets = definition.get("targets") or {}
+    if is_basic_land(card) and "basic_land" in targets:
+        return targets["basic_land"]
+    return targets.get((card.get("rarity") or "").lower(), DEFAULT_TARGET)
+
+
+def is_foil_only(card):
+    """Whether this printing was never made in non-foil.
+
+    Ownership counts non-foil copies toward the target, because a foil is a
+    different thing to own and not what the target is asking for. Six tracked
+    cards have no non-foil printing at all - LTR's Aragorn and Arwen, Wed and
+    the Saruman promo among them - and for those the foil is the only copy
+    there is, so it has to count or they could never be completed.
+    """
+    finishes = card.get("finishes")
+    # A card whose finishes Scryfall does not carry is treated as having a
+    # non-foil printing: that is true of all but six tracked cards, and it is
+    # the assumption that leaves the target asking for the usual thing.
+    return bool(finishes) and "nonfoil" not in finishes
+
+
 def scryfall_image(card):
     images = card.get("image_uris") or {}
     # Fallback for double-faced cards
@@ -273,14 +347,15 @@ def scryfall_image(card):
     return images.get("normal") or images.get("large") or images.get("small")
 
 
-def fetch_manapool_price(set_code, num, slug):
-    """Returns the NM non-foil price, or None if the page lists no price.
+def fetch_manapool_price(set_code, num, slug, finish="nonfoil"):
+    """Returns the NM price in `finish`, or None if the page lists no price.
 
     Raises FetchError if the page itself could not be fetched.
     """
     url = f"https://manapool.com/card/{set_code}/{num}/{slug}"
     html = http_request(url, accept="text/html,application/xhtml+xml")
-    m = MANAPOOL_PRICE_RE.search(html)
+    pattern = MANAPOOL_FOIL_PRICE_RE if finish == "foil" else MANAPOOL_PRICE_RE
+    m = pattern.search(html)
     return int(m.group(1)) / 100.0 if m else None
 
 
@@ -454,7 +529,7 @@ class RunStats:
         return reasons
 
 
-def build_card_row(set_code, num, card, owned, stats):
+def build_card_row(set_code, num, card, owned, stats, definition=None):
     """Assemble one output row. `card` is the Scryfall record, or None."""
     stats.cards += 1
 
@@ -467,12 +542,19 @@ def build_card_row(set_code, num, card, owned, stats):
     display_name = f"{flavor} ({name})" if flavor else name
     slug = slugify(name)
 
-    price = card.get("prices", {}).get("usd")
+    # Prices are non-foil throughout, with one exception that is not really an
+    # exception: a card with no non-foil printing has no non-foil price, and
+    # `usd` is null for all six of them. Falling back to the foil price is what
+    # keeps them out of Cost to Complete as a silent zero.
+    foil_only = is_foil_only(card)
+    prices = card.get("prices", {})
+    price = prices.get("usd_foil") if foil_only else prices.get("usd")
     tcg_price = float(price) if price else None
 
+    finish = "foil" if foil_only else "nonfoil"
     print(f"  {name}...")
     try:
-        mp_price = fetch_manapool_price(set_code, num, slug)
+        mp_price = fetch_manapool_price(set_code, num, slug, finish)
         if mp_price is None:
             stats.manapool_misses.append(name)
         time.sleep(MANAPOOL_DELAY)
@@ -481,8 +563,9 @@ def build_card_row(set_code, num, card, owned, stats):
         mp_price = None
 
     tcg_id = card.get("tcgplayer_id")
+    printing = "Foil" if foil_only else "Normal"
     tcg_url = (f"https://www.tcgplayer.com/product/{tcg_id}"
-               f"?Condition=Near+Mint&Printing=Normal") if tcg_id else \
+               f"?Condition=Near+Mint&Printing={printing}") if tcg_id else \
               (card.get("purchase_uris") or {}).get("tcgplayer", "")
 
     # collected_* are copy counts, not flags: 0 means un-owned, and the front
@@ -501,10 +584,18 @@ def build_card_row(set_code, num, card, owned, stats):
         # storing it would make a new rarity arrive here as an unmappable "S"
         # instead of something the front end can label in full.
         "rarity": card.get("rarity"),
+        # How many copies this section wants, resolved here rather than on the
+        # page: the rule needs Scryfall's type line to tell a basic land from
+        # any other common, and that is not carried in the row.
+        "target": card_target(definition or {}, card),
+        # Only non-foil copies count toward the target, so the page has to know
+        # which cards have no non-foil printing - for those the foil is the
+        # only copy there is, and it counts instead.
+        "foil_only": foil_only,
         "tcg_price": tcg_price,
         "tcg_url": tcg_url,
         "mp_price": mp_price,
-        "mp_url": f"https://manapool.com/card/{set_code}/{num}/{slug}?conditions=NM&finish=nonfoil",
+        "mp_url": f"https://manapool.com/card/{set_code}/{num}/{slug}?conditions=NM&finish={finish}",
         "image_url": scryfall_image(card),
         "collected_nonfoil": owned_entry["nonfoil"] if owned_entry else 0,
         "collected_foil": owned_entry["foil"] if owned_entry else 0,
@@ -534,7 +625,8 @@ def main():
         print(f"Fetching ManaPool prices for {d['label']}...")
         rows = []
         for set_code, num in card_keys(d):
-            row = build_card_row(set_code, num, cards.get((set_code, num)), owned, stats)
+            row = build_card_row(set_code, num, cards.get((set_code, num)),
+                                 owned, stats, d)
             if row:
                 rows.append(row)
         rows.sort(key=lambda x: x["tcg_price"] if x["tcg_price"] is not None else float("inf"))
@@ -566,8 +658,16 @@ def main():
     owned_count = sum(1 for r in all_rows if r["collected_nonfoil"] or r["collected_foil"])
     copies = sum(r["collected_nonfoil"] + r["collected_foil"] for r in all_rows)
     counts = " + ".join(f"{len(sections[d['key']])} {d['key']}" for d in definitions)
+    wanted = sum(r["target"] for r in all_rows)
+    # Mirrors held() in index.html: non-foil copies only, both finishes for a
+    # card that has no non-foil printing. The two must agree or this line and
+    # the page's summary would report different progress against one target.
+    held = sum(min((r["collected_nonfoil"] + r["collected_foil"]) if r["foil_only"]
+                   else r["collected_nonfoil"], r["target"])
+               for r in all_rows)
     print(f"\nDone. {counts} = {len(all_rows)} cards, "
           f"{owned_count} owned ({copies} copies).")
+    print(f"  Targets: {held}/{wanted} copies toward the declared quantities.")
 
 
 if __name__ == "__main__":

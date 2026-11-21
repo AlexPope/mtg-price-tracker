@@ -194,6 +194,33 @@ class TestLoadSets(unittest.TestCase):
             with self.subTest(group=g["key"]):
                 self.assertCountEqual(labels, set(labels))
 
+    def test_rejects_unknown_target_key(self):
+        """A typo'd rarity would silently leave those cards wanting one copy."""
+        self._write([{"key": "x", "label": "X", "set": "ltr", "from": 1, "to": 2,
+                      "targets": {"commons": 4}}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_rejects_non_positive_target(self):
+        for bad in (0, -1, 2.5, "4", True, None):
+            with self.subTest(target=bad):
+                self._write([{"key": "x", "label": "X", "set": "ltr",
+                              "from": 1, "to": 2, "targets": {"common": bad}}])
+                with self.assertRaises(SystemExit):
+                    fp.load_sets()
+
+    def test_rejects_non_object_targets(self):
+        self._write([{"key": "x", "label": "X", "set": "ltr", "from": 1, "to": 2,
+                      "targets": [4]}])
+        with self.assertRaises(SystemExit):
+            fp.load_sets()
+
+    def test_accepts_a_section_with_no_targets(self):
+        """The default: one of everything, as the page counted before targets."""
+        self._write([{"key": "x", "label": "X", "set": "ltr", "from": 1, "to": 2}])
+        _, definitions = fp.load_sets()
+        self.assertEqual(definitions[0].get("targets"), None)
+
     def test_card_keys_is_inclusive(self):
         self.assertEqual(fp.card_keys({"set": "ltr", "from": 3, "to": 6}),
                          [("ltr", "3"), ("ltr", "4"), ("ltr", "5"), ("ltr", "6")])
@@ -212,6 +239,106 @@ class TestLoadSets(unittest.TestCase):
             fp.card_keys({"ranges": [{"set": "hoc", "from": 1, "to": 3},
                                      {"set": "hoc", "from": 3, "to": 4}]}),
             [("hoc", "1"), ("hoc", "2"), ("hoc", "3"), ("hoc", "4")])
+
+
+class TestIsBasicLand(unittest.TestCase):
+    """Read off the type line rather than the name: the five basics are only
+    the basics of today, and a snow-covered printing is one too."""
+
+    def test_basic_lands(self):
+        for tl in ("Basic Land — Plains", "Basic Land — Island",
+                   "Basic Snow Land — Forest", "Basic Land"):
+            with self.subTest(type_line=tl):
+                self.assertTrue(fp.is_basic_land({"type_line": tl}))
+
+    def test_lands_that_are_not_basic(self):
+        """Barad-dur and Mount Doom are lands the page must not want 30 of."""
+        for tl in ("Legendary Land", "Land — Desert", "Artifact Land",
+                   "Land"):
+            with self.subTest(type_line=tl):
+                self.assertFalse(fp.is_basic_land({"type_line": tl}))
+
+    def test_non_lands_and_missing_type_line(self):
+        for card in ({"type_line": "Creature — Dog"}, {"type_line": ""}, {}):
+            with self.subTest(card=card):
+                self.assertFalse(fp.is_basic_land(card))
+
+    def test_a_creature_named_after_a_land_is_not_one(self):
+        """"The Lonely Mountain" and friends are matched by name, not type."""
+        self.assertFalse(fp.is_basic_land(
+            {"name": "The Lonely Mountain", "type_line": "Legendary Land"}))
+
+
+class TestIsFoilOnly(unittest.TestCase):
+    """Which cards have no non-foil printing. Only those count foil copies
+    toward the target; everything else counts non-foil only."""
+
+    def test_foil_only(self):
+        self.assertTrue(fp.is_foil_only({"finishes": ["foil"]}))
+
+    def test_ordinary_printings(self):
+        for f in (["nonfoil"], ["nonfoil", "foil"], ["foil", "nonfoil"],
+                  ["nonfoil", "etched"]):
+            with self.subTest(finishes=f):
+                self.assertFalse(fp.is_foil_only({"finishes": f}))
+
+    def test_missing_finishes_is_not_foil_only(self):
+        """The safe default: assume a non-foil printing exists, which is true
+        of all but six tracked cards and leaves the usual rule in force."""
+        for card in ({}, {"finishes": []}, {"finishes": None}):
+            with self.subTest(card=card):
+                self.assertFalse(fp.is_foil_only(card))
+
+    def test_etched_only_counts_as_foil_only(self):
+        """No nonfoil in the list is the test, not the presence of "foil"."""
+        self.assertTrue(fp.is_foil_only({"finishes": ["etched"]}))
+
+
+class TestCardTarget(unittest.TestCase):
+    PLAYSET = {"common": 4, "uncommon": 2, "rare": 1, "mythic": 1,
+               "basic_land": 30}
+
+    def _card(self, rarity, type_line="Creature — Dog"):
+        return {"rarity": rarity, "type_line": type_line}
+
+    def test_by_rarity(self):
+        d = {"targets": self.PLAYSET}
+        for rarity, want in (("common", 4), ("uncommon", 2),
+                             ("rare", 1), ("mythic", 1)):
+            with self.subTest(rarity=rarity):
+                self.assertEqual(fp.card_target(d, self._card(rarity)), want)
+
+    def test_basic_land_outranks_rarity(self):
+        """A basic is `common`, so without precedence it would read as 4."""
+        d = {"targets": self.PLAYSET}
+        self.assertEqual(
+            fp.card_target(d, self._card("common", "Basic Land — Plains")), 30)
+
+    def test_basic_land_only_section(self):
+        """Full Art Lands declares the land number and nothing else."""
+        d = {"targets": {"basic_land": 30}}
+        self.assertEqual(
+            fp.card_target(d, self._card("common", "Basic Land — Forest")), 30)
+
+    def test_a_section_with_no_targets_wants_one_of_everything(self):
+        for d in ({}, {"targets": {}}, {"targets": None}):
+            with self.subTest(definition=d):
+                self.assertEqual(fp.card_target(d, self._card("mythic")), 1)
+
+    def test_a_rarity_the_section_does_not_name_falls_back_to_one(self):
+        """Declaring commons says nothing about the mythics beside them."""
+        d = {"targets": {"common": 4}}
+        self.assertEqual(fp.card_target(d, self._card("mythic")), 1)
+
+    def test_a_basic_land_in_a_section_that_does_not_name_one(self):
+        """Borderless Lands wants one of each; the rule must not leak across."""
+        d = {"targets": {"common": 4}}
+        self.assertEqual(
+            fp.card_target(d, self._card("common", "Basic Land — Plains")), 4)
+
+    def test_missing_rarity_falls_back_to_one(self):
+        self.assertEqual(
+            fp.card_target({"targets": self.PLAYSET}, {"type_line": "Instant"}), 1)
 
 
 class TestFetchOwned(unittest.TestCase):
@@ -471,7 +598,7 @@ class TestBuildCardRow(unittest.TestCase):
 
     def setUp(self):
         self._orig = fp.fetch_manapool_price
-        fp.fetch_manapool_price = lambda s, n, slug: 82.17
+        fp.fetch_manapool_price = lambda s, n, slug, finish="nonfoil": 82.17
         self._sleep = fp.time.sleep
         fp.time.sleep = lambda *_: None
         # build_card_row logs each card; keep it out of the test output.
@@ -501,6 +628,41 @@ class TestBuildCardRow(unittest.TestCase):
             row["mp_url"],
             "https://manapool.com/card/ltc/348/the-great-henge?conditions=NM&finish=nonfoil")
         self.assertEqual((row["collected_nonfoil"], row["collected_foil"]), (0, 0))
+
+    def test_foil_only_card_is_priced_and_linked_as_foil(self):
+        """usd is null for every foil-only card, so pricing it from `usd` would
+        put a zero into Cost to Complete for a card that is not free."""
+        fp.fetch_manapool_price = lambda s, n, slug, finish="nonfoil": (
+            77.0 if finish == "foil" else None)
+        card = self._card(finishes=["foil"],
+                          prices={"usd": None, "usd_foil": "77.67"})
+        row = fp.build_card_row(self.SET, "300", card, {}, fp.RunStats())
+        self.assertTrue(row["foil_only"])
+        self.assertEqual(row["tcg_price"], 77.67)
+        self.assertEqual(row["mp_price"], 77.0)
+        self.assertIn("finish=foil", row["mp_url"])
+        self.assertIn("Printing=Foil", row["tcg_url"])
+
+    def test_an_ordinary_card_stays_non_foil(self):
+        row = fp.build_card_row(self.SET, "348", self._card(), {}, fp.RunStats())
+        self.assertFalse(row["foil_only"])
+        self.assertIn("finish=nonfoil", row["mp_url"])
+        self.assertIn("Printing=Normal", row["tcg_url"])
+
+    def test_target_defaults_to_one_without_a_definition(self):
+        row = fp.build_card_row(self.SET, "348", self._card(), {}, fp.RunStats())
+        self.assertEqual(row["target"], 1)
+
+    def test_target_comes_from_the_section_definition(self):
+        d = {"targets": {"common": 4, "mythic": 1, "basic_land": 30}}
+        row = fp.build_card_row(self.SET, "348", self._card(rarity="common"),
+                                {}, fp.RunStats(), d)
+        self.assertEqual(row["target"], 4)
+
+        land = self._card(rarity="common", name="Plains",
+                          type_line="Basic Land — Plains")
+        row = fp.build_card_row(self.SET, "190", land, {}, fp.RunStats(), d)
+        self.assertEqual(row["target"], 30)
 
     def test_flavor_name_becomes_display_name(self):
         row = fp.build_card_row(self.SET, "348",
@@ -545,7 +707,7 @@ class TestBuildCardRow(unittest.TestCase):
         self.assertIsNone(fp.build_card_row(self.SET, "348", None, {}, stats))
 
     def test_manapool_miss_is_recorded(self):
-        fp.fetch_manapool_price = lambda s, n, slug: None
+        fp.fetch_manapool_price = lambda s, n, slug, finish="nonfoil": None
         stats = fp.RunStats()
         row = fp.build_card_row(self.SET, "348", self._card(), {}, stats)
         self.assertIsNone(row["mp_price"])

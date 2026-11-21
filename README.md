@@ -6,9 +6,9 @@ ManaPool prices against what I actually own.
 **Live site: https://alexpope.github.io/mtg-price-tracker/**
 
 For each tracked set it shows the complete card list, the rarity, both vendors'
-current prices side by side, and how many copies of the card are already in my
-collection. Only the current price is tracked — there is no price history and
-no trend. The list can be filtered by card name and
+current prices side by side, how many copies I am **collecting**, and how many
+are already in my collection. Only the current price is tracked — there is no
+price history and no trend. The list can be filtered by card name and
 narrowed to just the missing or just the collected cards, each tab keeping its
 own filter. The page follows the system light/dark setting, with a toggle that
 overrides it. Prices refresh automatically once a day, and the header says
@@ -41,9 +41,59 @@ language and printing). A card I own none of shows a **blank** cell rather than
 a `0` — the page is mostly missing cards, and a column of zeroes reads as
 noise.
 
-All prices are **Near Mint, non-foil**. Foil ownership is counted in a separate
-column because the Moxfield export distinguishes it, but foil *prices* are not
-tracked — the non-foil price is the number of interest.
+## Quantities
+
+I am not collecting one of everything, so **Quantity** is how many copies of
+that card I am after — four of each common in a main set, two of each uncommon,
+one of each rare and mythic, thirty of each basic land, one of everything
+elsewhere. It is declared per treatment in
+[`data/sets.json`](data/sets.json) and resolved at fetch time; see
+[Targets](#targets) for the field.
+
+Both summary cards count in **copies**, not in distinct cards, and held copies
+are capped at the target:
+
+```
+Current Collection Value  =  sum over cards of  min(held, target) x price
+Cost to Complete          =  sum over cards of  max(0, target - held) x price
+                             -------------------------------------------
+                             the two sum to the full cost of the target
+```
+
+Capping is what makes that last line true: a fifth copy of a four-of cannot
+push the collection past what it set out to be. It also means the value figure
+is deliberately *not* "what my cards are worth" — copies beyond the target are
+not counted at all.
+
+"Collected" and "Missing" mean **target met** and **target not met**, in the
+filter and in the summary alike, so the two can never disagree. A common I hold
+one of is still a card to go shopping for.
+
+Price is the **cheaper** of the two vendors, per card, so both figures read as
+"shopping the better price each time" rather than as a market valuation.
+
+Only **non-foil** copies count toward a target. A foil is a different thing to
+own and not what the target is asking for, so two non-foil and one foil of a
+card counts as two — the Collected Foil column still shows the foil, it just
+does not satisfy the target.
+
+The exception is a card with **no non-foil printing**, where the foil is the
+only copy there is and would otherwise be impossible to complete. Six tracked
+cards are like this — LTR's `Aragorn and Arwen, Wed`, `Saruman of Many Colors`
+and `Trailblazer's Boots` among them. They are found from Scryfall's `finishes`
+rather than listed by hand, and carry `foil_only: true` in `prices.json`.
+
+Those six are also the only cards priced from the **foil** number, because
+Scryfall's `usd` is null for every one of them: pricing them non-foil would put
+a silent `$0` into Cost to Complete for cards that are not free — `Saruman of
+Many Colors` alone is about $78. Their ManaPool scrape reads `price_foil`, and
+both vendor links carry the foil finish.
+
+All prices are **Near Mint, non-foil** — except for the handful of cards that
+have no non-foil printing at all, which are priced and linked as foil because
+there is nothing else to price. Foil ownership is counted in a separate column
+because the Moxfield export distinguishes it, but it does not count toward a
+target; see [Quantities](#quantities).
 
 ## How it works
 
@@ -117,9 +167,40 @@ A **section** is one chip under it:
 | `label` | Text on the chip |
 | `set` | Scryfall set code, lowercase |
 | `from` / `to` | Collector number range, inclusive |
+| `targets` | Optional. How many copies to collect; see below. Absent means one of each |
 
 Everything else — card names, LOTR flavor names, rarities, TCGplayer product
 ids, images and the ManaPool URL slug — is derived from Scryfall at fetch time.
+
+### Targets
+
+`targets` is keyed by Scryfall's rarity word, plus `basic_land`:
+
+```json
+{
+  "key": "hob_main", "group": "hob", "label": "Main Set",
+  "targets": { "common": 4, "uncommon": 2, "rare": 1, "mythic": 1, "basic_land": 30 },
+  "ranges": [ { "set": "hob", "from": 1, "to": 193 } ]
+}
+```
+
+A rarity the section does not name falls back to **1**, so a section wanting
+only playsets of commons need say nothing about its mythics, and a section with
+no `targets` at all wants one of everything — exactly what the page counted
+before quantities existed.
+
+`basic_land` **outranks** the rarity key, because every basic land is `common`
+and a treatment wanting four of each common still only wants the lands at the
+land number. It is read off Scryfall's type line rather than the card name:
+`Basic Land — Plains` and `Basic Snow Land — Forest` both qualify, while
+`Legendary Land` — Barad-dûr, Mount Doom, the whole Borderless Lands chip —
+does not. Matching names against a list of the five basics would get today's
+cards right and a snow-covered or renamed printing wrong.
+
+`load_sets` rejects an unknown key and a target that is not a positive integer.
+Both would otherwise be silently ignored and the cards they were meant to cover
+would quietly fall back to one copy each — wrong in a direction nothing else on
+the page would reveal.
 
 Adding a **treatment** to a set already tracked is one entry in `sections`.
 Adding a **set** is one entry in each list. A section larger than 75 cards is
@@ -215,10 +296,14 @@ RUN_NETWORK_TESTS=1 python -m unittest discover -s tests   # also checks Scryfal
 
 The offline suite covers the derivation rules that replaced the old hardcoded
 card tables (the slug cases, `flavor_name` handling, TCGplayer URL assembly),
-the guard-rail thresholds, `data/sets.json` and Moxfield CSV validation, and
-the invariants the front end relies on `prices.json` to hold — every card
-carries a rarity the page has a letter for, every section has a chip, every
-chip resolves to a group, and no group is left empty.
+the guard-rail thresholds, `data/sets.json` and Moxfield CSV validation, the
+target rules (basic land beats rarity, an unnamed rarity falls back to one, a
+bad target key is rejected), the foil-only rule and the foil pricing that
+follows from it, and the invariants the front end relies on `prices.json` to
+hold — every card carries a rarity the page has a letter for, a positive
+target and a `foil_only` flag, every foil-only card links to a foil listing,
+every section has a chip, every chip resolves to a group, and no group is left
+empty.
 
 The network test is opt-in so the suite stays fast and deterministic. It
 confirms every tracked card still resolves on Scryfall with a `tcgplayer_id`
